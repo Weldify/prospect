@@ -2,8 +2,8 @@
 
 /build
 
-/obj
-Editor/obj
 Engine/obj
+Runtime/obj
+Editor/obj
 
 **/imgui.ini

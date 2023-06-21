@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ian\\Documents\\Projects\\prospect\\Runtime\\Prospect.Runtime.csproj": {}
+    "c:\\Users\\ian\\Documents\\Projects\\prospect\\Runtime\\Prospect.Runtime.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\Prospect.Engine.csproj": {
+    "c:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\Prospect.Engine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\Prospect.Engine.csproj",
+        "projectUniqueName": "c:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\Prospect.Engine.csproj",
         "projectName": "Prospect.Engine",
-        "projectPath": "C:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\Prospect.Engine.csproj",
+        "projectPath": "c:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\Prospect.Engine.csproj",
         "packagesPath": "C:\\Users\\ian\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\obj\\",
+        "outputPath": "c:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ian\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -77,14 +77,14 @@
         }
       }
     },
-    "C:\\Users\\ian\\Documents\\Projects\\prospect\\Runtime\\Prospect.Runtime.csproj": {
+    "c:\\Users\\ian\\Documents\\Projects\\prospect\\Runtime\\Prospect.Runtime.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ian\\Documents\\Projects\\prospect\\Runtime\\Prospect.Runtime.csproj",
+        "projectUniqueName": "c:\\Users\\ian\\Documents\\Projects\\prospect\\Runtime\\Prospect.Runtime.csproj",
         "projectName": "Prospect.Runtime",
-        "projectPath": "C:\\Users\\ian\\Documents\\Projects\\prospect\\Runtime\\Prospect.Runtime.csproj",
+        "projectPath": "c:\\Users\\ian\\Documents\\Projects\\prospect\\Runtime\\Prospect.Runtime.csproj",
         "packagesPath": "C:\\Users\\ian\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ian\\Documents\\Projects\\prospect\\Runtime\\obj\\",
+        "outputPath": "c:\\Users\\ian\\Documents\\Projects\\prospect\\Runtime\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\ian\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -101,8 +101,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\Prospect.Engine.csproj": {
-                "projectPath": "C:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\Prospect.Engine.csproj"
+              "c:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\Prospect.Engine.csproj": {
+                "projectPath": "c:\\Users\\ian\\Documents\\Projects\\prospect\\Engine\\Prospect.Engine.csproj"
               }
             }
           }
