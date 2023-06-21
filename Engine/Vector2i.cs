@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Prospect;
+namespace Prospect.Engine;
 
 public readonly struct Vector2i : IEquatable<Vector2i> {
 	public readonly int X = 0;

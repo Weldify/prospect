@@ -1,7 +1,7 @@
 using System.Numerics;
 using Veldrid;
 
-namespace Prospect;
+namespace Prospect.Engine;
 
 struct VertexPositionColor {
 	// TODO: I don't like this. Will have to find a way to automatically determine this later

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -9,7 +10,7 @@ using ImGuiNET;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Prospect;
+namespace Prospect.Engine;
 
 partial class ImGuiController : IDisposable {
 	GraphicsDevice _graphicsDevice;
