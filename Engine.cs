@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 
@@ -6,6 +7,8 @@ using Veldrid;
 using Veldrid.StartupUtilities;
 using Veldrid.Sdl2;
 using Veldrid.SPIRV;
+
+using ImGuiNET;
 
 namespace Prospect;
 
@@ -17,17 +20,26 @@ partial class Engine {
 	static Pipeline _pipeline;
 	static GraphicsDevice _graphicsDevice;
 	static Sdl2Window _mainWindow;
-
-	static bool _isMainWindowClosing = false;
+	static ImGuiController _imGuiController;
 
 	static void Main() {
 		createMainWindow();
 		createGraphicsDevice();
 		createResources();
+		createImGuiController();
+
+		var stopWatch = Stopwatch.StartNew();
+		float delta;
 
 		while ( _mainWindow.Exists ) {
-			_mainWindow.PumpEvents();
-			if ( _isMainWindowClosing ) break;
+			delta = stopWatch.ElapsedTicks / (float)Stopwatch.Frequency;
+			stopWatch.Restart();
+
+			InputSnapshot inputSnapshot = _mainWindow.PumpEvents();
+			if ( !_mainWindow.Exists ) break;
+
+			_imGuiController.Update( delta, inputSnapshot );
+			submitUi();
 
 			draw();
 		}
@@ -41,21 +53,16 @@ partial class Engine {
 
 		_commandList.ClearColorTarget( 0, RgbaFloat.Black );
 
-		_commandList.SetVertexBuffer( 0, _vertexBuffer );
-		_commandList.SetIndexBuffer( _indexBuffer, IndexFormat.UInt16 );
-		_commandList.SetPipeline( _pipeline );
-		_commandList.DrawIndexed(
-			indexCount: 4,
-			instanceCount: 1,
-			indexStart: 0,
-			vertexOffset: 0,
-			instanceStart: 0
-		);
+		_imGuiController.Draw( _commandList );
 
 		_commandList.End();
 
 		_graphicsDevice.SubmitCommands( _commandList );
 		_graphicsDevice.SwapBuffers();
+	}
+
+	static void submitUi() {
+		ImGui.Text( "I am gooey" );
 	}
 
 	static void createMainWindow() {
@@ -68,7 +75,6 @@ partial class Engine {
 		};
 
 		_mainWindow = VeldridStartup.CreateWindow( ref windowCi );
-		_mainWindow.Closed += () => _isMainWindowClosing = true;
 	}
 
 	static void createGraphicsDevice() {
@@ -144,7 +150,13 @@ partial class Engine {
 		_commandList = factory.CreateCommandList();
 	}
 
+	static void createImGuiController() {
+		_imGuiController = new( _graphicsDevice, new Vector2i( _mainWindow.Width, _mainWindow.Height ) );
+	}
+
 	static void disposeResources() {
+		_imGuiController.Dispose();
+
 		_pipeline.Dispose();
 
 		_shaders[0].Dispose(); // Vertex shader
