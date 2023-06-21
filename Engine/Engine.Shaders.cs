@@ -1,4 +1,4 @@
-namespace Prospect;
+namespace Prospect.Engine;
 
 partial class Engine {
 	const string VERTEX_SHADER_CODE = @"

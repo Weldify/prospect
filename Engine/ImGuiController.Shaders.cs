@@ -1,4 +1,4 @@
-namespace Prospect;
+namespace Prospect.Engine;
 
 partial class ImGuiController {
 	const string VERTEX_SHADER_CODE = @"

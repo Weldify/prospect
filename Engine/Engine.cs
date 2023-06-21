@@ -10,7 +10,7 @@ using Veldrid.SPIRV;
 
 using ImGuiNET;
 
-namespace Prospect;
+namespace Prospect.Engine;
 
 partial class Engine {
 	static CommandList _commandList;

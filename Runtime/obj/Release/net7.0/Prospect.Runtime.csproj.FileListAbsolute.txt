@@ -1,0 +1,16 @@
+C:\Users\ian\Documents\Projects\prospect\build\Release\net7.0\Prospect.Runtime.exe
+C:\Users\ian\Documents\Projects\prospect\build\Release\net7.0\Prospect.Runtime.deps.json
+C:\Users\ian\Documents\Projects\prospect\build\Release\net7.0\Prospect.Runtime.runtimeconfig.json
+C:\Users\ian\Documents\Projects\prospect\build\Release\net7.0\Prospect.Runtime.dll
+C:\Users\ian\Documents\Projects\prospect\build\Release\net7.0\Prospect.Runtime.pdb
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\Prospect.Runtime.csproj.AssemblyReference.cache
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\Prospect.Runtime.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\Prospect.Runtime.AssemblyInfoInputs.cache
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\Prospect.Runtime.AssemblyInfo.cs
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\Prospect.Runtime.csproj.CoreCompileInputs.cache
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\Prospect.Runtime.csproj.CopyComplete
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\Prospect.Runtime.dll
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\refint\Prospect.Runtime.dll
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\Prospect.Runtime.pdb
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\Prospect.Runtime.genruntimeconfig.cache
+C:\Users\ian\Documents\Projects\prospect\Runtime\obj\Release\net7.0\ref\Prospect.Runtime.dll
