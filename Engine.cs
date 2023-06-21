@@ -62,8 +62,16 @@ partial class Engine {
 		_graphicsDevice.SwapBuffers();
 	}
 
+	static bool isCaming = false;
+
 	static void submitUi() {
 		ImGui.Text( "I am gooey" );
+
+		if ( ImGui.Button( "Are we batakam?" ) )
+			isCaming = !isCaming;
+
+		if ( isCaming )
+			ImGui.Text( "OO MAI GOT!!! AMKAMIN@GGG" );
 	}
 
 	static void createMainWindow() {
