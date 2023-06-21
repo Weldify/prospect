@@ -16,7 +16,8 @@ partial class Engine {
 	static CommandList _commandList;
 	static DeviceBuffer _vertexBuffer;
 	static DeviceBuffer _indexBuffer;
-	static Shader[] _shaders;
+	static Shader _vertexShader;
+	static Shader _fragmentShader;
 	static Pipeline _pipeline;
 	static GraphicsDevice _graphicsDevice;
 	static Sdl2Window _mainWindow;
@@ -121,7 +122,9 @@ partial class Engine {
 			"main"
 		);
 
-		_shaders = factory.CreateFromSpirv( vertexDescription, fragmentDescription );
+		var shaders = factory.CreateFromSpirv( vertexDescription, fragmentDescription );
+		_vertexShader = shaders[0];
+		_fragmentShader = shaders[0];
 
 		GraphicsPipelineDescription pipelineDescription = new() {
 			BlendState = BlendStateDescription.SingleOverrideBlend,
@@ -141,7 +144,7 @@ partial class Engine {
 			ResourceLayouts = Array.Empty<ResourceLayout>(),
 			ShaderSet = new(
 				vertexLayouts: new[] { vertexLayout },
-				shaders: _shaders
+				shaders: shaders
 			),
 			Outputs = _graphicsDevice.SwapchainFramebuffer.OutputDescription
 		};
@@ -159,8 +162,8 @@ partial class Engine {
 
 		_pipeline.Dispose();
 
-		_shaders[0].Dispose(); // Vertex shader
-		_shaders[1].Dispose(); // Fragment shader
+		_vertexShader.Dispose(); // Vertex shader
+		_fragmentShader.Dispose(); // Fragment shader
 
 		_vertexBuffer.Dispose();
 		_indexBuffer.Dispose();
