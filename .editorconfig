@@ -20,36 +20,34 @@ dotnet_style_qualification_for_property = false:refactoring
 dotnet_style_qualification_for_method = false:refactoring
 dotnet_style_qualification_for_event = false:refactoring
 
-# Public must be uppercase
+# Public & internal must be uppercase
 dotnet_naming_rule.public_members_must_be_capitalized.symbols = public_symbols
 dotnet_naming_symbols.public_symbols.applicable_kinds = property,method,field,event,delegate
-dotnet_naming_symbols.public_symbols.applicable_accessibilities = public
+dotnet_naming_symbols.public_symbols.applicable_accessibilities = public,internal
 
 dotnet_naming_rule.public_members_must_be_capitalized.style = first_word_upper_case_style
 dotnet_naming_style.first_word_upper_case_style.capitalization = pascal_case
 
 dotnet_naming_rule.public_members_must_be_capitalized.severity = warning
 
-# Private must be camelCase
-dotnet_naming_rule.private_must_be_camelCase.symbols = private_symbols
-dotnet_naming_symbols.private_symbols.applicable_kinds = method, property
-dotnet_naming_symbols.private_symbols.applicable_accessibilities = private
+# Private rules
+dotnet_naming_rule.private_internal_rules.symbols = private_internal_symbols
+dotnet_naming_symbols.private_internal_symbols.applicable_kinds = method,property
+dotnet_naming_symbols.private_internal_symbols.applicable_accessibilities = private
 
-dotnet_naming_rule.private_must_be_camelCase.style = private_set_to_camelCase
-dotnet_naming_style.private_set_to_camelCase.capitalization = camel_case
+dotnet_naming_rule.private_internal_rules.style = private_internal_style
+dotnet_naming_style.private_internal_style.capitalization = camel_case
 
-dotnet_naming_rule.private_must_be_camelCase.severity = warning
+dotnet_naming_rule.private_internal_rules.severity = warning
 
-# Private fields must have underscore
-dotnet_naming_rule.private_fields_must_be_underscored_camelCase.symbols = private_fields
-dotnet_naming_symbols.private_fields.applicable_kinds = field
-dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+# Private fields
+dotnet_naming_rule.private_internal_field_rules.symbols = private_internal_field_symbols
+dotnet_naming_symbols.private_internal_field_symbols.applicable_kinds = field
+dotnet_naming_symbols.private_internal_field_symbols.applicable_accessibilities = private
 
-dotnet_naming_rule.private_fields_must_be_underscored_camelCase.style = private_field_set_to_camelCase
-dotnet_naming_style.private_field_set_to_camelCase.capitalization = camel_case
-dotnet_naming_style.private_field_set_to_camelCase.required_prefix = _
-
-dotnet_naming_rule.private_fields_must_be_underscored_camelCase.severity = warning
+dotnet_naming_rule.private_internal_field_rules.style = private_internal_field_style
+dotnet_naming_style.private_internal_field_style.capitalization = camel_case
+dotnet_naming_style.private_internal_field_style.required_prefix = _
 
 # Const must be full uppercase
 dotnet_naming_rule.const_must_be_uppercase.symbols = const_uppercase
