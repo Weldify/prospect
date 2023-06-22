@@ -2,11 +2,13 @@ global using System;
 global using System.Linq;
 global using System.Collections.Generic;
 
+using Microsoft.CodeAnalysis.CSharp;
 using System.Numerics;
 using System.IO;
 
 using ImGuiNET;
 using Prospect.Engine;
+using Microsoft.CodeAnalysis;
 
 namespace Prospect.Editor;
 
@@ -15,6 +17,9 @@ class Editor : IGame {
 
 	public void Start() {
 		Window.Title = "Prospect Editor";
+
+		var settings = Resources.GetOrCreate<EditorSettings>( "settings.eds" );
+		_projectOpenPath = settings.LastProjectPath;
 	}
 
 	public void Tick() {
@@ -87,7 +92,10 @@ class Editor : IGame {
 		ImGui.SameLine( 0, 4 );
 		ImGui.Button( "Run" );
 		ImGui.SameLine( 0, 4 );
-		ImGui.Button( "Export" );
+
+		if ( ImGui.Button( "Export" ) )
+			exportProject();
+
 		ImGui.SameLine( 0, 4 );
 
 		if ( ImGui.Button( "Close" ) )
@@ -119,5 +127,53 @@ class Editor : IGame {
 
 		_currentProject = null;
 		_currentProjectFilePath = "";
+	}
+
+	void exportProject() {
+		compileProject();
+		Console.WriteLine( "Compiled" );
+	}
+
+	string[] getProjectCsFilePaths() {
+		if ( Directory.GetParent( _currentProjectFilePath )?.FullName is not string projectPath ) throw new Exception();
+		var codeFolderPath = Path.Combine( projectPath, "code" );
+
+		return Directory.GetFiles( codeFolderPath, "**.cs" );
+	}
+
+	void compileProject() {
+		string[] sourceFiles = getProjectCsFilePaths();
+
+		List<SyntaxTree> syntaxTrees = new();
+		foreach ( string file in sourceFiles ) {
+			string code = File.ReadAllText( file );
+			SyntaxTree tree = CSharpSyntaxTree.ParseText( code );
+			syntaxTrees.Add( tree );
+		}
+
+		// I'm not sure why this is needed, but it is needed!
+		var mscorlib =
+					MetadataReference.CreateFromFile( typeof( object ).Assembly.Location );
+		var codeAnalysis =
+				MetadataReference.CreateFromFile( typeof( SyntaxTree ).Assembly.Location );
+		var csharpCodeAnalysis =
+				MetadataReference.CreateFromFile( typeof( CSharpSyntaxTree ).Assembly.Location );
+
+		MetadataReference[] references = { mscorlib, codeAnalysis, csharpCodeAnalysis };
+
+		var compilation = CSharpCompilation.Create(
+			"game.dll",
+			syntaxTrees,
+			references,
+			new( OutputKind.DynamicallyLinkedLibrary )
+		);
+
+		var projectDir = Directory.GetParent( _currentProjectFilePath )?.FullName ?? throw new Exception();
+		var buildDir = Path.Combine( projectDir, "build" );
+		Directory.CreateDirectory( buildDir );
+
+		var result = compilation.Emit( Path.Combine( buildDir, "game.dll" ) );
+
+		result.Diagnostics.ToList().ForEach( d => Console.WriteLine( d ) );
 	}
 }

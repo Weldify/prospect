@@ -10,5 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../Engine/Prospect.Engine.csproj" />
+	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.7.0-2.final" />
   </ItemGroup>
 </Project>
