@@ -12,7 +12,7 @@ using ImGuiNET;
 
 namespace Prospect.Engine;
 
-partial class Engine {
+public static partial class Entry {
 	static CommandList _commandList;
 	static DeviceBuffer _vertexBuffer;
 	static DeviceBuffer _indexBuffer;
@@ -23,7 +23,16 @@ partial class Engine {
 	static Sdl2Window _mainWindow;
 	static ImGuiController _imGuiController;
 
-	static void Main() {
+	public static void Run<T>() where T : IGame, new() {
+		Console.WriteLine( "Run dis shit!" );
+
+		T game = new();
+		game.Start();
+
+		MainLoop();
+	}
+
+	static void MainLoop() {
 		createMainWindow();
 		createGraphicsDevice();
 		createResources();

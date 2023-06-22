@@ -1,6 +1,6 @@
 namespace Prospect.Engine;
 
-partial class Engine {
+public static partial class Entry {
 	const string VERTEX_SHADER_CODE = @"
 		#version 450
 

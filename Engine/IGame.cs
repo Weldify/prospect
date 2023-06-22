@@ -1,6 +1,6 @@
 namespace Prospect.Engine;
 
-public class IGame {
+public interface IGame {
 	void Start() { }
 	void Shutdown() { }
 
