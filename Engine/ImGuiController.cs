@@ -34,7 +34,7 @@ public class ImGuiController : IDisposable {
 
 	private System.Numerics.Vector2 _scaleFactor = System.Numerics.Vector2.One;
 
-	private static bool KHRDebugAvailable = false;
+	static bool _khrDebugAvailable = false;
 
 	/// <summary>
 	/// Constructs a new ImGuiController.
@@ -46,7 +46,7 @@ public class ImGuiController : IDisposable {
 		int major = GL.GetInteger( GetPName.MajorVersion );
 		int minor = GL.GetInteger( GetPName.MinorVersion );
 
-		KHRDebugAvailable = (major == 4 && minor >= 3) || isExtensionSupported( "KHR_debug" );
+		_khrDebugAvailable = (major == 4 && minor >= 3) || isExtensionSupported( "KHR_debug" );
 
 		IntPtr context = ImGui.CreateContext();
 		ImGui.SetCurrentContext( context );
@@ -439,7 +439,7 @@ void main()
 	}
 
 	public static void LabelObject( ObjectLabelIdentifier objLabelIdent, int glObject, string name ) {
-		if ( KHRDebugAvailable )
+		if ( _khrDebugAvailable )
 			GL.ObjectLabel( objLabelIdent, glObject, name.Length, name );
 	}
 
