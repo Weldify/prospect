@@ -1,4 +1,5 @@
 using System;
+using ImGuiNET;
 using Prospect.Engine;
 
 namespace Prospect.Editor;
@@ -8,12 +9,10 @@ class Editor : IGame {
 		Entry.Run<Editor>();
 	}
 
+	bool isGooeing = false;
+
 	public void Start() {
 		Console.WriteLine( "Editor started!" );
-	}
-
-	public void Shutdown() {
-
 	}
 
 	public void Tick() {
@@ -21,6 +20,16 @@ class Editor : IGame {
 	}
 
 	public void Draw() {
+		ImGui.Text( "I am gooey" );
+
+		if ( ImGui.Button( "Are we gooing?" ) )
+			isGooeing = !isGooeing;
+
+		if ( isGooeing )
+			ImGui.Text( "OO MAI GOT!!! AMGOOING@GGG" );
+	}
+
+	public void Shutdown() {
 
 	}
 }

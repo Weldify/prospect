@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace Prospect.Engine;
 
 public readonly struct Vector2i : IEquatable<Vector2i> {
+	public static Vector2i Zero => new( 0, 0 );
+
 	public readonly int X = 0;
 	public readonly int Y = 0;
 

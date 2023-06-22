@@ -26,12 +26,12 @@ partial class ImGuiController : IDisposable {
 	TextureView _fontTextureView;
 	ResourceSet _mainResourceSet;
 	ResourceSet _fontTextureResourceSet;
-	Vector2i _size;
+	Vector2u _size;
 
 	readonly IntPtr _fontAtlasId = 1;
 	bool _frameBegan = false;
 
-	public ImGuiController( GraphicsDevice graphicsDevice, Vector2i size ) {
+	public ImGuiController( GraphicsDevice graphicsDevice, Vector2u size ) {
 		_graphicsDevice = graphicsDevice;
 		_size = size;
 
