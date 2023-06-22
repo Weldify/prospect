@@ -13,22 +13,21 @@ using OpenTK.Mathematics;
 namespace Prospect.Engine;
 
 public static partial class Entry {
-	internal static Window Window = null!;
+	internal static MainWindow Window = null!;
 	static readonly List<IGame> _games = new();
 
 	public static void Run<T>() where T : IGame, new() {
-		// Game shadows other variables, indent it
-		{
-			T game = new();
-			game.Start();
+		bool isFirstGame = _games.Count == 0;
+		if ( isFirstGame )
+			Window = new() { UpdateFrequency = 10, RenderFrequency = 10 };
 
-			_games.Add( game );
-		}
+		T game = new();
 
-		// First game to start is the main game
-		if ( _games.Count != 1 ) return;
+		game.Start();
+		_games.Add( game );
 
-		Window = new() { UpdateFrequency = 10, RenderFrequency = 10 };
+		if ( !isFirstGame ) return;
+
 		Window.Run();
 
 		shutdown();

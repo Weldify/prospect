@@ -5,14 +5,12 @@ using Prospect.Engine;
 namespace Prospect.Editor;
 
 class Editor : IGame {
-	static void Main() {
-		Entry.Run<Editor>();
-	}
+	static void Main() => Entry.Run<Editor>();
 
 	bool isGooeing = false;
 
 	public void Start() {
-		Console.WriteLine( "Editor started!" );
+		Window.Title = "Prospect Editor";
 	}
 
 	public void Tick() {
