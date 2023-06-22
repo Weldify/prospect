@@ -3,67 +3,50 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 
-using Veldrid;
-using Veldrid.StartupUtilities;
-using Veldrid.Sdl2;
-using Veldrid.SPIRV;
-
 using ImGuiNET;
 using System.Collections.Generic;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.Common;
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace Prospect.Engine;
 
 public static partial class Entry {
-	public static Window MainWindow { get; private set; } = null!;
-
+	internal static MainWindow Window = null!;
 	static readonly List<IGame> _games = new();
 
 	public static void Run<T>() where T : IGame, new() {
-		// Game shadows other variables, indent it
-		{
-			T game = new();
-			game.Start();
+		bool isFirstGame = _games.Count == 0;
+		if ( isFirstGame )
+			Window = new() { UpdateFrequency = 10, RenderFrequency = 10 };
 
-			_games.Add( game );
-		}
+		T game = new();
 
-		// First game to start is the main game
-		if ( _games.Count != 1 ) return;
+		game.Start();
+		_games.Add( game );
 
-		MainWindow = new( new Vector2u( 100, 100 ), new( 512, 512 ), "MainWindow" );
+		if ( !isFirstGame ) return;
 
-		var stopwatch = Stopwatch.StartNew();
-		float delta;
+		Window.Run();
 
-		while ( !MainWindow.IsClosed ) {
-			delta = stopwatch.ElapsedTicks / (float)Stopwatch.Frequency;
-			stopwatch.Restart();
-
-			// Update all windows
-			foreach ( var window in Window.All )
-				window.Update( delta );
-
-			if ( MainWindow.IsClosed ) break;
-
-			foreach ( var game in _games ) {
-				game.Tick();
-				game.Draw();
-			}
-
-			foreach ( var window in Window.All )
-				window.Draw();
-		}
-
-		freeResources();
+		shutdown();
 	}
 
-	static void freeResources() {
+	internal static void Update( float delta ) {
+		foreach ( var game in _games )
+			game.Tick();
+	}
+
+	internal static void Draw() {
+		foreach ( var game in _games )
+			game.Draw();
+	}
+
+	static void shutdown() {
 		for ( int i = _games.Count - 1; i >= 0; i-- ) {
 			_games[i].Shutdown();
 			_games.RemoveAt( i );
 		}
-
-		foreach ( var window in Window.All )
-			window.Dispose();
 	}
 }
