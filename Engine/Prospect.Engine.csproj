@@ -16,9 +16,9 @@
 	</ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.7.7">
-      <PrivateAssets>compile</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="OpenTK" Version="4.7.7" PrivateAssets="All" />
+
+    <PackageReference Include="YamlDotNet" Version="13.1.1" PrivateAssets="All" />
     <PackageReference Include="ImGui.NET" Version="1.89.5.2" />
   </ItemGroup>
 </Project>

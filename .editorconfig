@@ -41,13 +41,15 @@ dotnet_naming_style.private_internal_style.capitalization = camel_case
 dotnet_naming_rule.private_internal_rules.severity = warning
 
 # Private fields
-dotnet_naming_rule.private_internal_field_rules.symbols = private_internal_field_symbols
-dotnet_naming_symbols.private_internal_field_symbols.applicable_kinds = field
-dotnet_naming_symbols.private_internal_field_symbols.applicable_accessibilities = private
+dotnet_naming_rule.private_field_rules.symbols = private_field_symbols
+dotnet_naming_symbols.private_field_symbols.applicable_kinds = field
+dotnet_naming_symbols.private_field_symbols.applicable_accessibilities = private
 
-dotnet_naming_rule.private_internal_field_rules.style = private_internal_field_style
-dotnet_naming_style.private_internal_field_style.capitalization = camel_case
-dotnet_naming_style.private_internal_field_style.required_prefix = _
+dotnet_naming_rule.private_field_rules.style = private_field_style
+dotnet_naming_style.private_field_style.capitalization = camel_case
+dotnet_naming_style.private_field_style.required_prefix = _
+
+dotnet_naming_rule.private_field_rules.severity = warning
 
 # Const must be full uppercase
 dotnet_naming_rule.const_must_be_uppercase.symbols = const_uppercase

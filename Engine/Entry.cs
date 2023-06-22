@@ -1,10 +1,11 @@
-﻿using System;
+﻿global using System;
+global using System.Linq;
+global using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 
 using ImGuiNET;
-using System.Collections.Generic;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.Common;
 using OpenTK.Graphics.OpenGL4;

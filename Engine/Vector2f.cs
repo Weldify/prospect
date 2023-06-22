@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace Prospect.Engine;
 
@@ -20,4 +21,6 @@ public readonly struct Vector2f : IEquatable<Vector2f> {
 
 	public static bool operator ==( Vector2f left, Vector2f right ) => left.Equals( right );
 	public static bool operator !=( Vector2f left, Vector2f right ) => !left.Equals( right );
+
+	public static implicit operator Vector2( Vector2f v ) => new( v.X, v.Y );
 }
