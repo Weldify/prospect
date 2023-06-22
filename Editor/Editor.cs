@@ -18,13 +18,11 @@ class Editor : IGame {
 	}
 
 	public void Draw() {
-		ImGui.Text( "I am gooey" );
+		ImGui.Begin( "Projects" );
+		ImGui.Text( "Pooping" );
 
-		if ( ImGui.Button( "Are we gooing?" ) )
-			isGooeing = !isGooeing;
-
-		if ( isGooeing )
-			ImGui.Text( "OO MAI GOT!!! AMGOOING@GGG" );
+		ImGui.Begin( "pooppjects" );
+		ImGui.Text( "Pooping" );
 	}
 
 	public void Shutdown() {

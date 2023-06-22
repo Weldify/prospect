@@ -50,10 +50,12 @@ public class ImGuiController : IDisposable {
 
 		IntPtr context = ImGui.CreateContext();
 		ImGui.SetCurrentContext( context );
-		var io = ImGui.GetIO();
-		io.Fonts.AddFontDefault();
 
+		var io = ImGui.GetIO();
 		io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
+		io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
+
+		io.Fonts.AddFontDefault();
 
 		CreateDeviceResources();
 		setKeyMappings();
@@ -188,26 +190,19 @@ void main()
 	/// <summary>
 	/// Renders the ImGui draw list data.
 	/// </summary>
-	public void Render() {
-		if ( _frameBegun ) {
-			_frameBegun = false;
-			ImGui.Render();
-			renderImDrawData( ImGui.GetDrawData() );
-		}
+	public void End() {
+		ImGui.EndFrame();
+		ImGui.Render();
+		renderImDrawData( ImGui.GetDrawData() );
 	}
 
 	/// <summary>
 	/// Updates ImGui input and IO configuration state.
 	/// </summary>
-	public void Update( GameWindow wnd, float deltaSeconds ) {
-		if ( _frameBegun ) {
-			ImGui.Render();
-		}
-
+	public void Begin( GameWindow wnd, float deltaSeconds ) {
 		setPerFrameImGuiData( deltaSeconds );
 		updateImGuiInput( wnd );
 
-		_frameBegun = true;
 		ImGui.NewFrame();
 	}
 
@@ -224,7 +219,7 @@ void main()
 		io.DeltaTime = deltaSeconds; // DeltaTime is in seconds.
 	}
 
-	readonly List<char> PressedChars = new List<char>();
+	readonly List<char> PressedChars = new();
 
 	void updateImGuiInput( GameWindow wnd ) {
 		ImGuiIOPtr io = ImGui.GetIO();

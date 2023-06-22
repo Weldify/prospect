@@ -31,16 +31,14 @@ class MainWindow : GameWindow {
 	protected override void OnRenderFrame( FrameEventArgs e ) {
 		base.OnRenderFrame( e );
 
-		_imGuiController.Update( this, (float)e.Time );
+		_imGuiController.Begin( this, (float)e.Time );
 
 		GL.ClearColor( new Color4( 0, 32, 48, 255 ) );
 		GL.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit );
 
 		Entry.Draw();
 
-		ImGui.ShowDemoWindow();
-
-		_imGuiController.Render();
+		_imGuiController.End();
 		ImGuiController.CheckGLError( "End of frame" );
 
 		SwapBuffers();

@@ -19,7 +19,7 @@ public static partial class Entry {
 	public static void Run<T>() where T : IGame, new() {
 		bool isFirstGame = _games.Count == 0;
 		if ( isFirstGame )
-			Window = new() { UpdateFrequency = 10, RenderFrequency = 10 };
+			Window = new() { UpdateFrequency = 30, RenderFrequency = 30 };
 
 		T game = new();
 
