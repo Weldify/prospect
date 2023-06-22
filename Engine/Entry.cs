@@ -3,19 +3,17 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 
-using Veldrid;
-using Veldrid.StartupUtilities;
-using Veldrid.Sdl2;
-using Veldrid.SPIRV;
-
 using ImGuiNET;
 using System.Collections.Generic;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.Common;
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 namespace Prospect.Engine;
 
 public static partial class Entry {
-	public static Window MainWindow { get; private set; } = null!;
-
+	internal static Window Window = null!;
 	static readonly List<IGame> _games = new();
 
 	public static void Run<T>() where T : IGame, new() {
@@ -30,40 +28,26 @@ public static partial class Entry {
 		// First game to start is the main game
 		if ( _games.Count != 1 ) return;
 
-		MainWindow = new( new Vector2u( 100, 100 ), new( 512, 512 ), "MainWindow" );
+		Window = new() { UpdateFrequency = 61 };
+		Window.Run();
 
-		var stopwatch = Stopwatch.StartNew();
-		float delta;
-
-		while ( !MainWindow.IsClosed ) {
-			delta = stopwatch.ElapsedTicks / (float)Stopwatch.Frequency;
-			stopwatch.Restart();
-
-			// Update all windows
-			foreach ( var window in Window.All )
-				window.Update( delta );
-
-			if ( MainWindow.IsClosed ) break;
-
-			foreach ( var game in _games ) {
-				game.Tick();
-				game.Draw();
-			}
-
-			foreach ( var window in Window.All )
-				window.Draw();
-		}
-
-		freeResources();
+		shutdown();
 	}
 
-	static void freeResources() {
+	internal static void Update( float delta ) {
+		foreach ( var game in _games )
+			game.Tick();
+	}
+
+	internal static void Draw() {
+		foreach ( var game in _games )
+			game.Draw();
+	}
+
+	static void shutdown() {
 		for ( int i = _games.Count - 1; i >= 0; i-- ) {
 			_games[i].Shutdown();
 			_games.RemoveAt( i );
 		}
-
-		foreach ( var window in Window.All )
-			window.Dispose();
 	}
 }
