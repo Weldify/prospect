@@ -10,7 +10,7 @@ class Window : GameWindow {
 	readonly ImGuiController _imGuiController;
 
 	public Window() : base(
-		GameWindowSettings.Default, new() { WindowState = WindowState.Maximized, APIVersion = new( 3, 3 ) }
+		GameWindowSettings.Default, new() { WindowState = WindowState.Maximized, APIVersion = new( 3, 3 ), Vsync = VSyncMode.Off }
 	) {
 		_imGuiController = new( ClientSize.X, ClientSize.Y );
 	}

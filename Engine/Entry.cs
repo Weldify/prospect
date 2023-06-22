@@ -28,7 +28,7 @@ public static partial class Entry {
 		// First game to start is the main game
 		if ( _games.Count != 1 ) return;
 
-		Window = new() { UpdateFrequency = 61 };
+		Window = new() { UpdateFrequency = 10, RenderFrequency = 10 };
 		Window.Run();
 
 		shutdown();
