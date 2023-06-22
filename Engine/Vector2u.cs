@@ -1,9 +1,12 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Numerics;
 
 namespace Prospect.Engine;
 
 public readonly struct Vector2u : IEquatable<Vector2u> {
+	public static Vector2u Zero => new( 0, 0 );
+
 	public readonly uint X = 0;
 	public readonly uint Y = 0;
 

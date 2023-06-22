@@ -1,10 +1,11 @@
+using System;
 using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 
 namespace Prospect.Engine;
 
-public sealed class Window {
+public sealed class Window : IDisposable {
 	public Vector2u Position { get; private set; }
 	public Vector2u Size { get; private set; }
 	public string Title { get; private set; }
@@ -35,5 +36,10 @@ public sealed class Window {
 		};
 
 		_graphicsDevice = VeldridStartup.CreateGraphicsDevice( _nativeWindow, graphicsDeviceOptions, GraphicsBackend.Vulkan );
+	}
+
+	public void Dispose() {
+		_nativeWindow.Close();
+		_graphicsDevice.Dispose();
 	}
 }

@@ -9,10 +9,15 @@ using Veldrid.Sdl2;
 using Veldrid.SPIRV;
 
 using ImGuiNET;
+using System.Collections.Generic;
 
 namespace Prospect.Engine;
 
 public static partial class Entry {
+	public static Window MainWindow { get; private set; } = null!;
+
+	static List<IGame> _games = new();
+
 	static CommandList _commandList;
 	static DeviceBuffer _vertexBuffer;
 	static DeviceBuffer _indexBuffer;
@@ -20,21 +25,22 @@ public static partial class Entry {
 	static Shader _fragmentShader;
 	static Pipeline _pipeline;
 	static GraphicsDevice _graphicsDevice;
-	static Sdl2Window _mainWindow;
 	static ImGuiController _imGuiController;
 
 	public static void Run<T>() where T : IGame, new() {
-		Console.WriteLine( "Run dis shit!" );
-
 		T game = new();
 		game.Start();
 
+		_games.Add( game );
+
+		// First game to start is the main game
+		if ( _games.Count != 1 ) return;
+
+		MainWindow = new( Vector2u.Zero, new( 200, 200 ), "MainWindow" );
 		MainLoop();
 	}
 
 	static void MainLoop() {
-		createMainWindow();
-		createGraphicsDevice();
 		createResources();
 		createImGuiController();
 
@@ -81,93 +87,6 @@ public static partial class Entry {
 
 		if ( isCaming )
 			ImGui.Text( "OO MAI GOT!!! AMKAMIN@GGG" );
-	}
-
-	static void createMainWindow() {
-		WindowCreateInfo windowCi = new() {
-			X = 100,
-			Y = 100,
-			WindowWidth = 960,
-			WindowHeight = 540,
-			WindowTitle = "Prospect"
-		};
-
-		_mainWindow = VeldridStartup.CreateWindow( ref windowCi );
-	}
-
-	static void createGraphicsDevice() {
-		GraphicsDeviceOptions options = new() {
-			PreferDepthRangeZeroToOne = true,
-			PreferStandardClipSpaceYDirection = true
-		};
-
-		_graphicsDevice = VeldridStartup.CreateGraphicsDevice( _mainWindow, options, GraphicsBackend.Vulkan );
-	}
-
-	static void createResources() {
-		var factory = _graphicsDevice.ResourceFactory;
-
-		VertexPositionColor[] quadVertices = {
-			new VertexPositionColor(new Vector2(-0.75f, 0.75f), RgbaFloat.Red),
-			new VertexPositionColor(new Vector2(0.75f, 0.75f), RgbaFloat.Green),
-			new VertexPositionColor(new Vector2(-0.75f, -0.75f), RgbaFloat.Blue),
-			new VertexPositionColor(new Vector2(0.75f, -0.75f), RgbaFloat.Yellow),
-		};
-
-		ushort[] quadIndices = { 0, 1, 2, 3 };
-
-		_vertexBuffer = factory.CreateBuffer( new( 4 * VertexPositionColor.SIZE_IN_BYTES, BufferUsage.VertexBuffer ) );
-		_indexBuffer = factory.CreateBuffer( new( 4 * sizeof( ushort ), BufferUsage.IndexBuffer ) );
-
-		_graphicsDevice.UpdateBuffer( _vertexBuffer, 0, quadVertices );
-		_graphicsDevice.UpdateBuffer( _indexBuffer, 0, quadIndices );
-
-		VertexLayoutDescription vertexLayout = new(
-			new VertexElementDescription( "Position", VertexElementSemantic.Position, VertexElementFormat.Float2 ),
-			new VertexElementDescription( "Color", VertexElementSemantic.Color, VertexElementFormat.Float4 )
-		);
-
-		ShaderDescription vertexDescription = new(
-			ShaderStages.Vertex,
-			Encoding.UTF8.GetBytes( VERTEX_SHADER_CODE ),
-			"main"
-		);
-
-		ShaderDescription fragmentDescription = new(
-			ShaderStages.Fragment,
-			Encoding.UTF8.GetBytes( FRAGMENT_SHADER_CODE ),
-			"main"
-		);
-
-		var shaders = factory.CreateFromSpirv( vertexDescription, fragmentDescription );
-		_vertexShader = shaders[0];
-		_fragmentShader = shaders[0];
-
-		GraphicsPipelineDescription pipelineDescription = new() {
-			BlendState = BlendStateDescription.SingleOverrideBlend,
-			DepthStencilState = new(
-				depthTestEnabled: true,
-				depthWriteEnabled: true,
-				comparisonKind: ComparisonKind.LessEqual
-			),
-			RasterizerState = new RasterizerStateDescription(
-				cullMode: FaceCullMode.Back,
-				fillMode: PolygonFillMode.Solid,
-				frontFace: FrontFace.Clockwise,
-				depthClipEnabled: true,
-				scissorTestEnabled: false
-			),
-			PrimitiveTopology = PrimitiveTopology.TriangleStrip,
-			ResourceLayouts = Array.Empty<ResourceLayout>(),
-			ShaderSet = new(
-				vertexLayouts: new[] { vertexLayout },
-				shaders: shaders
-			),
-			Outputs = _graphicsDevice.SwapchainFramebuffer.OutputDescription
-		};
-
-		_pipeline = factory.CreateGraphicsPipeline( pipelineDescription );
-		_commandList = factory.CreateCommandList();
 	}
 
 	static void createImGuiController() {
