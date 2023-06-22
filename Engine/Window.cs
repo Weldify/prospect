@@ -17,7 +17,7 @@ public sealed class Window : IDisposable {
 
 	readonly Sdl2Window _nativeWindow;
 	readonly GraphicsDevice _graphicsDevice;
-	readonly ImGuiController _imGuiController;
+	readonly ImGuiRenderer _imGuiRenderer;
 	readonly CommandList _commandList;
 
 	public Window( Vector2u position, Vector2u size, string title ) {
@@ -44,7 +44,7 @@ public sealed class Window : IDisposable {
 
 		_graphicsDevice = VeldridStartup.CreateGraphicsDevice( _nativeWindow, graphicsDeviceOptions, GraphicsBackend.Vulkan );
 
-		_imGuiController = new( _graphicsDevice, Size );
+		_imGuiRenderer = new( _graphicsDevice, _graphicsDevice.SwapchainFramebuffer.OutputDescription, (int)Size.X, (int)Size.Y );
 		_commandList = _graphicsDevice.ResourceFactory.CreateCommandList();
 
 		_all.Add( this );
@@ -56,7 +56,7 @@ public sealed class Window : IDisposable {
 
 		if ( IsClosed ) return;
 
-		_imGuiController.Update( delta, inputSnapshot );
+		_imGuiRenderer.Update( delta, inputSnapshot );
 	}
 
 	internal void Draw() {
@@ -65,7 +65,7 @@ public sealed class Window : IDisposable {
 
 		_commandList.ClearColorTarget( 0, RgbaFloat.Black );
 
-		_imGuiController.Draw( _commandList );
+		_imGuiRenderer.Render( _graphicsDevice, _commandList );
 
 		_commandList.End();
 
@@ -74,7 +74,7 @@ public sealed class Window : IDisposable {
 	}
 
 	public void Dispose() {
-		_imGuiController.Dispose();
+		_imGuiRenderer.Dispose();
 		_nativeWindow.Close();
 		_graphicsDevice.Dispose();
 
