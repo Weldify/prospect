@@ -18,11 +18,20 @@ public static partial class Entry {
 	static readonly List<IGame> _games = new();
 
 	public static void Run<T>() where T : IGame, new() {
+		runGame( new T() );
+	}
+
+	public static void Run( Type t ) {
+		var gameInstance = Activator.CreateInstance( t );
+		if ( gameInstance is not IGame game ) return;
+
+		runGame( game );
+	}
+
+	static void runGame( IGame game ) {
 		bool isFirstGame = _games.Count == 0;
 		if ( isFirstGame )
 			Window = new() { UpdateFrequency = 30, RenderFrequency = 30 };
-
-		T game = new();
 
 		game.Start();
 		_games.Add( game );
