@@ -40,17 +40,15 @@ public static class Resources {
 		if ( File.Exists( path ) )
 			return Get<T>( path );
 
-		Write( new T(), path );
+		File.WriteAllText( path, new T().Serialize() );
 		return Get<T>( path );
 	}
 
-	public static void Write( this IResource resource, string path ) {
-		if ( findAttribute( resource ) is not ResourceAttribute attrib || !isPathValid( attrib, path ) )
+	public static string Serialize( this IResource resource ) {
+		if ( findAttribute( resource ) is not ResourceAttribute attrib )
 			throw new Exception();
 
 		var yaml = _serializer.Serialize( resource );
-
-		using StreamWriter writer = File.CreateText( path );
-		writer.Write( yaml );
+		return yaml;
 	}
 }

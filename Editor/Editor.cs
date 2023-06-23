@@ -12,14 +12,20 @@ using Microsoft.CodeAnalysis;
 
 namespace Prospect.Editor;
 
-class Editor : IGame {
+partial class Editor : IGame {
 	static void Main() => Entry.Run<Editor>();
 
 	public void Start() {
 		Window.Title = "Prospect Editor";
 
 		var settings = Resources.GetOrCreate<EditorSettings>( "settings.eds" );
-		_projectOpenPath = settings.LastProjectPath;
+		_projectFileOpenPath = settings.LastProjectPath;
+
+		if ( !Path.Exists( _projectFileOpenPath ) )
+			_projectFileOpenPath = "";
+
+		if ( _projectFileOpenPath != "" )
+			openProject( _projectFileOpenPath );
 	}
 
 	public void Tick() {
@@ -45,20 +51,19 @@ class Editor : IGame {
 	public void Shutdown() {
 		var settings = Resources.GetOrCreate<EditorSettings>( "settings.eds" );
 		settings.LastProjectPath = _currentProjectFilePath;
-		settings.Write( "settings.eds" );
+		File.WriteAllText( "settings.eds", settings.Serialize() );
 	}
 
-	string _projectOpenPath = "";
+	string _projectFileOpenPath = "";
 	void drawOpenProject() {
 		ImGui.SeparatorText( "Open" );
-		ImGui.InputText( ".proj file", ref _projectOpenPath, 64 );
+		ImGui.InputText( ".proj file", ref _projectFileOpenPath, 64 );
 
 		var opening = ImGui.Button( "Open" );
 		if ( !opening ) return;
-		if ( !File.Exists( _projectOpenPath ) ) return;
+		if ( !File.Exists( _projectFileOpenPath ) ) return;
 
-		_currentProjectFilePath = _projectOpenPath;
-		_currentProject = Resources.Get<Project>( _currentProjectFilePath );
+		openProject( _projectFileOpenPath );
 	}
 
 	string _projectCreateDir = "";
@@ -105,25 +110,59 @@ class Editor : IGame {
 	}
 
 	void createProject( string parentDir, string title ) {
+		// Create main project path
 		var projectPath = Path.Combine( parentDir, title );
 		Directory.CreateDirectory( projectPath );
+
+		// Create code path
+		// Don't generate .csproj - it's generated while opening the project
+		var codePath = Path.Combine( projectPath, "code" );
+		Directory.CreateDirectory( codePath );
+
+		// Create basic .cs file
+		File.WriteAllText( Path.Combine( codePath, "Game.cs" ), SAMPLE_GAME_CODE );
 
 		var project = new Project() {
 			Title = title,
 		};
 
 		var projectFilePath = Path.Combine( projectPath, "project.proj" );
-		project.Write( projectFilePath );
+		File.WriteAllText( projectFilePath, project.Serialize() );
 
+		openProject( projectFilePath );
+	}
+
+	void openProject( string projectFilePath ) {
 		_currentProjectFilePath = projectFilePath;
-		_currentProject = project;
+		_currentProject = Resources.Get<Project>( _currentProjectFilePath );
+
+		var projectPath = Directory.GetParent( projectFilePath )?.FullName ?? throw new Exception();
+
+		// Regenerate .csproj file
+		File.WriteAllText( Path.Combine( projectPath, $"{_currentProject.Title}.csproj" ), generateCsprojContents( _currentProject ) );
+	}
+
+	string generateCsprojContents( Project proj ) {
+		return $@"
+<Project Sdk=""Microsoft.NET.Sdk"">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+	<ImplicitUsings>disable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include=""{Path.GetFullPath( "Prospect.Engine.dll" )}"" />
+  </ItemGroup>
+</Project>
+";
 	}
 
 	void closeProject() {
 		// Wasn't open
 		if ( _currentProject is not Project proj ) return;
 
-		proj.Write( _currentProjectFilePath );
+		File.WriteAllText( _currentProjectFilePath, proj.Serialize() );
 
 		_currentProject = null;
 		_currentProjectFilePath = "";
@@ -151,15 +190,13 @@ class Editor : IGame {
 			syntaxTrees.Add( tree );
 		}
 
-		// I'm not sure why this is needed, but it is needed!
-		var mscorlib =
-					MetadataReference.CreateFromFile( typeof( object ).Assembly.Location );
-		var codeAnalysis =
-				MetadataReference.CreateFromFile( typeof( SyntaxTree ).Assembly.Location );
-		var csharpCodeAnalysis =
-				MetadataReference.CreateFromFile( typeof( CSharpSyntaxTree ).Assembly.Location );
-
-		MetadataReference[] references = { mscorlib, codeAnalysis, csharpCodeAnalysis };
+		// TODO: PLEASE PLEASE PLEASE future weldify get rid of the magic code
+		List<MetadataReference> references = new() {
+			MetadataReference.CreateFromFile( typeof( object ).Assembly.Location ), // mscorlib
+			MetadataReference.CreateFromFile( typeof( SyntaxTree ).Assembly.Location ), // Code analysis
+			MetadataReference.CreateFromFile( typeof( CSharpSyntaxTree ).Assembly.Location ), // Cs code analysis
+			MetadataReference.CreateFromFile("Prospect.Engine.dll")
+		};
 
 		var compilation = CSharpCompilation.Create(
 			"game.dll",
