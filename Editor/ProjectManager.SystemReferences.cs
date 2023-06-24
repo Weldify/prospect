@@ -1,6 +1,6 @@
 ﻿namespace Prospect.Editor;
 
-partial class Editor {
+partial class ProjectManager {
 	static readonly string[] _systemReferences = new[]
 	{
 		"mscorlib.dll",

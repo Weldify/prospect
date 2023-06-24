@@ -1,6 +1,6 @@
 ﻿namespace Prospect.Editor;
 
-partial class Editor {
+partial class ProjectManager {
 	const string SAMPLE_GAME_CODE = @"
 using Prospect.Engine;
 
