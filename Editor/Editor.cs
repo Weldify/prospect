@@ -14,15 +14,17 @@ using Microsoft.CodeAnalysis;
 namespace Prospect.Editor;
 
 partial class Editor : IGame {
-	ProjectManager _projectManager = new();
+	readonly ProjectManager _projectManager = new();
+
+	EditorSettings _settings = new();
 
 	static void Main() => Entry.Run<Editor>();
 
 	public void Start() {
 		Window.Title = "Prospect Editor";
 
-		var settings = Resources.GetOrCreate<EditorSettings>( "settings.eds" );
-		_projectManager.TryRestoreProject( settings.LastProjectPath );
+		_settings = Resources.GetOrCreate<EditorSettings>( "settings.eds" );
+		_projectManager.TryRestoreProject( _settings.LastProjectPath );
 	}
 
 	public void Tick() {
@@ -34,9 +36,7 @@ partial class Editor : IGame {
 	}
 
 	public void Shutdown() {
-		var settings = Resources.GetOrCreate<EditorSettings>( "settings.eds" );
-		settings.LastProjectPath = _projectManager.ProjectPath;
-
-		File.WriteAllText( "settings.eds", settings.Serialize() );
+		_settings.LastProjectPath = _projectManager.ProjectPath;
+		_settings.Write( "settings.eds" );
 	}
 }

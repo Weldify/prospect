@@ -17,38 +17,30 @@ public static class Resources {
 		.WithNamingConvention( PascalCaseNamingConvention.Instance )
 		.Build();
 
-	static ResourceAttribute findAttribute( IResource resource ) =>
-		resource.GetType().GetCustomAttributes().OfType<ResourceAttribute>().First();
-	static ResourceAttribute findAttribute<T>() =>
-		typeof( T ).GetCustomAttributes().OfType<ResourceAttribute>().First();
-
-
-	static bool isPathValid( ResourceAttribute attrib, string path ) {
-		var ext = Path.GetExtension( path );
-		return ext == $".{attrib.FileExtension}";
-	}
-
-	public static T Get<T>( string path ) where T : IResource {
-		if ( findAttribute<T>() is not ResourceAttribute attrib || !isPathValid( attrib, path ) )
-			throw new Exception();
+	public static T? Get<T>( string path ) where T : IResource {
+		if ( !File.Exists( path ) )
+			return default;
 
 		var yaml = File.ReadAllText( path );
 		return _deserializer.Deserialize<T>( yaml );
 	}
 
 	public static T GetOrCreate<T>( string path ) where T : IResource, new() {
-		if ( File.Exists( path ) )
-			return Get<T>( path );
+		if ( Get<T>( path ) is T resource )
+			return resource;
 
-		File.WriteAllText( path, new T().Serialize() );
-		return Get<T>( path );
+		var newResource = new T();
+		newResource.Write( path );
+
+		return newResource;
 	}
 
 	public static string Serialize( this IResource resource ) {
-		if ( findAttribute( resource ) is not ResourceAttribute attrib )
-			throw new Exception();
-
 		var yaml = _serializer.Serialize( resource );
 		return yaml;
+	}
+
+	public static void Write( this IResource resource, string path ) {
+		File.WriteAllText( path, resource.Serialize() );
 	}
 }

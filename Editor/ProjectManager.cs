@@ -101,7 +101,7 @@ partial class ProjectManager {
 		};
 
 		var projectFilePath = Path.Combine( projectPath, "project.proj" );
-		File.WriteAllText( projectFilePath, project.Serialize() );
+		project.Write( projectFilePath );
 
 		openProject( projectPath );
 	}
@@ -119,7 +119,9 @@ partial class ProjectManager {
 		if ( _project is null ) return;
 
 		var projectFilePath = Path.Combine( ProjectPath, "project.proj" );
-		File.WriteAllText( projectFilePath, _project.Serialize() );
+		_project.Write( projectFilePath );
+
+		_projectOpenPath = ProjectPath;
 
 		_project = null;
 		ProjectPath = "";
