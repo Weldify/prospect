@@ -17,13 +17,6 @@ partial class ProjectManager {
 	string _projectCreateDir = "";
 	string _projectCreateName = "";
 
-	string[] _comboPlatforms = new[] { "win-x64", "linux-x64" };
-	string _comboCurrentPlatform = "";
-
-	public ProjectManager() {
-		_comboCurrentPlatform = _comboPlatforms[0];
-	}
-
 	public void TryRestoreProject( string path ) {
 		if ( !Directory.Exists( path ) ) return;
 
@@ -100,20 +93,20 @@ partial class ProjectManager {
 			ImGui.OpenPopup( "ExportPopup" );
 
 		if ( ImGui.BeginPopup( "ExportPopup" ) ) {
-			// Draw platform selection
-			if ( ImGui.BeginCombo( "Platform", _comboCurrentPlatform ) ) {
-				foreach ( var platform in _comboPlatforms ) {
-					var isSelected = platform == _comboCurrentPlatform;
+			//// Draw platform selection
+			//if ( ImGui.BeginCombo( "Platform", _comboCurrentPlatform ) ) {
+			//	foreach ( var platform in _comboPlatforms ) {
+			//		var isSelected = platform == _comboCurrentPlatform;
 
-					if ( ImGui.Selectable( platform, isSelected ) )
-						_comboCurrentPlatform = platform;
+			//		if ( ImGui.Selectable( platform, isSelected ) )
+			//			_comboCurrentPlatform = platform;
 
-					if ( isSelected )
-						ImGui.SetItemDefaultFocus();
-				}
+			//		if ( isSelected )
+			//			ImGui.SetItemDefaultFocus();
+			//	}
 
-				ImGui.EndCombo();
-			}
+			//	ImGui.EndCombo();
+			//}
 
 			if ( ImGui.Button( "Export" ) )
 				exportProject();
@@ -163,10 +156,40 @@ partial class ProjectManager {
 	}
 
 	void exportProject() {
+		// Copy runtime to build folder
+		copyDirectory( "../../../runtime/Release/net7.0", Path.Combine( ProjectPath, "export" ) );
+
 		if ( compileProject() ) {
 			Console.WriteLine( "Compiled successfully!" );
 		} else {
 			Console.WriteLine( "Compilation failed" );
+		}
+	}
+
+	void copyDirectory( string source, string destination ) {
+		// Get information about the source directory
+		var dir = new DirectoryInfo( source );
+
+		// Check if the source directory exists
+		if ( !dir.Exists )
+			throw new DirectoryNotFoundException( $"Source directory not found: {dir.FullName}" );
+
+		// Cache directories before we start copying
+		DirectoryInfo[] dirs = dir.GetDirectories();
+
+		// Create the destination directory
+		Directory.CreateDirectory( destination );
+
+		// Get the files in the source directory and copy to the destination directory
+		foreach ( FileInfo file in dir.GetFiles() ) {
+			string targetFilePath = Path.Combine( destination, file.Name );
+			file.CopyTo( targetFilePath, true );
+		}
+
+		// If recursive and copying subdirectories, recursively call this method
+		foreach ( DirectoryInfo subDir in dirs ) {
+			string newDestinationDir = Path.Combine( destination, subDir.Name );
+			copyDirectory( subDir.FullName, newDestinationDir );
 		}
 	}
 
@@ -203,10 +226,10 @@ partial class ProjectManager {
 			new( OutputKind.DynamicallyLinkedLibrary )
 		);
 
-		var buildDir = Path.Combine( ProjectPath, "build" );
-		Directory.CreateDirectory( buildDir );
+		var exportDir = Path.Combine( ProjectPath, "export" );
+		Directory.CreateDirectory( exportDir );
 
-		var gameDllPath = Path.Combine( buildDir, "game.dll" );
+		var gameDllPath = Path.Combine( exportDir, "game.dll" );
 
 		var result = compilation.Emit( gameDllPath );
 		result.Diagnostics.ToList().ForEach( d => Console.WriteLine( d ) );
