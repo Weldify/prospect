@@ -16,6 +16,13 @@ partial class ProjectManager {
 	string _projectCreateDir = "";
 	string _projectCreateName = "";
 
+	string[] _comboPlatforms = new[] { "win-x64", "linux-x64" };
+	string _comboCurrentPlatform = "";
+
+	public ProjectManager() {
+		_comboCurrentPlatform = _comboPlatforms[0];
+	}
+
 	public void TryRestoreProject( string path ) {
 		if ( !Directory.Exists( path ) ) return;
 
@@ -76,8 +83,7 @@ partial class ProjectManager {
 		ImGui.Button( "Run" );
 		ImGui.SameLine( 0f, 4f );
 
-		if ( ImGui.Button( "Export" ) )
-			exportProject();
+		drawExport();
 
 		ImGui.SameLine( 0, 4 );
 
@@ -85,6 +91,34 @@ partial class ProjectManager {
 			closeProject();
 
 		ImGui.Separator();
+	}
+
+	void drawExport() {
+		// Open export popup when we click export
+		if ( ImGui.Button( "Export" ) )
+			ImGui.OpenPopup( "ExportPopup" );
+
+		if ( ImGui.BeginPopup( "ExportPopup" ) ) {
+			// Draw platform selection
+			if ( ImGui.BeginCombo( "Platform", _comboCurrentPlatform ) ) {
+				foreach ( var platform in _comboPlatforms ) {
+					var isSelected = platform == _comboCurrentPlatform;
+
+					if ( ImGui.Selectable( platform, isSelected ) )
+						_comboCurrentPlatform = platform;
+
+					if ( isSelected )
+						ImGui.SetItemDefaultFocus();
+				}
+
+				ImGui.EndCombo();
+			}
+
+			if ( ImGui.Button( "Export" ) )
+				exportProject();
+
+			ImGui.EndPopup();
+		}
 	}
 
 	void createProject( string parentPath, string title ) {
@@ -129,7 +163,6 @@ partial class ProjectManager {
 
 	void exportProject() {
 		compileProject();
-		Console.WriteLine( "Exported" );
 	}
 
 	void compileProject() {
@@ -167,7 +200,6 @@ partial class ProjectManager {
 		Directory.CreateDirectory( buildDir );
 
 		var result = compilation.Emit( Path.Combine( buildDir, "game.dll" ) );
-
 		result.Diagnostics.ToList().ForEach( d => Console.WriteLine( d ) );
 	}
 
