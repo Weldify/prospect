@@ -108,8 +108,10 @@ partial class ProjectManager {
 			//	ImGui.EndCombo();
 			//}
 
-			if ( ImGui.Button( "Export" ) )
+			if ( ImGui.Button( "Export" ) ) {
+				ImGui.CloseCurrentPopup();
 				exportProject();
+			}
 
 			ImGui.EndPopup();
 		}
