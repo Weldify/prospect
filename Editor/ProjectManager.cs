@@ -140,7 +140,8 @@ partial class ProjectManager {
 		_project = Resources.GetOrCreate<Project>( projectFilePath );
 		ProjectPath = path;
 
-		regenerateCsproj();
+		regenerateCsproj( _project );
+		regenerateEditorConfig();
 	}
 
 	void closeProject() {
@@ -249,11 +250,14 @@ partial class ProjectManager {
 		return Directory.GetFiles( codeFolderPath, "**.cs" );
 	}
 
-	void regenerateCsproj() {
-		if ( _project is null ) return;
-
-		var csprojPath = Path.Combine( ProjectPath, $"{_project.Title}.csproj" );
+	void regenerateCsproj( Project project ) {
+		var csprojPath = Path.Combine( ProjectPath, $"{project.Title}.csproj" );
 		File.WriteAllText( csprojPath, generateCsprojContents() );
+	}
+
+	void regenerateEditorConfig() {
+		// Currently I just yoink this from the engine, probably not a good idea
+		File.Copy( "../../../../.editorconfig", Path.Combine( ProjectPath, ".editorconfig" ), true );
 	}
 
 	string generateCsprojContents() {
