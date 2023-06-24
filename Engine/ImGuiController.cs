@@ -10,8 +10,6 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 
-using ImGuiNative = ImGuiNET.ImGui;
-
 namespace Prospect.Engine;
 
 public class ImGuiController : IDisposable {
@@ -50,10 +48,10 @@ public class ImGuiController : IDisposable {
 
 		_khrDebugAvailable = (major == 4 && minor >= 3) || isExtensionSupported( "KHR_debug" );
 
-		IntPtr context = ImGuiNative.CreateContext();
-		ImGuiNative.SetCurrentContext( context );
+		IntPtr context = ImGui.CreateContext();
+		ImGui.SetCurrentContext( context );
 
-		var io = ImGuiNative.GetIO();
+		var io = ImGui.GetIO();
 		io.BackendFlags |= ImGuiBackendFlags.RendererHasVtxOffset;
 		io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
 
@@ -64,7 +62,7 @@ public class ImGuiController : IDisposable {
 
 		setPerFrameImGuiData( 1f / 60f );
 
-		ImGuiNative.NewFrame();
+		ImGui.NewFrame();
 		_frameBegun = true;
 	}
 
@@ -154,7 +152,7 @@ void main()
 	/// Recreates the device texture used to render text.
 	/// </summary>
 	public void RecreateFontDeviceTexture() {
-		ImGuiIOPtr io = ImGuiNative.GetIO();
+		ImGuiIOPtr io = ImGui.GetIO();
 		io.Fonts.GetTexDataAsRGBA32( out IntPtr pixels, out int width, out int height, out int bytesPerPixel );
 
 		int mips = (int)Math.Floor( Math.Log( Math.Max( width, height ), 2 ) );
@@ -193,9 +191,9 @@ void main()
 	/// Renders the ImGui draw list data.
 	/// </summary>
 	public void End() {
-		ImGuiNative.EndFrame();
-		ImGuiNative.Render();
-		renderImDrawData( ImGuiNative.GetDrawData() );
+		ImGui.EndFrame();
+		ImGui.Render();
+		renderImDrawData( ImGui.GetDrawData() );
 	}
 
 	/// <summary>
@@ -205,7 +203,7 @@ void main()
 		setPerFrameImGuiData( deltaSeconds );
 		updateImGuiInput( wnd );
 
-		ImGuiNative.NewFrame();
+		ImGui.NewFrame();
 	}
 
 	/// <summary>
@@ -213,7 +211,7 @@ void main()
 	/// This is called by Update(float).
 	/// </summary>
 	void setPerFrameImGuiData( float deltaSeconds ) {
-		ImGuiIOPtr io = ImGuiNative.GetIO();
+		ImGuiIOPtr io = ImGui.GetIO();
 		io.DisplaySize = new System.Numerics.Vector2(
 			_windowWidth / _scaleFactor.X,
 			_windowHeight / _scaleFactor.Y );
@@ -224,7 +222,7 @@ void main()
 	readonly List<char> PressedChars = new();
 
 	void updateImGuiInput( GameWindow wnd ) {
-		ImGuiIOPtr io = ImGuiNative.GetIO();
+		ImGuiIOPtr io = ImGui.GetIO();
 
 		MouseState MouseState = wnd.MouseState;
 		KeyboardState KeyboardState = wnd.KeyboardState;
@@ -260,14 +258,14 @@ void main()
 	}
 
 	internal void MouseScroll( Vector2 offset ) {
-		ImGuiIOPtr io = ImGuiNative.GetIO();
+		ImGuiIOPtr io = ImGui.GetIO();
 
 		io.MouseWheel = offset.Y;
 		io.MouseWheelH = offset.X;
 	}
 
 	static void setKeyMappings() {
-		ImGuiIOPtr io = ImGuiNative.GetIO();
+		ImGuiIOPtr io = ImGui.GetIO();
 		io.KeyMap[(int)ImGuiKey.Tab] = (int)Keys.Tab;
 		io.KeyMap[(int)ImGuiKey.LeftArrow] = (int)Keys.Left;
 		io.KeyMap[(int)ImGuiKey.RightArrow] = (int)Keys.Right;
@@ -346,7 +344,7 @@ void main()
 		}
 
 		// Setup orthographic projection matrix into our constant buffer
-		ImGuiIOPtr io = ImGuiNative.GetIO();
+		ImGuiIOPtr io = ImGui.GetIO();
 		Matrix4 mvp = Matrix4.CreateOrthographicOffCenter(
 			0.0f,
 			io.DisplaySize.X,

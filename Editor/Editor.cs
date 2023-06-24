@@ -6,6 +6,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using System.Numerics;
 using System.IO;
 
+using ImGuiNET;
+
 using Prospect.Engine;
 using Microsoft.CodeAnalysis;
 
@@ -91,7 +93,7 @@ partial class Editor : IGame {
 	}
 
 	void drawProjectInfo( Project proj ) {
-		ImGui.TextColored( proj.Title, new Vector4( 1f, 1f, 0f, 1f ) );
+		ImGui.TextColored( new Vector4( 1f, 1f, 0f, 1f ), proj.Title );
 		ImGui.Button( "Options" );
 		ImGui.SameLine( 0f, 4f );
 		ImGui.Button( "Run" );
@@ -152,6 +154,7 @@ partial class Editor : IGame {
 
   <ItemGroup>
     <Reference Include=""{Path.GetFullPath( "Prospect.Engine.dll" )}"" />
+	<Reference Include=""{Path.GetFullPath( "ImGui.NET.dll" )}"" />
   </ItemGroup>
 </Project>
 ";
@@ -194,7 +197,8 @@ partial class Editor : IGame {
 
 		// TODO: PLEASE PLEASE PLEASE future weldify get rid of the magic code
 		List<MetadataReference> references = new() {
-			MetadataReference.CreateFromFile( "Prospect.Engine.dll" )
+			MetadataReference.CreateFromFile( "Prospect.Engine.dll" ),
+			MetadataReference.CreateFromFile( "ImGui.NET.dll" )
 		};
 
 		// The following references (most of them) are required for compilation to not shit itself!
