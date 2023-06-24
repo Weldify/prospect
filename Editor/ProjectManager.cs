@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Prospect.Engine;
 using System.IO;
 using System.Numerics;
+using Microsoft.CodeAnalysis.Emit;
 
 namespace Prospect.Editor;
 
@@ -162,10 +163,14 @@ partial class ProjectManager {
 	}
 
 	void exportProject() {
-		compileProject();
+		if ( compileProject() ) {
+			Console.WriteLine( "Compiled successfully!" );
+		} else {
+			Console.WriteLine( "Compilation failed" );
+		}
 	}
 
-	void compileProject() {
+	bool compileProject() {
 		string[] sourceFiles = getProjectCsFilePaths();
 
 		List<SyntaxTree> syntaxTrees = new();
@@ -175,8 +180,10 @@ partial class ProjectManager {
 			syntaxTrees.Add( tree );
 		}
 
-		if ( Directory.GetParent( typeof( object ).Assembly.Location )?.FullName is not string netCoreDir )
-			throw new Exception();
+		if ( Directory.GetParent( typeof( object ).Assembly.Location )?.FullName is not string netCoreDir ) {
+			Console.WriteLine( "Couldn't find NET core dir" );
+			return false;
+		}
 
 		// TODO: PLEASE PLEASE PLEASE future weldify get rid of the magic code
 		List<MetadataReference> references = new() {
@@ -199,8 +206,19 @@ partial class ProjectManager {
 		var buildDir = Path.Combine( ProjectPath, "build" );
 		Directory.CreateDirectory( buildDir );
 
-		var result = compilation.Emit( Path.Combine( buildDir, "game.dll" ) );
+		var gameDllPath = Path.Combine( buildDir, "game.dll" );
+
+		var result = compilation.Emit( gameDllPath );
 		result.Diagnostics.ToList().ForEach( d => Console.WriteLine( d ) );
+
+		// Success = good!
+		if ( result.Success )
+			return true;
+
+		// Clean up after fail
+		File.Delete( gameDllPath );
+
+		return false;
 	}
 
 	string[] getProjectCsFilePaths() {
