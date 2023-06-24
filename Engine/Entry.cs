@@ -23,7 +23,9 @@ public static partial class Entry {
 
 	public static void Run( Type t ) {
 		var gameInstance = Activator.CreateInstance( t );
+		Console.WriteLine( "Sex1" );
 		if ( gameInstance is not IGame game ) return;
+		Console.WriteLine( "Sex2" );
 
 		runGame( game );
 	}

@@ -2,6 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <BaseOutputPath>../build</BaseOutputPath>
+	<PublishSingleFile>true</PublishSingleFile>
     
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>

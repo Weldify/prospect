@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using System.Numerics;
 using System.IO;
 
-using ImGuiNET;
 using Prospect.Engine;
 using Microsoft.CodeAnalysis;
 
@@ -92,11 +91,11 @@ partial class Editor : IGame {
 	}
 
 	void drawProjectInfo( Project proj ) {
-		ImGui.TextColored( new Vector4( 1f, 1f, 0f, 1f ), proj.Title );
+		ImGui.TextColored( proj.Title, new Vector4( 1f, 1f, 0f, 1f ) );
 		ImGui.Button( "Options" );
-		ImGui.SameLine( 0, 4 );
+		ImGui.SameLine( 0f, 4f );
 		ImGui.Button( "Run" );
-		ImGui.SameLine( 0, 4 );
+		ImGui.SameLine( 0f, 4f );
 
 		if ( ImGui.Button( "Export" ) )
 			exportProject();
@@ -190,13 +189,18 @@ partial class Editor : IGame {
 			syntaxTrees.Add( tree );
 		}
 
+		if ( Directory.GetParent( typeof( object ).Assembly.Location )?.FullName is not string netCoreDir )
+			throw new Exception();
+
 		// TODO: PLEASE PLEASE PLEASE future weldify get rid of the magic code
 		List<MetadataReference> references = new() {
-			MetadataReference.CreateFromFile( typeof( object ).Assembly.Location ), // mscorlib
-			MetadataReference.CreateFromFile( typeof( SyntaxTree ).Assembly.Location ), // Code analysis
-			MetadataReference.CreateFromFile( typeof( CSharpSyntaxTree ).Assembly.Location ), // Cs code analysis
-			MetadataReference.CreateFromFile("Prospect.Engine.dll")
+			MetadataReference.CreateFromFile( "Prospect.Engine.dll" )
 		};
+
+		// The following references (most of them) are required for compilation to not shit itself!
+		foreach ( var file in _systemReferences ) {
+			references.Add( MetadataReference.CreateFromFile( Path.Combine( netCoreDir, file ) ) );
+		}
 
 		var compilation = CSharpCompilation.Create(
 			"game.dll",

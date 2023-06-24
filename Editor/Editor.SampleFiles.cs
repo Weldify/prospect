@@ -7,11 +7,11 @@ using Prospect.Engine;
 namespace YourGame;
 
 public class Game : IGame {
-	void Start() { }
-	void Shutdown() { }
+	public void Start() { }
+	public void Shutdown() { }
 
-	void Tick() { }
-	void Draw() { }
+	public void Tick() { }
+	public void Draw() { }
 }
 ";
 }
