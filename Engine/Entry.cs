@@ -15,8 +15,7 @@ namespace Prospect.Engine;
 
 public static partial class Entry {
 	internal static IGraphicsBackend Graphics { get; private set; } = null!;
-
-	static readonly List<IGame> _games = new();
+	static IGame? _game;
 
 	public static void Run<T>() where T : IGame, new() {
 		runGame( new T() );
@@ -30,17 +29,14 @@ public static partial class Entry {
 	}
 
 	static void runGame( IGame game ) {
-		bool isFirstGame = _games.Count == 0;
-		if ( isFirstGame )
-			Graphics = new OpenTk.GraphicsBackend();
-
-		game.Start();
-		_games.Add( game );
-
-		if ( !isFirstGame ) return;
+		Graphics = new OpenTk.GraphicsBackend();
 
 		Graphics.Window.DoUpdate = update;
 		Graphics.Window.DoRender = draw;
+
+		_game = game;
+		game.Start();
+
 
 		Graphics.RunLoop();
 
@@ -48,20 +44,15 @@ public static partial class Entry {
 	}
 
 	static void update( float delta ) {
-		foreach ( var game in _games )
-			game.Tick();
+		_game?.Tick();
 	}
 
 	static void draw() {
-		foreach ( var game in _games )
-			game.Draw();
+		_game?.Draw();
 	}
 
 	static void shutdown() {
-		for ( int i = _games.Count - 1; i >= 0; i-- ) {
-			_games[i].Shutdown();
-			_games.RemoveAt( i );
-		}
+		_game?.Shutdown();
 
 		Graphics.Dispose();
 	}
