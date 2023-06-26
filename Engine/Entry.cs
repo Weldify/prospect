@@ -39,20 +39,20 @@ public static partial class Entry {
 
 		if ( !isFirstGame ) return;
 
-		Graphics.Window.DoUpdate = Update;
-		Graphics.Window.DoRender = Draw;
+		Graphics.Window.DoUpdate = update;
+		Graphics.Window.DoRender = draw;
 
 		Graphics.RunLoop();
 
 		shutdown();
 	}
 
-	internal static void Update( float delta ) {
+	static void update( float delta ) {
 		foreach ( var game in _games )
 			game.Tick();
 	}
 
-	internal static void Draw() {
+	static void draw() {
 		foreach ( var game in _games )
 			game.Draw();
 	}

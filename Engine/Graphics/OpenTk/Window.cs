@@ -31,8 +31,7 @@ class Window : GameWindow, IWindow {
 
 	protected override void OnUpdateFrame( FrameEventArgs e ) {
 		base.OnUpdateFrame( e );
-
-		Entry.Update( (float)e.Time );
+		DoUpdate?.Invoke( (float)e.Time );
 	}
 
 	protected override void OnRenderFrame( FrameEventArgs e ) {
@@ -43,7 +42,7 @@ class Window : GameWindow, IWindow {
 		GL.ClearColor( new Color4( 0, 32, 48, 255 ) );
 		GL.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit );
 
-		Entry.Draw();
+		DoRender?.Invoke();
 
 		_imGuiController.End();
 		ImGuiController.CheckGLError( "End of frame" );
