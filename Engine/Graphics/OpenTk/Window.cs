@@ -1,17 +1,24 @@
-using ImGuiNET;
+﻿using OpenTK;
+using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 
-namespace Prospect.Engine;
+namespace Prospect.Engine.OpenTk;
 
-class MainWindow : GameWindow {
+class Window : GameWindow, IWindow {
 	readonly ImGuiController _imGuiController;
 
-	public MainWindow() : base(
+	public Action<float>? DoUpdate { get; set; }
+	public Action? DoRender { get; set; }
+
+	public Window() : base(
 		GameWindowSettings.Default, new() { WindowState = WindowState.Maximized, APIVersion = new( 3, 3 ), Vsync = VSyncMode.Off }
 	) {
+		UpdateFrequency = 30;
+		RenderFrequency = 30;
+
 		_imGuiController = new( ClientSize.X, ClientSize.Y );
 	}
 
@@ -53,4 +60,4 @@ class MainWindow : GameWindow {
 		base.OnMouseWheel( e );
 		_imGuiController.MouseScroll( e.Offset );
 	}
-}
+};

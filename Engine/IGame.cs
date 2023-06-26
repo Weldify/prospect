@@ -1,9 +1,9 @@
 namespace Prospect.Engine;
 
 public interface IGame {
-	public void Start() { }
-	public void Shutdown() { }
+	void Start() { }
+	void Shutdown() { }
 
-	public void Tick() { }
-	public void Draw() { }
+	void Tick() { }
+	void Draw() { }
 }

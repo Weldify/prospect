@@ -10,9 +10,9 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using System.Diagnostics;
 using ErrorCode = OpenTK.Graphics.OpenGL4.ErrorCode;
 
-namespace Prospect.Engine;
+namespace Prospect.Engine.OpenTk;
 
-public class ImGuiController : IDisposable {
+class ImGuiController : IDisposable {
 	private bool _frameBegun;
 
 	private int _vertexArray;

@@ -14,7 +14,8 @@ using OpenTK.Mathematics;
 namespace Prospect.Engine;
 
 public static partial class Entry {
-	internal static MainWindow Window = null!;
+	internal static IGraphicsBackend Graphics { get; private set; } = null!;
+
 	static readonly List<IGame> _games = new();
 
 	public static void Run<T>() where T : IGame, new() {
@@ -31,14 +32,17 @@ public static partial class Entry {
 	static void runGame( IGame game ) {
 		bool isFirstGame = _games.Count == 0;
 		if ( isFirstGame )
-			Window = new() { UpdateFrequency = 30, RenderFrequency = 30 };
+			Graphics = new OpenTk.GraphicsBackend();
 
 		game.Start();
 		_games.Add( game );
 
 		if ( !isFirstGame ) return;
 
-		Window.Run();
+		Graphics.Window.DoUpdate = Update;
+		Graphics.Window.DoRender = Draw;
+
+		Graphics.RunLoop();
 
 		shutdown();
 	}
@@ -58,5 +62,7 @@ public static partial class Entry {
 			_games[i].Shutdown();
 			_games.RemoveAt( i );
 		}
+
+		Graphics.Dispose();
 	}
 }
