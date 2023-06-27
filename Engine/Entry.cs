@@ -32,11 +32,10 @@ public static partial class Entry {
 		Graphics = new OpenTk.GraphicsBackend();
 
 		Graphics.Window.DoUpdate = update;
-		Graphics.Window.DoRender = draw;
+		Graphics.Window.DoRender = render;
 
 		_game = game;
 		game.Start();
-
 
 		Graphics.RunLoop();
 
@@ -47,8 +46,8 @@ public static partial class Entry {
 		_game?.Tick();
 	}
 
-	static void draw() {
-		_game?.Draw();
+	static void render() {
+		_game?.Render();
 	}
 
 	static void shutdown() {

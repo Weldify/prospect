@@ -5,5 +5,5 @@ public interface IGame {
 	void Shutdown() { }
 
 	void Tick() { }
-	void Draw() { }
+	void Render() { }
 }

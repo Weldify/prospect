@@ -1,4 +1,4 @@
-﻿namespace Prospect.Engine.OpenTk;
+﻿namespace Prospect.Engine.OpenGl;
 
 class GraphicsBackend : IGraphicsBackend {
 	public IWindow Window => _window;

@@ -31,7 +31,7 @@ partial class Editor : IGame {
 
 	}
 
-	public void Draw() {
+	public void Render() {
 		_projectManager.Draw();
 	}
 
