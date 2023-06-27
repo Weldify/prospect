@@ -1,24 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <BaseOutputPath>../build/engine</BaseOutputPath>
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<BaseOutputPath>../build/engine</BaseOutputPath>
 
-    <TargetFramework>net7.0</TargetFramework>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <ItemGroup>
-	<Compile Remove="bin/**" />
-	<EmbeddedResource Remove="bin/**" />
-    <None Remove="bin/**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="bin/**" />
+		<EmbeddedResource Remove="bin/**" />
+		<None Remove="bin/**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.7.7" />
+	<ItemGroup>
+		<!-- Graphics -->
+		<PackageReference Include="OpenTK" Version="4.7.7" />
 
-    <PackageReference Include="YamlDotNet" Version="13.1.1" />
-    <PackageReference Include="ImGui.NET" Version="1.89.5.2" />
-  </ItemGroup>
+		<PackageReference Include="Silk.NET.Windowing" Version="2.17.1" />
+		<PackageReference Include="Silk.NET.Input" Version="2.17.1" />
+		<PackageReference Include="Silk.NET.OpenGL" Version="2.17.1" />
+
+		<PackageReference Include="ImGui.NET" Version="1.89.5.2" />
+
+		<PackageReference Include="YamlDotNet" Version="13.1.1" />
+	</ItemGroup>
 </Project>
