@@ -30,6 +30,7 @@ partial class ProjectManager {
 			drawProjectInfo( proj );
 		else {
 			drawOpenProject();
+			ImGui.Separator();
 			drawCreateProject();
 		}
 
@@ -37,7 +38,6 @@ partial class ProjectManager {
 	}
 
 	void drawOpenProject() {
-		ImGui.SeparatorText( "Open" );
 		ImGui.InputText( ".proj file", ref _projectOpenPath, 64 );
 
 		var opening = ImGui.Button( "Open" );
@@ -48,7 +48,6 @@ partial class ProjectManager {
 	}
 
 	void drawCreateProject() {
-		ImGui.SeparatorText( "Create" );
 		ImGui.InputText( "parent dir", ref _projectCreateDir, 64 );
 		ImGui.InputText( "name", ref _projectCreateName, 64 );
 

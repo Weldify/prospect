@@ -39,7 +39,7 @@ class Window : GameWindow, IWindow {
 
 		_imGuiController.Begin( this, (float)e.Time );
 
-		GL.ClearColor( new Color4( 0, 32, 48, 255 ) );
+		GL.ClearColor( new Color4( 0, 0, 0, 255 ) );
 		GL.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit );
 
 		DoRender?.Invoke();

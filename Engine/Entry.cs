@@ -29,7 +29,7 @@ public static partial class Entry {
 	}
 
 	static void runGame( IGame game ) {
-		Graphics = new OpenTk.GraphicsBackend();
+		Graphics = new OpenGl.GraphicsBackend();
 
 		Graphics.Window.DoUpdate = update;
 		Graphics.Window.DoRender = render;
