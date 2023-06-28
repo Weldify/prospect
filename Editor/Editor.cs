@@ -33,6 +33,8 @@ partial class Editor : IGame {
 
 	public void Render() {
 		_projectManager.Draw();
+
+		Graphics.DrawThingamabob();
 	}
 
 	public void Shutdown() {

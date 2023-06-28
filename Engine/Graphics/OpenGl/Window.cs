@@ -15,11 +15,13 @@ class Window : IWindow, IDisposable {
 	public Action<float>? DoUpdate { get; set; }
 	public Action? DoRender { get; set; }
 
+	public event Action Load = () => { };
+
 	readonly Silk.NET.Windowing.IWindow _nativeWindow;
 
 	// These will never be null in _nativeWindow events
 	ImGuiController _imGuiController = null!;
-	GL _gl = null!;
+	public GL Gl = null!;
 	IInputContext _inputContext = null!;
 
 	public Window() {
@@ -35,16 +37,18 @@ class Window : IWindow, IDisposable {
 
 		_nativeWindow.Load += () => {
 			_imGuiController = new(
-				_gl = _nativeWindow.CreateOpenGL(),
+				Gl = _nativeWindow.CreateOpenGL(),
 				_nativeWindow,
 				_inputContext = _nativeWindow.CreateInput()
 			);
+
+			Load.Invoke();
 		};
 
 		_nativeWindow.Closing += () => {
 			_imGuiController?.Dispose();
 			_inputContext?.Dispose();
-			_gl?.Dispose();
+			Gl?.Dispose();
 		};
 
 		_nativeWindow.Update += delta => {
@@ -54,14 +58,14 @@ class Window : IWindow, IDisposable {
 		_nativeWindow.Render += delta => {
 			_imGuiController.Update( (float)delta );
 
-			_gl.ClearColor( Color.FromArgb( 255, 0, 0, 0 ) );
-			_gl.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit );
+			Gl.ClearColor( Color.FromArgb( 255, 0, 0, 0 ) );
+			Gl.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit );
 
 			DoRender?.Invoke();
 			_imGuiController.Render();
 		};
 
-		_nativeWindow.FramebufferResize += size => _gl.Viewport( size );
+		_nativeWindow.FramebufferResize += size => Gl.Viewport( size );
 	}
 
 	public void Run() => _nativeWindow.Run();

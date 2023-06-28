@@ -6,10 +6,6 @@ using System.Numerics;
 using System.Text;
 
 using ImGuiNET;
-using OpenTK.Windowing.Desktop;
-using OpenTK.Windowing.Common;
-using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 
 namespace Prospect.Engine;
 
