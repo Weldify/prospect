@@ -6,11 +6,11 @@ using System.Runtime.Intrinsics;
 using Prospect.Engine;
 using YamlDotNet.Core.Tokens;
 
-public readonly struct Rotation : IEquatable<Rotation> {
+public struct Rotation : IEquatable<Rotation> {
 	const float _SLERP_EPSILON = 1e-6f;
 
-	public static Rotation Identity => new( 0, 0, 0, 1 );
-	public static Rotation Zero => new( 0, 0, 0, 0 );
+	public static readonly Rotation Identity = new( 0, 0, 0, 1 );
+	public static readonly Rotation Zero = new( 0, 0, 0, 0 );
 
 	public static Rotation FromYawPitchRoll( float yaw, float pitch, float roll ) {
 		//  Roll first, about axis the object is facing, then
@@ -50,10 +50,10 @@ public readonly struct Rotation : IEquatable<Rotation> {
 		);
 	}
 
-	public readonly float X;
-	public readonly float Y;
-	public readonly float Z;
-	public readonly float W;
+	public float X;
+	public float Y;
+	public float Z;
+	public float W;
 
 	public Rotation Normal {
 		get {
@@ -89,6 +89,7 @@ public readonly struct Rotation : IEquatable<Rotation> {
 		Z = vectorPart.Z;
 		W = scalarPart;
 	}
+
 	public static Rotation operator /( Rotation r1, Rotation r2 ) {
 		float q1x = r1.X;
 		float q1y = r1.Y;
@@ -163,7 +164,7 @@ public readonly struct Rotation : IEquatable<Rotation> {
 	public static Rotation operator -( Rotation r1, Rotation r2 ) => new( r1.X - r2.X, r1.Y - r2.Y, r1.Z - r2.Z, r1.W - r2.W );
 	public static Rotation operator -( Rotation r ) => new( -r.X, -r.Y, -r.Z, -r.W );
 
-	public Rotation Concatenate( Rotation r ) {
+	public Rotation Concatenated( Rotation r ) {
 		// Concatenate rotation is actually q2 * q1 instead of q1 * q2.
 		// So that's why value2 goes q1 and value1 goes q2.
 		float q1x = r.X;
@@ -200,6 +201,8 @@ public readonly struct Rotation : IEquatable<Rotation> {
 
 	public override readonly string ToString() =>
 		$"{{X:{X} Y:{Y} Z:{Z} W:{W}}}";
+
+	public static implicit operator Quaternion( Rotation r ) => new( r.X, r.Y, r.Z, r.W );
 
 	public bool Equals( Rotation other ) => this == other;
 	public override bool Equals( [NotNullWhen( true )] object? obj ) => obj is Rotation other && this == other;

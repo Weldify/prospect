@@ -4,11 +4,11 @@ using System.Numerics;
 
 namespace Prospect.Engine;
 
-public readonly struct Vector2f : IEquatable<Vector2f> {
-	public static Vector2f Zero => new( 0f, 0f );
+public struct Vector2f : IEquatable<Vector2f> {
+	public static readonly Vector2f Zero = new( 0f, 0f );
 
-	public readonly float X = 0;
-	public readonly float Y = 0;
+	public float X = 0;
+	public float Y = 0;
 
 	public Vector2f( float x, float y ) {
 		X = x;

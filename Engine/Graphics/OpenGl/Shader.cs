@@ -1,5 +1,6 @@
 ﻿using Silk.NET.OpenGL;
 using System.IO;
+using System.Numerics;
 
 namespace Prospect.Engine.OpenGl;
 
@@ -38,24 +39,19 @@ sealed class Shader : IDisposable {
 		_gl.UseProgram( _handle );
 	}
 
-	//Uniforms are properties that applies to the entire geometry
-	public void SetUniform( string name, int value ) {
-		//Setting a uniform on a shader using a name.
-		int location = _gl.GetUniformLocation( _handle, name );
-		if ( location == -1 ) //If GetUniformLocation returns -1 the uniform is not found.
-		{
-			throw new Exception( $"{name} uniform not found on shader." );
-		}
-		_gl.Uniform1( location, value );
+	int getUniformLocation( string name ) {
+		var location = _gl.GetUniformLocation( _handle, name );
+		return location switch {
+			-1 => throw new Exception( $"{name} uniform not found on shader." ),
+			_ => location
+		};
 	}
 
-	public void SetUniform( string name, float value ) {
-		int location = _gl.GetUniformLocation( _handle, name );
-		if ( location == -1 ) {
-			throw new Exception( $"{name} uniform not found on shader." );
-		}
-		_gl.Uniform1( location, value );
-	}
+	//Uniforms are properties that applies to the entire geometry
+	public void SetUniform( string name, int value ) => _gl.Uniform1( getUniformLocation( name ), value );
+	public void SetUniform( string name, float value ) => _gl.Uniform1( getUniformLocation( name ), value );
+	public unsafe void SetUniform( string name, Matrix4x4 value ) =>
+		_gl.UniformMatrix4( getUniformLocation( name ), 1, false, (float*)&value );
 
 	public void Dispose() {
 		//Remember to delete the program when we are done.

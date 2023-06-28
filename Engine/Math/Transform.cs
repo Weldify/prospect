@@ -1,12 +1,41 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Silk.NET.Input;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace Prospect.Engine;
 
-public readonly struct Transform : IEquatable<Transform> {
-	public readonly Vector3f Position;
-	public readonly float Scale;
-	public readonly Rotation Rotation;
+public struct Transform : IEquatable<Transform> {
+	public static readonly Transform Zero = new();
+
+	public Vector3f Position;
+	public Rotation Rotation;
+	public float Scale;
+
+	public Matrix4x4 ViewMatrix => Matrix4x4.Identity * Matrix4x4.CreateFromQuaternion( Rotation ) * Matrix4x4.CreateScale( Scale ) * Matrix4x4.CreateTranslation( Position );
+
+	public Transform( Vector3f position, Rotation rotation, float scale ) {
+		Position = position;
+		Rotation = rotation;
+		Scale = scale;
+	}
+
+	public Transform( Vector3f position, Rotation rotation ) {
+		Position = position;
+		Rotation = rotation;
+		Scale = 1f;
+	}
+
+	public Transform( Vector3f position ) {
+		Position = position;
+		Rotation = Rotation.Identity;
+		Scale = 1f;
+	}
+
+	public Transform() {
+		Position = Vector3f.Zero;
+		Rotation = Rotation.Identity;
+		Scale = 1f;
+	}
 
 	public static bool operator ==( Transform t1, Transform t2 ) => t1.Position == t2.Position;
 	public static bool operator !=( Transform t1, Transform t2 ) => !(t1 == t2);

@@ -33,6 +33,7 @@ class GraphicsBackend : IGraphicsBackend {
 	VertexArrayObject<float, uint> _vao = null!;
 	Shader _shader = null!;
 	Texture _texture = null!;
+	Transform _transform = Transform.Zero;
 
 	public GraphicsBackend() {
 		_window = new();
@@ -80,13 +81,19 @@ class GraphicsBackend : IGraphicsBackend {
 		_gl.BlendFunc( BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha );
 	}
 
+	static float _speen = 0f;
+
 	public void DrawThingamabob() {
 		_vao.Bind();
 		_shader.Use();
 
 		_texture.Bind( TextureUnit.Texture0 );
 
+		_speen += 0.1f;
+		_transform.Rotation = Rotation.FromYawPitchRoll( _speen, 0f, 0f );
+
 		_shader.SetUniform( "uTexture", 0 );
+		_shader.SetUniform( "uViewMatrix", _transform.ViewMatrix );
 
 		unsafe {
 			_gl.DrawElements( PrimitiveType.Triangles, 15, DrawElementsType.UnsignedInt, (void*)0 );
