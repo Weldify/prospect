@@ -2,6 +2,7 @@
 using StbImageSharp;
 using System;
 using System.IO;
+using System.Numerics;
 
 namespace Prospect.Engine.OpenGl;
 
@@ -34,6 +35,8 @@ class GraphicsBackend : IGraphicsBackend {
 	Shader _shader = null!;
 	Texture _texture = null!;
 	Transform _transform = Transform.Zero;
+
+	Transform _camera = new( new( 0f, 0f, -1f ), Rotation.LookAt( new( 0f, 0f, -1f ), Vector3f.Zero ) );
 
 	public GraphicsBackend() {
 		_window = new();
@@ -89,11 +92,15 @@ class GraphicsBackend : IGraphicsBackend {
 
 		_texture.Bind( TextureUnit.Texture0 );
 
-		_speen += 0.1f;
+		_speen += 0.08f;
 		_transform.Rotation = Rotation.FromYawPitchRoll( _speen, 0f, 0f );
 
+		var projection = Matrix4x4.CreatePerspectiveFieldOfView( 70f.ToRadians(), _window.Size.Aspect, 0.1f, 100f );
+
 		_shader.SetUniform( "uTexture", 0 );
-		_shader.SetUniform( "uViewMatrix", _transform.ViewMatrix );
+		_shader.SetUniform( "uModel", _transform.ViewMatrix );
+		_shader.SetUniform( "uView", _camera.ViewMatrix );
+		_shader.SetUniform( "uProjection", projection );
 
 		unsafe {
 			_gl.DrawElements( PrimitiveType.Triangles, 15, DrawElementsType.UnsignedInt, (void*)0 );

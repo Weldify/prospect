@@ -1,3 +1,4 @@
+using Silk.NET.Maths;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
@@ -9,6 +10,8 @@ public struct Vector2i : IEquatable<Vector2i> {
 
 	public int X = 0;
 	public int Y = 0;
+
+	public float Aspect => X / Y;
 
 	public Vector2i( int x, int y ) {
 		X = x;
@@ -23,4 +26,5 @@ public struct Vector2i : IEquatable<Vector2i> {
 	public override int GetHashCode() => HashCode.Combine( X, Y );
 
 	public static implicit operator Vector2( Vector2i v ) => new( v.X, v.Y );
+	public static implicit operator Vector2D<int>( Vector2i v ) => new( v.X, v.Y );
 }

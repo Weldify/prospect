@@ -12,6 +12,11 @@ class Window : IWindow, IDisposable {
 		set => _nativeWindow.Title = value;
 	}
 
+	public Vector2i Size {
+		get => new( _nativeWindow.Size.X, _nativeWindow.Size.Y );
+		set => _nativeWindow.Size = value;
+	}
+
 	public Action<float>? DoUpdate { get; set; }
 	public Action? DoRender { get; set; }
 
@@ -27,8 +32,8 @@ class Window : IWindow, IDisposable {
 
 	public Window() {
 		WindowOptions options = WindowOptions.Default with {
-			UpdatesPerSecond = 30,
-			FramesPerSecond = 30,
+			UpdatesPerSecond = 165,
+			FramesPerSecond = 165,
 			VSync = false,
 
 			Title = "Prospect game"

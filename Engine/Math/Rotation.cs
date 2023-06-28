@@ -9,8 +9,26 @@ using YamlDotNet.Core.Tokens;
 public struct Rotation : IEquatable<Rotation> {
 	const float _SLERP_EPSILON = 1e-6f;
 
-	public static readonly Rotation Identity = new( 0, 0, 0, 1 );
-	public static readonly Rotation Zero = new( 0, 0, 0, 0 );
+	public static readonly Rotation Identity = new( 0f, 0f, 0f, 1f );
+	public static readonly Rotation Zero = new( 0f, 0f, 0f, 0f );
+
+	public static Rotation LookAt( Vector3f sourcePoint, Vector3f destPoint ) {
+		Vector3f forwardVector = (destPoint - sourcePoint).Normal;
+
+		float dot = Vector3.Dot( Vector3f.Forward, forwardVector );
+
+		if ( Math.Abs( dot - (-1.0f) ) < 0.000001f ) {
+			return new Rotation( Vector3f.Up.X, Vector3f.Up.Y, Vector3f.Up.Z, 3.1415926535897932f );
+		}
+		if ( Math.Abs( dot - (1.0f) ) < 0.000001f ) {
+			return Identity;
+		}
+
+		float rotAngle = (float)Math.Acos( dot );
+		Vector3f rotAxis = Vector3f.Forward.Cross( forwardVector );
+
+		return FromAxisAngle( rotAxis.Normal, rotAngle );
+	}
 
 	public static Rotation FromYawPitchRoll( float yaw, float pitch, float roll ) {
 		//  Roll first, about axis the object is facing, then
@@ -58,7 +76,7 @@ public struct Rotation : IEquatable<Rotation> {
 	public Rotation Normal {
 		get {
 			float ls = X * X + Y * Y + Z * Z + W * W;
-			float invNorm = 1.0f / MathF.Sqrt( ls );
+			float invNorm = 1f / MathF.Sqrt( ls );
 
 			return this * invNorm;
 		}
@@ -67,11 +85,29 @@ public struct Rotation : IEquatable<Rotation> {
 	public Rotation Inverse {
 		get {
 			float ls = X * X + Y * Y + Z * Z + W * W;
-			float invNorm = 1.0f / ls;
+			float invNorm = 1f / ls;
 
 			return Normal.Conjugate * invNorm;
 		}
 	}
+
+	public Vector3f Forward => new(
+		2f * (X * Z + W * Y),
+		2f * (Y * Z - W * X),
+		1f - 2f * (X * X + Y * Y)
+	);
+
+	public Vector3f Up => new(
+		2f * (X * Y + W * Z),
+		1f - 2f * (X * X + Z * Z),
+		2f * (Y * Z + W * X)
+	);
+
+	public Vector3f Right => new(
+		-(1f - 2f * (Y * Y + Z * Z)), // Negative because usually its Left. But Right is a cooler direction so fuck the world
+		2f * (X * Y + W * Z),
+		2f * (X * Z - W * Y)
+	);
 
 	public Rotation Conjugate => new( -X, -Y, -Z, W );
 	public float SquareLength => X * X + Y * Y + Z * Z + W * W;
@@ -100,7 +136,7 @@ public struct Rotation : IEquatable<Rotation> {
 		// Inverse part.
 		float ls = r2.X * r2.X + r2.Y * r2.Y +
 				   r2.Z * r2.Z + r2.W * r2.W;
-		float invNorm = 1.0f / ls;
+		float invNorm = 1f / ls;
 
 		float q2x = -r2.X * invNorm;
 		float q2y = -r2.Y * invNorm;
