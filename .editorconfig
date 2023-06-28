@@ -54,13 +54,25 @@ dotnet_naming_rule.private_field_rules.severity = warning
 # Const must be full uppercase
 dotnet_naming_rule.const_must_be_uppercase.symbols = const_uppercase
 dotnet_naming_symbols.const_uppercase.applicable_kinds = *
-dotnet_naming_symbols.const_uppercase.applicable_accessibilities = *
+dotnet_naming_symbols.const_uppercase.applicable_accessibilities = public,protected,internal
 dotnet_naming_symbols.const_uppercase.required_modifiers = const
 
 dotnet_naming_rule.const_must_be_uppercase.style = const_set_to_uppercase
 dotnet_naming_style.const_set_to_uppercase.capitalization = all_upper
 
 dotnet_naming_rule.const_must_be_uppercase.severity = warning
+
+# private const must be underscored
+dotnet_naming_rule.private_const_must_be_underscored.symbols = private_const
+dotnet_naming_symbols.private_const.applicable_kinds = *
+dotnet_naming_symbols.private_const.applicable_accessibilities = private
+dotnet_naming_symbols.private_const.required_modifiers = const
+
+dotnet_naming_rule.private_const_must_be_underscored.style = const_set_to_uppercase_underscored
+dotnet_naming_style.const_set_to_uppercase_underscored.capitalization = all_upper
+dotnet_naming_style.const_set_to_uppercase_underscored.required_prefix = _
+
+dotnet_naming_rule.private_const_must_be_underscored.severity = warning
 
 # Expression-bodied members
 csharp_style_expression_bodied_accessors = true:silent

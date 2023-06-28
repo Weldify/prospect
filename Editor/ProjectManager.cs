@@ -210,10 +210,9 @@ partial class ProjectManager {
 			return false;
 		}
 
-		// TODO: PLEASE PLEASE PLEASE future weldify get rid of the magic code
 		List<MetadataReference> references = new() {
 			MetadataReference.CreateFromFile( "Prospect.Engine.dll" ),
-			MetadataReference.CreateFromFile( "ImGui.NET.dll" )
+			MetadataReference.CreateFromFile( "ImGui.NET.dll" ),
 		};
 
 		// The following references (most of them) are required for compilation to not shit itself!

@@ -11,6 +11,6 @@ public class Game : IGame {
 	public void Shutdown() { }
 
 	public void Tick() { }
-	public void Draw() { }
+	public void Render() { }
 }";
 }
