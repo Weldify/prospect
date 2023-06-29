@@ -5,7 +5,7 @@ using AssMesh = Silk.NET.Assimp.Mesh;
 
 namespace Prospect.Engine.OpenGl;
 
-class Model : IDisposable {
+class Model : IModel, IDisposable {
 	public IReadOnlyList<Mesh> Meshes => _meshes;
 
 	readonly GL _gl;

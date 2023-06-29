@@ -10,8 +10,15 @@ using ImGuiNET;
 namespace Prospect.Engine;
 
 public static partial class Entry {
-	internal static IGraphicsBackend Graphics { get; private set; } = null!;
+	internal static IGraphicsBackend Graphics { get; private set; }
 	static IGame? _game;
+
+	static Entry() {
+		Graphics = new OpenGl.GraphicsBackend();
+
+		Graphics.Window.DoUpdate = update;
+		Graphics.OnRender = render;
+	}
 
 	public static void Run<T>() where T : IGame, new() {
 		runGame( new T() );
@@ -25,11 +32,6 @@ public static partial class Entry {
 	}
 
 	static void runGame( IGame game ) {
-		Graphics = new OpenGl.GraphicsBackend();
-
-		Graphics.Window.DoUpdate = update;
-		Graphics.OnRender = render;
-
 		_game = game;
 		game.Start();
 

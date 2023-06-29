@@ -32,10 +32,7 @@ class GraphicsBackend : IGraphicsBackend {
 	readonly Window _window;
 
 	GL _gl = null!;
-	Model _arcModel;
 	Shader _shader = null!;
-	Texture _texture = null!;
-	Transform _transform = Transform.Zero;
 
 	public GraphicsBackend() {
 		_window = new();
@@ -43,8 +40,35 @@ class GraphicsBackend : IGraphicsBackend {
 		_window.DoRender += doRender;
 	}
 
+	public IModel LoadModel( string path, ITexture texture ) {
+		var tex = texture as Texture ?? throw new Exception( "Booboo exception" );
+		return new Model( _gl, path, tex );
+	}
+
+	public ITexture LoadTexture( string path ) {
+		return new Texture( _gl, path );
+	}
+
 	public void RunLoop() {
 		_window.Run();
+	}
+
+	public void DrawModel( Engine.Model model, Transform transform ) {
+		_shader.Use();
+		_shader.SetUniform( "uTexture", 0 );
+		_shader.SetUniform( "uTransform", transform.ViewMatrix );
+		_shader.SetUniform( "uView", _currentView );
+		_shader.SetUniform( "uProjection", _currentProjection );
+
+		var backendModel = model.BackendModel as Model ?? throw new Exception( "Bad" );
+
+		foreach ( var mesh in backendModel.Meshes ) {
+			mesh.Bind();
+
+			unsafe {
+				_gl.DrawElements( PrimitiveType.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, null );
+			}
+		}
 	}
 
 	public void Dispose() {
@@ -53,12 +77,7 @@ class GraphicsBackend : IGraphicsBackend {
 
 	void onLoad() {
 		_gl = _window.Gl;
-
-		_arcModel = new( _gl, "C:\\Users\\ian\\Documents\\Models\\prospect\\prospect.glb", new( _gl, "C:\\Users\\ian\\Documents\\Models\\prospect\\prospect.png" ) );
-		_transform.Rotation = Rotation.FromYawPitchRoll( 0f, 90f, 0f );
-
 		_shader = new Shader( _gl, Shaders.VERTEX_SOURCE, Shaders.FRAGMENT_SOURCE );
-		_texture = new Texture( _gl, "arcicon.png" );
 
 		// Better blending of texture edges or some shit
 		_gl.Enable( EnableCap.Blend );
@@ -76,30 +95,5 @@ class GraphicsBackend : IGraphicsBackend {
 		_gl.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit );
 
 		OnRender.Invoke();
-	}
-
-	static float _speen = 0f;
-
-	public void DrawThingamabob() {
-		_speen += 0.01f;
-		_transform.Rotation = Rotation.FromYawPitchRoll( 0f, 90f, _speen );
-
-		drawModel( _arcModel );
-	}
-
-	void drawModel( Model model ) {
-		_shader.Use();
-		_shader.SetUniform( "uTexture", 0 );
-		_shader.SetUniform( "uTransform", _transform.ViewMatrix );
-		_shader.SetUniform( "uView", _currentView );
-		_shader.SetUniform( "uProjection", _currentProjection );
-
-		foreach ( var mesh in model.Meshes ) {
-			mesh.Bind();
-
-			unsafe {
-				_gl.DrawElements( PrimitiveType.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, null );
-			}
-		}
 	}
 }

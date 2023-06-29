@@ -31,10 +31,14 @@ partial class Editor : IGame {
 
 	}
 
+	Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/prospect/prospect.mdl" );
+	float _speen = 0f;
+
 	public void Render() {
 		_projectManager.Draw();
+		_speen += 0.01f;
 
-		Graphics.DrawThingamabob();
+		Graphics.DrawModel( _prospectIcon, new Transform( Vector3f.Zero, Rotation.FromYawPitchRoll( 0f, 90f, _speen ) ) );
 	}
 
 	public void Shutdown() {

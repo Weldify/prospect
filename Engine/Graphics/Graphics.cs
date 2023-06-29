@@ -6,5 +6,5 @@ public static class Graphics {
 		set => Entry.Graphics.PolygonMode = value;
 	}
 
-	public static void DrawThingamabob() => Entry.Graphics.DrawThingamabob();
+	public static void DrawModel( Model model, Transform transform ) => Entry.Graphics.DrawModel( model, transform );
 }

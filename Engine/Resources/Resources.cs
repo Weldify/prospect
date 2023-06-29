@@ -10,6 +10,7 @@ public static class Resources {
 	readonly static ISerializer _serializer =
 		new SerializerBuilder()
 		.WithNamingConvention( PascalCaseNamingConvention.Instance )
+		.WithIndentedSequences()
 		.Build();
 
 	readonly static IDeserializer _deserializer =

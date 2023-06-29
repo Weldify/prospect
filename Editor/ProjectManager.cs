@@ -213,6 +213,7 @@ partial class ProjectManager {
 		List<MetadataReference> references = new() {
 			MetadataReference.CreateFromFile( "Prospect.Engine.dll" ),
 			MetadataReference.CreateFromFile( "ImGui.NET.dll" ),
+			MetadataReference.CreateFromFile( "YamlDotNet.dll" ),
 		};
 
 		// The following references (most of them) are required for compilation to not shit itself!
@@ -272,6 +273,7 @@ partial class ProjectManager {
   <ItemGroup>
     <Reference Include=""{Path.GetFullPath( "Prospect.Engine.dll" )}"" />
 	<Reference Include=""{Path.GetFullPath( "ImGui.NET.dll" )}"" />
+	<Reference Include=""{Path.GetFullPath( "YamlDotNet.dll" )}"" />
   </ItemGroup>
 </Project>
 ";

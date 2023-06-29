@@ -1,4 +1,5 @@
 using Prospect.Engine;
+using YamlDotNet.Serialization;
 
 namespace Prospect.Editor;
 

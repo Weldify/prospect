@@ -4,7 +4,7 @@ using System.IO;
 
 namespace Prospect.Engine.OpenGl;
 
-public sealed class Texture : IDisposable {
+public sealed class Texture : ITexture, IDisposable {
 	readonly uint _handle;
 	readonly GL _gl;
 

@@ -6,7 +6,10 @@ interface IGraphicsBackend : IDisposable {
 
 	Action OnRender { set; }
 
+	IModel LoadModel( string path, ITexture texture );
+	ITexture LoadTexture( string path );
+
 	void RunLoop();
 
-	void DrawThingamabob();
+	void DrawModel( Model model, Transform transform );
 }
