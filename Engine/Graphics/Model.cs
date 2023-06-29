@@ -1,29 +1,53 @@
-﻿namespace Prospect.Engine;
+﻿using Prospect.Engine.OpenGl;
 
-public sealed class Model {
-	readonly static Dictionary<string, Model> _cache = new();
+namespace Prospect.Engine;
 
-	internal readonly IModel BackendModel;
-	internal readonly ITexture BackendTexture;
+public sealed class Model : IPreloadable {
+	internal readonly static Dictionary<string, Model> Cache = new();
 
-	Model( IModel model, ITexture texture ) {
-		BackendModel = model;
-		BackendTexture = texture;
-	}
+	internal IModel BackendModel { get; private set; } = null!;
+	internal ITexture BackendTexture { get; private set; } = null!;
+
+	// When we replace unready models, we use this
+	ModelResource _preset = null!;
+	bool _isReady = false;
+
+	// Mark the constructor as private, prevent instantiation!
+	Model() { }
 
 	public static Model Load( string path ) {
-		if ( _cache.TryGetValue( path, out var mdl ) )
+		if ( Cache.TryGetValue( path, out var mdl ) )
 			return mdl;
 
 		if ( Resources.Get<ModelResource>( path ) is not ModelResource res )
 			throw new Exception( "Model ain't there pal" );
 
+		Model model = new() {
+			_preset = res,
+			_isReady = true,
+		};
+
+		if ( !Entry.Graphics.IsReady )
+			model._isReady = false;
+		else
+			model.UpdateFromResource( res );
+
+		Cache[path] = model;
+		return model;
+	}
+
+	internal void UpdateFromResource( ModelResource res ) {
 		var texture = Entry.Graphics.LoadTexture( res.TexturePath );
 		var backendMesh = Entry.Graphics.LoadModel( res.MeshPath, texture );
 
-		Model model = new( backendMesh, texture );
-		_cache[path] = model;
+		BackendModel = backendMesh;
+		BackendTexture = texture;
+	}
 
-		return model;
+	void IPreloadable.Ready() {
+		if ( _isReady ) return;
+		_isReady = true;
+
+		UpdateFromResource( _preset );
 	}
 }

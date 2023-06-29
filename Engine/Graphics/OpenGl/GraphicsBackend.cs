@@ -27,6 +27,9 @@ class GraphicsBackend : IGraphicsBackend {
 	}
 
 	public Action OnRender { private get; set; } = () => { };
+	public Action OnLoad { private get; set; } = () => { };
+
+	public bool IsReady { get; private set; } = false;
 
 	PolygonMode _polygonMode;
 	readonly Window _window;
@@ -82,6 +85,10 @@ class GraphicsBackend : IGraphicsBackend {
 		// Better blending of texture edges or some shit
 		_gl.Enable( EnableCap.Blend );
 		_gl.BlendFunc( BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha );
+
+		IsReady = true;
+
+		OnLoad.Invoke();
 	}
 
 	Matrix4x4 _currentProjection;

@@ -14,10 +14,11 @@ public static partial class Entry {
 	static IGame? _game;
 
 	static Entry() {
-		Graphics = new OpenGl.GraphicsBackend();
-
+		Graphics = new OpenGl.GraphicsBackend {
+			OnLoad = onGraphicsLoaded,
+			OnRender = render
+		};
 		Graphics.Window.DoUpdate = update;
-		Graphics.OnRender = render;
 	}
 
 	public static void Run<T>() where T : IGame, new() {
@@ -38,6 +39,11 @@ public static partial class Entry {
 		Graphics.RunLoop();
 
 		shutdown();
+	}
+
+	static void onGraphicsLoaded() {
+		foreach ( var (_, model) in Model.Cache )
+			(model as IPreloadable).Ready();
 	}
 
 	static void update( float delta ) {

@@ -36,7 +36,7 @@ partial class Editor : IGame {
 
 	public void Render() {
 		_projectManager.Draw();
-		_speen += 0.01f;
+		_speen += 0.005f;
 
 		Graphics.DrawModel( _prospectIcon, new Transform( Vector3f.Zero, Rotation.FromYawPitchRoll( 0f, 90f, _speen ) ) );
 	}
