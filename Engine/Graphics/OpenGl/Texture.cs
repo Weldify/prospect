@@ -2,7 +2,7 @@
 using StbImageSharp;
 using System.IO;
 
-namespace Prospect.Engine.OpenGl;
+namespace Prospect.Engine.OpenGL;
 
 public sealed class Texture : ITexture, IDisposable {
 	readonly uint _handle;

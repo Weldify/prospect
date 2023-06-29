@@ -1,6 +1,6 @@
 ﻿using Silk.NET.OpenGL;
 
-namespace Prospect.Engine.OpenGl;
+namespace Prospect.Engine.OpenGL;
 
 sealed class VertexArrayObject<VertexType, IndexType> : IDisposable
 	where VertexType : unmanaged

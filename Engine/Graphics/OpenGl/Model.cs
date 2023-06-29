@@ -3,7 +3,7 @@ using Silk.NET.OpenGL;
 
 using AssMesh = Silk.NET.Assimp.Mesh;
 
-namespace Prospect.Engine.OpenGl;
+namespace Prospect.Engine.OpenGL;
 
 class Model : IModel, IDisposable {
 	public IReadOnlyList<Mesh> Meshes => _meshes;

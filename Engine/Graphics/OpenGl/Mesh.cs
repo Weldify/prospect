@@ -1,6 +1,6 @@
 ﻿using Silk.NET.OpenGL;
 
-namespace Prospect.Engine.OpenGl;
+namespace Prospect.Engine.OpenGL;
 
 class Mesh : IDisposable {
 	public readonly uint VertexCount;

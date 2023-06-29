@@ -20,7 +20,7 @@
 		<PackageReference Include="Silk.NET.Windowing" Version="2.17.1" />
 		<PackageReference Include="Silk.NET.Input" Version="2.17.1" />
 		<PackageReference Include="Silk.NET.OpenGL" Version="2.17.1" />
-		<PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.17.1" /> <!-- ImGui.NET Silk.OpenGl backend integration -->
+		<PackageReference Include="Silk.NET.OpenGL.Extensions.ImGui" Version="2.17.1" /> <!-- ImGui.NET Silk.OpenGL backend integration -->
 
 		<!-- Parsing -->
 		<PackageReference Include="Silk.NET.Assimp" Version="2.17.1" /> <!-- Parsing 3D models -->

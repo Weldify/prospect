@@ -14,7 +14,7 @@ public static partial class Entry {
 	static IGame? _game;
 
 	static Entry() {
-		Graphics = new OpenGl.GraphicsBackend {
+		Graphics = new OpenGL.GraphicsBackend {
 			OnLoad = onGraphicsLoaded,
 			OnRender = render
 		};

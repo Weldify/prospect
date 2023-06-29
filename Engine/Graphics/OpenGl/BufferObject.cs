@@ -1,6 +1,6 @@
 ﻿using Silk.NET.OpenGL;
 
-namespace Prospect.Engine.OpenGl;
+namespace Prospect.Engine.OpenGL;
 
 sealed class BufferObject<DataType> : IDisposable where DataType : unmanaged {
 	readonly uint _handle;

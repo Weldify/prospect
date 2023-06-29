@@ -2,7 +2,7 @@
 using System.IO;
 using System.Numerics;
 
-namespace Prospect.Engine.OpenGl;
+namespace Prospect.Engine.OpenGL;
 
 sealed class Shader : IDisposable {
 	//Our handle and the GL instance this class will use, these are private because they have no reason to be public.

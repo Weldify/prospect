@@ -5,7 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Numerics;
 
-namespace Prospect.Engine.OpenGl;
+namespace Prospect.Engine.OpenGL;
 
 class GraphicsBackend : IGraphicsBackend {
 	public IWindow Window => _window;

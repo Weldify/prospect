@@ -1,4 +1,4 @@
-﻿namespace Prospect.Engine.OpenGl;
+﻿namespace Prospect.Engine.OpenGL;
 
 struct Vertex {
 	public const uint MAX_BONE_INFLUENCE = 4;

@@ -4,7 +4,7 @@ using Silk.NET.OpenGL.Extensions.ImGui;
 using Silk.NET.Windowing;
 using System.Drawing;
 
-namespace Prospect.Engine.OpenGl;
+namespace Prospect.Engine.OpenGL;
 
 class Window : IWindow, IDisposable {
 	public string Title {

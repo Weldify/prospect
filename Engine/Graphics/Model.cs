@@ -1,4 +1,4 @@
-﻿using Prospect.Engine.OpenGl;
+﻿using Prospect.Engine.OpenGL;
 
 namespace Prospect.Engine;
 

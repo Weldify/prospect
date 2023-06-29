@@ -1,4 +1,4 @@
-﻿namespace Prospect.Engine.OpenGl;
+﻿namespace Prospect.Engine.OpenGL;
 
 static class Shaders {
 	public const string VERTEX_SOURCE =
