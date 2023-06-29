@@ -20,6 +20,10 @@ partial class Editor : IGame {
 
 	static void Main() => Entry.Run<Editor>();
 
+	public GameOptions Options => GameOptions.Default with {
+		TickRate = 60
+	};
+
 	public void Start() {
 		Window.Title = "Prospect Editor";
 
@@ -27,9 +31,7 @@ partial class Editor : IGame {
 		_projectManager.TryRestoreProject( _settings.LastProjectPath );
 	}
 
-	public void Tick() {
-
-	}
+	public void Tick() { }
 
 	//readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
 	float _speen = 0f;
