@@ -28,7 +28,11 @@ partial class Editor : IGame {
 	}
 
 	public void Tick() {
+		TimeSince poop = 0f;
 
+		if ( poop > 1f ) {
+
+		}
 	}
 
 	//readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
