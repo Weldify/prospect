@@ -32,9 +32,7 @@ class GraphicsBackend : IGraphicsBackend {
 	readonly Window _window;
 
 	GL _gl = null!;
-	BufferObject<float> _vbo = null!;
-	BufferObject<uint> _ebo = null!;
-	VertexArrayObject<float, uint> _vao = null!;
+	Mesh arcMesh;
 	Shader _shader = null!;
 	Texture _texture = null!;
 	Transform _transform = Transform.Zero;
@@ -71,12 +69,7 @@ class GraphicsBackend : IGraphicsBackend {
 			3u, 2u, 4u
 		};
 
-		_vbo = new( _gl, BufferTargetARB.ArrayBuffer, vertices );
-		_ebo = new( _gl, BufferTargetARB.ElementArrayBuffer, indices );
-		_vao = new( _gl, _vbo, _ebo );
-
-		_vao.SetVertexAttributePointer( 0, 3, VertexAttribPointerType.Float, 5, 0 );
-		_vao.SetVertexAttributePointer( 1, 2, VertexAttribPointerType.Float, 5, 3 );
+		arcMesh = new( _gl, vertices, indices );
 
 		_shader = new Shader( _gl, Shaders.VERTEX_SOURCE, Shaders.FRAGMENT_SOURCE );
 		_texture = new Texture( _gl, "arcicon.png" );
@@ -102,14 +95,13 @@ class GraphicsBackend : IGraphicsBackend {
 	static float _speen = 0f;
 
 	public void DrawThingamabob() {
-		_vao.Bind();
-		_shader.Use();
-
-		_texture.Bind( TextureUnit.Texture0 );
-
 		_speen += 0.08f;
 		_transform.Rotation = Rotation.FromYawPitchRoll( _speen, 0f, 0f );
 
+		arcMesh.Bind();
+		_texture.Bind( TextureUnit.Texture0 );
+
+		_shader.Use();
 		_shader.SetUniform( "uTexture", 0 );
 		_shader.SetUniform( "uModel", _transform.ViewMatrix );
 		_shader.SetUniform( "uView", _currentView );
