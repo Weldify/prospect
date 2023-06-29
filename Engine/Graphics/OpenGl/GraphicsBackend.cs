@@ -1,6 +1,7 @@
 ﻿using Silk.NET.OpenGL;
 using StbImageSharp;
 using System;
+using System.Drawing;
 using System.IO;
 using System.Numerics;
 
@@ -25,6 +26,8 @@ class GraphicsBackend : IGraphicsBackend {
 		}
 	}
 
+	public Action OnRender { private get; set; } = () => { };
+
 	PolygonMode _polygonMode;
 	readonly Window _window;
 
@@ -39,6 +42,7 @@ class GraphicsBackend : IGraphicsBackend {
 	public GraphicsBackend() {
 		_window = new();
 		_window.Load += onLoad;
+		_window.DoRender += doRender;
 	}
 
 	public void RunLoop() {
@@ -82,6 +86,19 @@ class GraphicsBackend : IGraphicsBackend {
 		_gl.BlendFunc( BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha );
 	}
 
+	Matrix4x4 _currentProjection;
+	Matrix4x4 _currentView;
+
+	void doRender() {
+		_currentProjection = Matrix4x4.CreatePerspectiveFieldOfView( Camera.FieldOfView.ToRadians(), _window.Size.Aspect, 0.1f, 100f );
+		_currentView = Camera.Transform.ViewMatrix;
+
+		_gl.ClearColor( Color.FromArgb( 255, 0, 0, 0 ) );
+		_gl.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit );
+
+		OnRender.Invoke();
+	}
+
 	static float _speen = 0f;
 
 	public void DrawThingamabob() {
@@ -93,12 +110,10 @@ class GraphicsBackend : IGraphicsBackend {
 		_speen += 0.08f;
 		_transform.Rotation = Rotation.FromYawPitchRoll( _speen, 0f, 0f );
 
-		var projection = Matrix4x4.CreatePerspectiveFieldOfView( Camera.FieldOfView.ToRadians(), _window.Size.Aspect, 0.1f, 100f );
-
 		_shader.SetUniform( "uTexture", 0 );
 		_shader.SetUniform( "uModel", _transform.ViewMatrix );
-		_shader.SetUniform( "uView", Camera.Transform.ViewMatrix );
-		_shader.SetUniform( "uProjection", projection );
+		_shader.SetUniform( "uView", _currentView );
+		_shader.SetUniform( "uProjection", _currentProjection );
 
 		unsafe {
 			_gl.DrawElements( PrimitiveType.Triangles, 15, DrawElementsType.UnsignedInt, (void*)0 );

@@ -28,7 +28,7 @@ public static partial class Entry {
 		Graphics = new OpenGl.GraphicsBackend();
 
 		Graphics.Window.DoUpdate = update;
-		Graphics.Window.DoRender = render;
+		Graphics.OnRender = render;
 
 		_game = game;
 		game.Start();

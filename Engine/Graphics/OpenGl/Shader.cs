@@ -47,7 +47,7 @@ sealed class Shader : IDisposable {
 		};
 	}
 
-	//Uniforms are properties that applies to the entire geometry
+	//Uniforms are properties that apply to the entire geometry
 	public void SetUniform( string name, int value ) => _gl.Uniform1( getUniformLocation( name ), value );
 	public void SetUniform( string name, float value ) => _gl.Uniform1( getUniformLocation( name ), value );
 	public unsafe void SetUniform( string name, Matrix4x4 value ) =>

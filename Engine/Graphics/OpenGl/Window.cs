@@ -63,10 +63,6 @@ class Window : IWindow, IDisposable {
 
 		_nativeWindow.Render += delta => {
 			_imGuiController.Update( (float)delta );
-
-			_gl.ClearColor( Color.FromArgb( 255, 0, 0, 0 ) );
-			_gl.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit | ClearBufferMask.StencilBufferBit );
-
 			DoRender?.Invoke();
 			_imGuiController.Render();
 		};

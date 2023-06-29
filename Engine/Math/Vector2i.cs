@@ -11,7 +11,7 @@ public struct Vector2i : IEquatable<Vector2i> {
 	public int X = 0;
 	public int Y = 0;
 
-	public float Aspect => X / Y;
+	public float Aspect => (float)X / (float)Y;
 
 	public Vector2i( int x, int y ) {
 		X = x;
