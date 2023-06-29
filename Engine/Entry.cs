@@ -10,8 +10,14 @@ using ImGuiNET;
 namespace Prospect.Engine;
 
 public static partial class Entry {
+	public const uint TICK_RATE = 2;
+	public const float TICK_DELTA = 1f / (float)TICK_RATE;
+
 	internal static IGraphicsBackend Graphics { get; private set; }
 	static IGame? _game;
+
+	internal static Stopwatch RawGameTime { get; private set; } = new();
+	internal static uint CurrentTick { get; private set; } = 0;
 
 	static Entry() {
 		Graphics = new OpenGL.GraphicsBackend {
@@ -33,6 +39,8 @@ public static partial class Entry {
 	}
 
 	static void runGame( IGame game ) {
+		RawGameTime.Start();
+
 		_game = game;
 		game.Start();
 
@@ -47,7 +55,12 @@ public static partial class Entry {
 	}
 
 	static void update( float delta ) {
-		_game?.Tick();
+		var expectedCurrentTick = Time.CalculateCurrentTick();
+
+		while ( CurrentTick < expectedCurrentTick ) {
+			CurrentTick++;
+			_game?.Tick();
+		}
 	}
 
 	static void render() {

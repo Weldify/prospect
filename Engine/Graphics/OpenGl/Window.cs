@@ -32,7 +32,6 @@ class Window : IWindow, IDisposable {
 
 	public Window() {
 		WindowOptions options = WindowOptions.Default with {
-			UpdatesPerSecond = 165,
 			FramesPerSecond = 165,
 			VSync = false,
 
