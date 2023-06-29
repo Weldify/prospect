@@ -1,8 +1,8 @@
 ﻿namespace Prospect.Engine;
 
 public static class Time {
-	public static uint TickRate => Entry.TICK_RATE;
-	public static float Delta => Entry.TICK_DELTA;
+	public static uint TickRate => Entry.TickRate;
+	public static float Delta => Entry.TickDelta;
 
 	/// <summary> Time since the game's startup </summary>
 	public static TimeSince SinceStarted => CalculateTimeFromTick( Tick );

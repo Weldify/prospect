@@ -7,6 +7,8 @@ partial class ProjectManager {
 namespace YourGame;
 
 public class Game : IGame {
+	public GameOptions Options => GameOptions.Default;
+
 	public void Start() { }
 	public void Shutdown() { }
 
