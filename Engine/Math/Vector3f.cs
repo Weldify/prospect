@@ -48,4 +48,5 @@ public struct Vector3f : IEquatable<Vector3f> {
 	public override int GetHashCode() => HashCode.Combine( X, Y, Z );
 
 	public static implicit operator Vector3( Vector3f v ) => new( v.X, v.Y, v.Z );
+	public static implicit operator Vector3f( Vector3 v ) => new( v.X, v.Y, v.Z );
 }
