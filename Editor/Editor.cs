@@ -31,7 +31,7 @@ partial class Editor : IGame {
 
 	}
 
-	//readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/barramundifish/barramundifish.mdl" );
+	//readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
 	float _speen = 0f;
 
 	public void Render() {
@@ -39,7 +39,7 @@ partial class Editor : IGame {
 		_speen += 0.04f;
 
 		//Camera.Transform = new Transform( -Vector3f.Forward, Rotation.LookAt( -Vector3f.Forward, Vector3f.Zero ) );
-		//Graphics.DrawModel( _prospectIcon, new Transform( Vector3f.Zero, Rotation.FromYawPitchRoll( _speen, 0f, 0f ) ) );
+		//Graphics.DrawModel( _prospectIcon, new Transform( Vector3f.Zero, Rotation.FromYawPitchRoll( _speen, 90f, 0f ), 1f ) );
 	}
 
 	public void Shutdown() {

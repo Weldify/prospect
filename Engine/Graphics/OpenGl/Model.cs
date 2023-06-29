@@ -50,14 +50,14 @@ class Model : IModel, IDisposable {
 			};
 
 			// Normals
-			if ( mesh->MNormals != null )
-				vertex.Normal = mesh->MNormals[i];
+			//if ( mesh->MNormals != null )
+			//	vertex.Normal = mesh->MNormals[i];
 			// Tangent
-			if ( mesh->MTangents != null )
-				vertex.Tangent = mesh->MTangents[i];
+			//if ( mesh->MTangents != null )
+			//	vertex.Tangent = mesh->MTangents[i];
 			// BiTangent
-			if ( mesh->MBitangents != null )
-				vertex.BiTangent = mesh->MBitangents[i];
+			//if ( mesh->MBitangents != null )
+			//	vertex.BiTangent = mesh->MBitangents[i];
 
 			// Texture coordinates
 			if ( mesh->MTextureCoords[0] != null ) // Does the mesh contain texture coordinates?
@@ -93,7 +93,7 @@ class Model : IModel, IDisposable {
 			vertices[vi + 1] = vertex.Position.Y;
 			vertices[vi + 2] = vertex.Position.Z;
 			vertices[vi + 3] = vertex.TexCoords.X;
-			vertices[vi + 4] = vertex.TexCoords.Y;
+			vertices[vi + 4] = 1f - vertex.TexCoords.Y; // OpenGL UV's Y is flipped, flip it back
 		}
 
 		return vertices;
