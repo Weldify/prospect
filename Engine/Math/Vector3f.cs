@@ -40,8 +40,10 @@ public struct Vector3f : IEquatable<Vector3f> {
 
 	public static Vector3f operator +( Vector3f v1, Vector3f v2 ) => new( v1.X + v2.X, v1.Y + v2.Y, v1.Z + v2.Z );
 	public static Vector3f operator -( Vector3f v1, Vector3f v2 ) => new( v1.X - v2.X, v1.Y - v2.Y, v1.Z - v2.Z );
+	public static Vector3f operator -( Vector3f v ) => new( -v.X, -v.Y, -v.Z );
 	public static Vector3f operator *( Vector3f v1, float f ) => new( v1.X * f, v1.Y * f, v1.Z * f );
 	public static Vector3f operator /( Vector3f v1, float f ) => new( v1.X / f, v1.Y / f, v1.Z / f );
+
 
 	public bool Equals( Vector3f other ) => this == other;
 	public override bool Equals( [NotNullWhen( true )] object? obj ) => obj is Vector3f other && this == other;

@@ -86,6 +86,8 @@ class GraphicsBackend : IGraphicsBackend {
 		_gl.Enable( EnableCap.Blend );
 		_gl.BlendFunc( BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha );
 
+		_gl.Enable( EnableCap.DepthTest );
+
 		IsReady = true;
 
 		OnLoad.Invoke();

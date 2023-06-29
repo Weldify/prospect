@@ -31,14 +31,15 @@ partial class Editor : IGame {
 
 	}
 
-	Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/prospect/prospect.mdl" );
+	//readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/barramundifish/barramundifish.mdl" );
 	float _speen = 0f;
 
 	public void Render() {
 		_projectManager.Draw();
-		_speen += 0.005f;
+		_speen += 0.04f;
 
-		Graphics.DrawModel( _prospectIcon, new Transform( Vector3f.Zero, Rotation.FromYawPitchRoll( 0f, 90f, _speen ) ) );
+		//Camera.Transform = new Transform( -Vector3f.Forward, Rotation.LookAt( -Vector3f.Forward, Vector3f.Zero ) );
+		//Graphics.DrawModel( _prospectIcon, new Transform( Vector3f.Zero, Rotation.FromYawPitchRoll( _speen, 0f, 0f ) ) );
 	}
 
 	public void Shutdown() {
