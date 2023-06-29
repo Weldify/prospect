@@ -6,14 +6,18 @@ using AssMesh = Silk.NET.Assimp.Mesh;
 namespace Prospect.Engine.OpenGl;
 
 class Model : IDisposable {
-	GL _gl;
-	Assimp _assimp;
+	public IReadOnlyList<Mesh> Meshes => _meshes;
 
-	List<Mesh> _meshes = new();
+	readonly GL _gl;
+	readonly Assimp _assimp;
 
-	public unsafe Model( GL gl, string path ) {
+	readonly List<Mesh> _meshes = new();
+	readonly Texture _texture;
+
+	public unsafe Model( GL gl, string path, Texture texture ) {
 		_gl = gl;
 		_assimp = Assimp.GetApi();
+		_texture = texture;
 
 		var scene = _assimp.ImportFile( path, (uint)PostProcessSteps.Triangulate );
 		if ( scene == null || scene->MFlags == Assimp.SceneFlagsIncomplete || scene->MRootNode == null )
@@ -67,7 +71,14 @@ class Model : IDisposable {
 			vertices.Add( vertex );
 		}
 
-		return new Mesh( _gl, buildVertices( vertices ), indices.ToArray() );
+		// Go thru all faces, grab their indices
+		for ( uint i = 0; i < mesh->MNumFaces; i++ ) {
+			var face = mesh->MFaces[i];
+			for ( uint j = 0; j < face.MNumIndices; j++ )
+				indices.Add( face.MIndices[j] );
+		}
+
+		return new( _gl, buildVertices( vertices ), indices.ToArray(), _texture );
 	}
 
 	float[] buildVertices( List<Vertex> vertexList ) {

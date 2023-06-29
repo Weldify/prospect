@@ -32,7 +32,7 @@ class GraphicsBackend : IGraphicsBackend {
 	readonly Window _window;
 
 	GL _gl = null!;
-	Mesh arcMesh;
+	Model _arcModel;
 	Shader _shader = null!;
 	Texture _texture = null!;
 	Transform _transform = Transform.Zero;
@@ -54,22 +54,8 @@ class GraphicsBackend : IGraphicsBackend {
 	void onLoad() {
 		_gl = _window.Gl;
 
-		// 3 vert, 2 tex coord
-		float[] vertices = {
-			-0.5f,  0.5f,  0.0f,  0.0f, 0.0f,
-			-0.5f, -0.5f,  0.0f,  0.0f, 1.0f,
-			 0.0f, -0.5f,  0.0f,  0.5f, 1.0f,
-			 0.0f,  0.5f,  0.0f,  0.5f, 0.0f,
-			 0.5f,  0.5f,  0.0f,  1.0f, 0.0f,
-		};
-
-		uint[] indices = {
-			3u, 0u, 1u,
-			1u, 2u, 3u,
-			3u, 2u, 4u
-		};
-
-		arcMesh = new( _gl, vertices, indices );
+		_arcModel = new( _gl, "C:\\Users\\ian\\Documents\\Models\\prospect\\prospect.glb", new( _gl, "C:\\Users\\ian\\Documents\\Models\\prospect\\prospect.png" ) );
+		_transform.Rotation = Rotation.FromYawPitchRoll( 0f, 90f, 0f );
 
 		_shader = new Shader( _gl, Shaders.VERTEX_SOURCE, Shaders.FRAGMENT_SOURCE );
 		_texture = new Texture( _gl, "arcicon.png" );
@@ -95,20 +81,25 @@ class GraphicsBackend : IGraphicsBackend {
 	static float _speen = 0f;
 
 	public void DrawThingamabob() {
-		_speen += 0.08f;
-		_transform.Rotation = Rotation.FromYawPitchRoll( _speen, 0f, 0f );
+		_speen += 0.01f;
+		_transform.Rotation = Rotation.FromYawPitchRoll( 0f, 90f, _speen );
 
-		arcMesh.Bind();
-		_texture.Bind( TextureUnit.Texture0 );
+		drawModel( _arcModel );
+	}
 
+	void drawModel( Model model ) {
 		_shader.Use();
 		_shader.SetUniform( "uTexture", 0 );
-		_shader.SetUniform( "uModel", _transform.ViewMatrix );
+		_shader.SetUniform( "uTransform", _transform.ViewMatrix );
 		_shader.SetUniform( "uView", _currentView );
 		_shader.SetUniform( "uProjection", _currentProjection );
 
-		unsafe {
-			_gl.DrawElements( PrimitiveType.Triangles, 15, DrawElementsType.UnsignedInt, (void*)0 );
+		foreach ( var mesh in model.Meshes ) {
+			mesh.Bind();
+
+			unsafe {
+				_gl.DrawElements( PrimitiveType.Triangles, mesh.IndiceCount, DrawElementsType.UnsignedInt, null );
+			}
 		}
 	}
 }
