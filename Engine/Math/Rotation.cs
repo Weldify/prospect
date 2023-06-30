@@ -104,7 +104,7 @@ public struct Rotation : IEquatable<Rotation> {
 	);
 
 	public Vector3f Right => new(
-		-(1f - 2f * (Y * Y + Z * Z)), // Negative because usually its Left. But Right is a cooler direction so fuck the world
+		-(1f - 2f * (Y * Y + Z * Z)), // I think this computes the left
 		2f * (X * Y + W * Z),
 		2f * (X * Z - W * Y)
 	);
@@ -235,12 +235,31 @@ public struct Rotation : IEquatable<Rotation> {
 			   W * other.W;
 	}
 
+	public bool Equals( Rotation other ) => this == other;
+	public override bool Equals( [NotNullWhen( true )] object? obj ) => obj is Rotation other && this == other;
+	public override int GetHashCode() => HashCode.Combine( X, Y, Z, W );
+
 	public override readonly string ToString() =>
 		$"{{X:{X} Y:{Y} Z:{Z} W:{W}}}";
 
 	public static implicit operator Quaternion( Rotation r ) => new( r.X, r.Y, r.Z, r.W );
 
-	public bool Equals( Rotation other ) => this == other;
-	public override bool Equals( [NotNullWhen( true )] object? obj ) => obj is Rotation other && this == other;
-	public override int GetHashCode() => HashCode.Combine( X, Y, Z, W );
+	public static explicit operator Angles( Rotation r ) {
+		float sinrCosp = 2 * (r.W * r.X + r.Y * r.Z);
+		float cosrCosp = 1 - 2 * (r.X * r.X + r.Y * r.Y);
+
+		// pitch (y-axis rotation)
+		float sinp = MathF.Sqrt( 1 + 2 * (r.W * r.Y - r.X * r.Z) );
+		float cosp = MathF.Sqrt( 1 - 2 * (r.W * r.Y - r.X * r.Z) );
+
+		// yaw (z-axis rotation)
+		float sinyCosp = 2 * (r.W * r.Z + r.X * r.Y);
+		float cosyCosp = 1 - 2 * (r.Y * r.Y + r.Z * r.Z);
+
+		return new(
+			MathF.Atan2( sinyCosp, cosyCosp ),
+			2f * MathF.Atan2( sinp, cosp ) - MathF.PI / 2f,
+			MathF.Atan2( sinrCosp, cosrCosp )
+		);
+	}
 }

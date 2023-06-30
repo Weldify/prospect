@@ -11,9 +11,9 @@ public struct Angles : IEquatable<Angles> {
 	public float Roll;
 
 	public Angles Wrapped => new(
-		Yaw % 360f,
-		Pitch % 360f,
-		Roll % 360f
+		Yaw % 180f,
+		Pitch % 180f,
+		Roll % 180f
 	);
 
 	public Angles( float yaw, float pitch, float roll ) {
@@ -27,6 +27,8 @@ public struct Angles : IEquatable<Angles> {
 	public static Angles operator +( Angles a1, Angles a2 ) => new( a1.Yaw + a2.Yaw, a1.Pitch + a2.Pitch, a1.Roll + a2.Roll );
 	public static Angles operator -( Angles a1, Angles a2 ) => new( a1.Yaw - a2.Yaw, a1.Pitch - a2.Pitch, a1.Roll - a2.Roll );
 	public static Angles operator -( Angles a ) => new( -a.Yaw, -a.Pitch, -a.Roll );
+	public static Angles operator *( Angles a1, float n ) => new( a1.Yaw * n, a1.Pitch * n, a1.Roll * n );
+	public static Angles operator /( Angles a1, float n ) => new( a1.Yaw / n, a1.Pitch / n, a1.Roll / n );
 
 	public bool Equals( Angles other ) => this == other;
 	public override bool Equals( [NotNullWhen( true )] object? obj ) => obj is Angles other && this == other;

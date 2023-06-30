@@ -27,6 +27,9 @@ partial class Editor : IGame {
 	public void Start() {
 		Window.Title = "Prospect Editor";
 
+		Input.MouseMode = MouseMode.Lock;
+		Camera.FieldOfView = 70f;
+
 		_settings = Resources.GetOrCreate<EditorSettings>( "settings.eds" );
 		_projectManager.TryRestoreProject( _settings.LastProjectPath );
 	}
@@ -42,15 +45,16 @@ partial class Editor : IGame {
 	}
 
 	readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
+	Angles _lookAngles;
 
 	public void Frame() {
 		_projectManager.Draw();
 
-		if ( !Input.Down( Key.Space ) ) return;
+		_lookAngles = (_lookAngles + Input.LookDelta * 0.01f).Wrapped;
+		Camera.Transform = new Transform( -Vector3f.Forward, (Rotation)_lookAngles );
 
 		var transform = new Transform( Vector3f.Zero, (Rotation)new Angles( Time.Now, 90f, 0f ) );
 
-		Camera.Transform = new Transform( -Vector3f.Forward, Rotation.LookAt( -Vector3f.Forward, Vector3f.Zero ) );
 		Graphics.DrawModel( _prospectIcon, transform );
 	}
 

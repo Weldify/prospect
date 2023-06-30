@@ -10,18 +10,20 @@ using ImGuiNET;
 namespace Prospect.Engine;
 
 public static partial class Entry {
-	public static uint TickRate = 0;
-	public static float TickDelta = 0f;
+	public static uint TickRate { get; private set; } = 0;
+	public static float TickDelta { get; private set; } = 0f;
 
 	internal static IGraphicsBackend Graphics { get; private set; }
-	static IGame? _game;
 
 	internal static Stopwatch RawGameTime { get; private set; } = new();
 	internal static uint CurrentTick { get; private set; } = 0;
 
-	internal static HashSet<Key> HeldKeys = new();
-	internal static HashSet<Key> PreviousHeldKeys = new();
-	//static HashSet<Key> _liftedKeys = new();
+	internal static Angles LookDelta { get; private set; } = Angles.Zero;
+	internal static HashSet<Key> HeldKeys { get; private set; } = new();
+	internal static HashSet<Key> PreviousHeldKeys { get; private set; } = new();
+
+	static IGame? _game;
+	static bool _gameStarted = false;
 
 	static Entry() {
 		Graphics = new OpenGL.GraphicsBackend {
@@ -30,8 +32,9 @@ public static partial class Entry {
 		};
 		Graphics.Window.DoUpdate = update;
 
-		Graphics.Input.KeyDown = onKeyDown;
-		Graphics.Input.KeyUp = onKeyUp;
+		Graphics.KeyDown = onKeyDown;
+		Graphics.KeyUp = onKeyUp;
+		Graphics.MouseMoved = onMouseMoved;
 	}
 
 	public static void Run<T>() where T : IGame, new() {
@@ -51,7 +54,6 @@ public static partial class Entry {
 		RawGameTime.Start();
 
 		_game = game;
-		game.Start();
 
 		Graphics.RunLoop();
 
@@ -69,6 +71,11 @@ public static partial class Entry {
 	}
 
 	static void update( float delta ) {
+		if ( !_gameStarted && _game is not null ) {
+			_gameStarted = true;
+			_game.Start();
+		}
+
 		var expectedCurrentTick = Time.CalculateCurrentTick();
 
 		while ( CurrentTick < expectedCurrentTick ) {
@@ -89,8 +96,25 @@ public static partial class Entry {
 		HeldKeys.Remove( key );
 	}
 
+	static Vector2f _lastMousePosition = new();
+
+	static void onMouseMoved( Vector2f pos ) {
+		var delta = pos - _lastMousePosition;
+		_lastMousePosition = pos;
+
+		LookDelta = (
+			LookDelta with {
+				Yaw = delta.X,
+				Pitch = delta.Y,
+				Roll = 0f
+			}
+		).Wrapped;
+	}
+
 	static void render() {
 		_game?.Frame();
+
+		LookDelta = Angles.Zero;
 	}
 
 	static void shutdown() {

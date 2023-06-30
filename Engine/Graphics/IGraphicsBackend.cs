@@ -2,8 +2,12 @@
 
 interface IGraphicsBackend : IDisposable {
 	IWindow Window { get; }
-	IInput Input { get; }
 	PolygonMode PolygonMode { get; set; }
+	MouseMode MouseMode { get; set; }
+
+	Action<Key> KeyDown { get; set; }
+	Action<Key> KeyUp { get; set; }
+	Action<Vector2f> MouseMoved { get; set; }
 
 	/// <summary>
 	/// Is this backend ready to draw things, load models, etc
