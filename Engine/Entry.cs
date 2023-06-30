@@ -23,7 +23,7 @@ public static partial class Entry {
 	internal static HashSet<Key> PreviousHeldKeys { get; private set; } = new();
 
 	static IGame? _game;
-	static bool _gameStarted = false;
+	static bool _hasGameStarted = false;
 
 	static Entry() {
 		Graphics = new OpenGL.GraphicsBackend {
@@ -54,10 +54,17 @@ public static partial class Entry {
 		RawGameTime.Start();
 
 		_game = game;
+		tryStartGame();
 
 		Graphics.RunLoop();
 
 		shutdown();
+	}
+
+	static void tryStartGame() {
+		if ( _game is null || !Graphics.IsReady || _hasGameStarted ) return;
+		_hasGameStarted = true;
+		_game.Start();
 	}
 
 	static void applyOptions( IGame game ) {
@@ -68,14 +75,11 @@ public static partial class Entry {
 	static void onGraphicsLoaded() {
 		foreach ( var (_, model) in Model.Cache )
 			(model as IPreloadable).Ready();
+
+		tryStartGame();
 	}
 
 	static void update( float delta ) {
-		if ( !_gameStarted && _game is not null ) {
-			_gameStarted = true;
-			_game.Start();
-		}
-
 		var expectedCurrentTick = Time.CalculateCurrentTick();
 
 		while ( CurrentTick < expectedCurrentTick ) {
@@ -83,38 +87,24 @@ public static partial class Entry {
 			_game?.Tick();
 
 			PreviousHeldKeys = new( HeldKeys );
-			//HeldKeys.RemoveWhere( _liftedKeys.Contains );
-			//_liftedKeys.Clear();
 		}
 	}
 
-	static void onKeyDown( Key key ) {
-		HeldKeys.Add( key );
-	}
-
-	static void onKeyUp( Key key ) {
-		HeldKeys.Remove( key );
-	}
+	static void onKeyDown( Key key ) => HeldKeys.Add( key );
+	static void onKeyUp( Key key ) => HeldKeys.Remove( key );
 
 	static Vector2f _lastMousePosition = default;
-
 	static void onMouseMoved( Vector2f pos ) {
-		if ( _lastMousePosition == default ) {
+		if ( _lastMousePosition == default )
 			_lastMousePosition = pos;
-		}
 
 		var delta = _lastMousePosition - pos;
 		_lastMousePosition = pos;
 
 		if ( Graphics.MouseMode == MouseMode.Normal ) return;
 
-		LookDelta = (
-			LookDelta with {
-				Yaw = delta.X,
-				Pitch = -delta.Y,
-				Roll = 0f
-			}
-		).Wrapped;
+		var lookDelta = new Angles( delta.X, -delta.Y, 0f );
+		LookDelta = lookDelta.Wrapped;
 	}
 
 	static void render() {
