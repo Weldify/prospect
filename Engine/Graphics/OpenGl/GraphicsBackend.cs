@@ -79,7 +79,9 @@ class GraphicsBackend : IGraphicsBackend {
 	}
 
 	void onLoad() {
-		_gl = _window.Gl;
+		_gl = _window.GL;
+
+
 		_shader = new Shader( _gl, Shaders.VERTEX_SOURCE, Shaders.FRAGMENT_SOURCE );
 
 		// Better blending of texture edges or some shit

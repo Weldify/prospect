@@ -21,7 +21,7 @@ class Window : IWindow, IDisposable {
 	public Action? DoRender { get; set; }
 
 	public event Action Load = () => { };
-	public GL Gl => _gl ?? throw new Exception( "Window hasn't loaded yet" );
+	public GL GL => _gl ?? throw new Exception( "Window hasn't loaded yet" );
 
 	readonly Silk.NET.Windowing.IWindow _nativeWindow;
 
@@ -69,6 +69,7 @@ class Window : IWindow, IDisposable {
 		_nativeWindow.FramebufferResize += size => _gl.Viewport( size );
 	}
 
+	public IInputContext CreateInput() => _nativeWindow.CreateInput();
 	public void Run() => _nativeWindow.Run();
 
 	public void Dispose() {

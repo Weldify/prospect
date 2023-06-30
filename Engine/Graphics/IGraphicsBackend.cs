@@ -2,6 +2,7 @@
 
 interface IGraphicsBackend : IDisposable {
 	IWindow Window { get; }
+	IInput Input { get; }
 	PolygonMode PolygonMode { get; set; }
 
 	/// <summary>
