@@ -1,4 +1,5 @@
-﻿using Silk.NET.OpenGL;
+﻿using Silk.NET.Input;
+using Silk.NET.OpenGL;
 using StbImageSharp;
 using System;
 using System.Drawing;
@@ -9,6 +10,7 @@ namespace Prospect.Engine.OpenGL;
 
 class GraphicsBackend : IGraphicsBackend {
 	public IWindow Window => _window;
+	public IInput Input => _input;
 	public PolygonMode PolygonMode {
 		get => _polygonMode;
 		set {
@@ -32,13 +34,13 @@ class GraphicsBackend : IGraphicsBackend {
 	public bool IsReady { get; private set; } = false;
 
 	PolygonMode _polygonMode;
-	readonly Window _window;
+	readonly Window _window = new();
+	readonly Input _input = new();
 
 	GL _gl = null!;
 	Shader _shader = null!;
 
 	public GraphicsBackend() {
-		_window = new();
 		_window.Load += onLoad;
 		_window.DoRender += doRender;
 	}
@@ -80,7 +82,11 @@ class GraphicsBackend : IGraphicsBackend {
 
 	void onLoad() {
 		_gl = _window.GL;
-
+		IInputContext input = _window.CreateInput();
+		if ( input.Keyboards.FirstOrDefault() is IKeyboard kb ) {
+			kb.KeyDown += onKeyDown;
+			kb.KeyUp += onKeyUp;
+		}
 
 		_shader = new Shader( _gl, Shaders.VERTEX_SOURCE, Shaders.FRAGMENT_SOURCE );
 
@@ -93,6 +99,14 @@ class GraphicsBackend : IGraphicsBackend {
 		IsReady = true;
 
 		OnLoad.Invoke();
+	}
+
+	void onKeyDown( IKeyboard kb, Silk.NET.Input.Key key, int i ) {
+		_input.KeyDown.Invoke( (Key)key );
+	}
+
+	void onKeyUp( IKeyboard kb, Silk.NET.Input.Key key, int i ) {
+		_input.KeyUp.Invoke( (Key)key );
 	}
 
 	Matrix4x4 _currentProjection;

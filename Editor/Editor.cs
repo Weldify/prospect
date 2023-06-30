@@ -31,17 +31,27 @@ partial class Editor : IGame {
 		_projectManager.TryRestoreProject( _settings.LastProjectPath );
 	}
 
-	public void Tick() { }
+	public void Tick() {
+		if ( Input.Pressed( Key.Space ) ) {
+			Console.WriteLine( $"wepres {Time.Tick}" );
+		}
 
-	//readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
+		if ( Input.Down( Key.Space ) ) {
+			Console.WriteLine( $"wehold {Time.Tick}" );
+		}
+	}
+
+	readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
 
 	public void Render() {
 		_projectManager.Draw();
 
+		if ( !Input.Down( Key.Space ) ) return;
+
 		var transform = new Transform( Vector3f.Zero, Rotation.FromYawPitchRoll( Time.Now, 90f, 0f ) );
 
-		//Camera.Transform = new Transform( -Vector3f.Forward, Rotation.LookAt( -Vector3f.Forward, Vector3f.Zero ) );
-		//Graphics.DrawModel( _prospectIcon, transform );
+		Camera.Transform = new Transform( -Vector3f.Forward, Rotation.LookAt( -Vector3f.Forward, Vector3f.Zero ) );
+		Graphics.DrawModel( _prospectIcon, transform );
 	}
 
 	public void Shutdown() {

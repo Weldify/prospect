@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Prospect.Engine;
 
-namespace Prospect.Engine.Graphics {
-	internal interface IInput {
-	}
+interface IInput {
+	Action<Key> KeyDown { get; set; }
+	Action<Key> KeyUp { get; set; }
 }

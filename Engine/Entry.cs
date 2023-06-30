@@ -19,12 +19,19 @@ public static partial class Entry {
 	internal static Stopwatch RawGameTime { get; private set; } = new();
 	internal static uint CurrentTick { get; private set; } = 0;
 
+	internal static HashSet<Key> HeldKeys = new();
+	internal static HashSet<Key> PreviousHeldKeys = new();
+	//static HashSet<Key> _liftedKeys = new();
+
 	static Entry() {
 		Graphics = new OpenGL.GraphicsBackend {
 			OnLoad = onGraphicsLoaded,
 			OnRender = render
 		};
 		Graphics.Window.DoUpdate = update;
+
+		Graphics.Input.KeyDown = onKeyDown;
+		Graphics.Input.KeyUp = onKeyUp;
 	}
 
 	public static void Run<T>() where T : IGame, new() {
@@ -67,7 +74,19 @@ public static partial class Entry {
 		while ( CurrentTick < expectedCurrentTick ) {
 			CurrentTick++;
 			_game?.Tick();
+
+			PreviousHeldKeys = new( HeldKeys );
+			//HeldKeys.RemoveWhere( _liftedKeys.Contains );
+			//_liftedKeys.Clear();
 		}
+	}
+
+	static void onKeyDown( Key key ) {
+		HeldKeys.Add( key );
+	}
+
+	static void onKeyUp( Key key ) {
+		HeldKeys.Remove( key );
 	}
 
 	static void render() {
