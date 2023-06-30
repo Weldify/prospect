@@ -43,7 +43,7 @@ partial class Editor : IGame {
 
 	readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
 
-	public void Render() {
+	public void Frame() {
 		_projectManager.Draw();
 
 		if ( !Input.Down( Key.Space ) ) return;

@@ -123,7 +123,7 @@ partial class ProjectManager {
 		var codePath = Path.Combine( projectPath, "code" );
 		Directory.CreateDirectory( codePath );
 
-		File.WriteAllText( Path.Combine( codePath, "Game.cs" ), SAMPLE_GAME_CODE );
+		File.WriteAllText( Path.Combine( codePath, "Game.cs" ), _SAMPLE_GAME_CODE );
 
 		var project = new Project() {
 			Title = title

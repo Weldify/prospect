@@ -7,5 +7,5 @@ public interface IGame {
 	void Shutdown() { }
 
 	void Tick() { }
-	void Render() { }
+	void Frame() { }
 }

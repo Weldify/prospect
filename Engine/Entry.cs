@@ -90,7 +90,7 @@ public static partial class Entry {
 	}
 
 	static void render() {
-		_game?.Render();
+		_game?.Frame();
 	}
 
 	static void shutdown() {
