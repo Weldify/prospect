@@ -5,6 +5,8 @@ namespace Prospect.Engine;
 public struct TimeUntil : IEquatable<TimeUntil> {
 	public float GoalTime;
 
+	public TimeUntil( float goalTime ) => GoalTime = goalTime;
+
 	public static bool operator ==( TimeUntil t1, TimeUntil t2 ) => t1.GoalTime == t2.GoalTime;
 	public static bool operator !=( TimeUntil t1, TimeUntil t2 ) => t1.GoalTime != t2.GoalTime;
 
@@ -13,5 +15,5 @@ public struct TimeUntil : IEquatable<TimeUntil> {
 	public override int GetHashCode() => HashCode.Combine( GoalTime );
 
 	public static implicit operator TimeUntil( float time ) => new() { GoalTime = time };
-	public static implicit operator float( TimeUntil t ) => t.GoalTime - Time.SinceStarted;
+	public static implicit operator float( TimeUntil t ) => t.GoalTime - Time.Now;
 }

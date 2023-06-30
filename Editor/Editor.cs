@@ -34,14 +34,14 @@ partial class Editor : IGame {
 	public void Tick() { }
 
 	//readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
-	float _speen = 0f;
 
 	public void Render() {
 		_projectManager.Draw();
-		_speen += 0.04f;
+
+		var transform = new Transform( Vector3f.Zero, Rotation.FromYawPitchRoll( Time.Now, 90f, 0f ) );
 
 		//Camera.Transform = new Transform( -Vector3f.Forward, Rotation.LookAt( -Vector3f.Forward, Vector3f.Zero ) );
-		//Graphics.DrawModel( _prospectIcon, new Transform( Vector3f.Zero, Rotation.FromYawPitchRoll( _speen, 90f, 0f ), 1f ) );
+		//Graphics.DrawModel( _prospectIcon, transform );
 	}
 
 	public void Shutdown() {
