@@ -48,7 +48,7 @@ partial class Editor : IGame {
 
 		if ( !Input.Down( Key.Space ) ) return;
 
-		var transform = new Transform( Vector3f.Zero, Rotation.FromYawPitchRoll( Time.Now, 90f, 0f ) );
+		var transform = new Transform( Vector3f.Zero, (Rotation)new Angles( Time.Now, 90f, 0f ) );
 
 		Camera.Transform = new Transform( -Vector3f.Forward, Rotation.LookAt( -Vector3f.Forward, Vector3f.Zero ) );
 		Graphics.DrawModel( _prospectIcon, transform );

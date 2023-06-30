@@ -1,4 +1,6 @@
-﻿namespace Prospect.Engine;
+﻿using System.Numerics;
+
+namespace Prospect.Engine;
 
 public static class Camera {
 	public static Transform Transform { get; set; } = new( new( 0f, 0f, -5f ), Rotation.LookAt( new( 0f, 0f, -1f ), Vector3f.Zero ) );

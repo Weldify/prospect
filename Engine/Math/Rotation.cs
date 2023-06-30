@@ -30,7 +30,7 @@ public struct Rotation : IEquatable<Rotation> {
 		return FromAxisAngle( rotAxis.Normal, rotAngle );
 	}
 
-	public static Rotation FromYawPitchRoll( float yaw, float pitch, float roll ) {
+	internal static Rotation FromYawPitchRoll( float yaw, float pitch, float roll ) {
 		//  Roll first, about axis the object is facing, then
 		//  pitch upward, then yaw to face into the new heading
 		float sr, cr, sp, cp, sy, cy;

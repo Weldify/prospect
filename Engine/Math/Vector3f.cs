@@ -44,7 +44,6 @@ public struct Vector3f : IEquatable<Vector3f> {
 	public static Vector3f operator *( Vector3f v1, float f ) => new( v1.X * f, v1.Y * f, v1.Z * f );
 	public static Vector3f operator /( Vector3f v1, float f ) => new( v1.X / f, v1.Y / f, v1.Z / f );
 
-
 	public bool Equals( Vector3f other ) => this == other;
 	public override bool Equals( [NotNullWhen( true )] object? obj ) => obj is Vector3f other && this == other;
 	public override int GetHashCode() => HashCode.Combine( X, Y, Z );

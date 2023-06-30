@@ -62,7 +62,7 @@ class GraphicsBackend : IGraphicsBackend {
 		_shader.Use();
 		_shader.SetUniform( "uTexture", 0 );
 		_shader.SetUniform( "uTransform", transform.ViewMatrix );
-		_shader.SetUniform( "uView", _currentView );
+		_shader.SetUniform( "uView", Camera.Transform.ViewMatrix );
 		_shader.SetUniform( "uProjection", _currentProjection );
 
 		var backendModel = model.BackendModel as Model ?? throw new Exception( "Bad" );
@@ -110,11 +110,9 @@ class GraphicsBackend : IGraphicsBackend {
 	}
 
 	Matrix4x4 _currentProjection;
-	Matrix4x4 _currentView;
 
 	void doRender() {
 		_currentProjection = Matrix4x4.CreatePerspectiveFieldOfView( Camera.FieldOfView.ToRadians(), _window.Size.Aspect, 0.1f, 100f );
-		_currentView = Camera.Transform.ViewMatrix;
 
 		_gl.ClearColor( Color.FromArgb( 255, 0, 0, 0 ) );
 		_gl.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit );
