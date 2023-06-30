@@ -10,6 +10,7 @@ using ImGuiNET;
 
 using Prospect.Engine;
 using Microsoft.CodeAnalysis;
+using Silk.NET.Maths;
 
 namespace Prospect.Editor;
 
@@ -45,7 +46,7 @@ partial class Editor : IGame {
 	}
 
 	readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
-	Angles _lookAngles;
+	Angles _lookAngles = (Angles)Rotation.LookAt( -Vector3f.Forward, Vector3.Zero );
 
 	public void Frame() {
 		_projectManager.Draw();

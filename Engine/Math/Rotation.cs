@@ -103,8 +103,8 @@ public struct Rotation : IEquatable<Rotation> {
 		2f * (Y * Z + W * X)
 	);
 
-	public Vector3f Right => new(
-		-(1f - 2f * (Y * Y + Z * Z)), // I think this computes the left
+	public Vector3f Left => new(
+		1f - 2f * (Y * Y + Z * Z), // I think this computes the left
 		2f * (X * Y + W * Z),
 		2f * (X * Z - W * Y)
 	);

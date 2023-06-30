@@ -81,8 +81,6 @@ class GraphicsBackend : IGraphicsBackend {
 			Camera.Transform.Rotation.Up
 		);
 
-		var cameraViewP = Camera.Transform.ViewMatrix;
-
 		_shader.Use();
 		_shader.SetUniform( "uTexture", 0 );
 		_shader.SetUniform( "uTransform", transform.ViewMatrix );

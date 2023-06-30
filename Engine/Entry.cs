@@ -96,11 +96,17 @@ public static partial class Entry {
 		HeldKeys.Remove( key );
 	}
 
-	static Vector2f _lastMousePosition = new();
+	static Vector2f _lastMousePosition = default;
 
 	static void onMouseMoved( Vector2f pos ) {
+		if ( _lastMousePosition == default ) {
+			_lastMousePosition = pos;
+		}
+
 		var delta = pos - _lastMousePosition;
 		_lastMousePosition = pos;
+
+		if ( Graphics.MouseMode == MouseMode.Normal ) return;
 
 		LookDelta = (
 			LookDelta with {
