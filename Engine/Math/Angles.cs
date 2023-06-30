@@ -10,10 +10,10 @@ public struct Angles : IEquatable<Angles> {
 	public float Pitch;
 	public float Roll;
 
-	public Angles Clamped => new(
-		Math.Clamp( Yaw, -180f, 180f ),
-		Math.Clamp( Pitch, -180f, 180f ),
-		Math.Clamp( Roll, -180f, 180f )
+	public Angles Wrapped => new(
+		Yaw % 360f,
+		Pitch % 360f,
+		Roll % 360f
 	);
 
 	public Angles( float yaw, float pitch, float roll ) {
@@ -33,7 +33,7 @@ public struct Angles : IEquatable<Angles> {
 	public override int GetHashCode() => HashCode.Combine( Pitch, Roll, Yaw );
 
 	public static explicit operator Rotation( Angles a ) {
-		var clamped = a.Clamped;
+		var clamped = a.Wrapped;
 		return Rotation.FromYawPitchRoll( clamped.Yaw, clamped.Pitch, clamped.Roll );
 	}
 }
