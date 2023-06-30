@@ -103,7 +103,7 @@ public static partial class Entry {
 			_lastMousePosition = pos;
 		}
 
-		var delta = pos - _lastMousePosition;
+		var delta = _lastMousePosition - pos;
 		_lastMousePosition = pos;
 
 		if ( Graphics.MouseMode == MouseMode.Normal ) return;
@@ -111,7 +111,7 @@ public static partial class Entry {
 		LookDelta = (
 			LookDelta with {
 				Yaw = delta.X,
-				Pitch = delta.Y,
+				Pitch = -delta.Y,
 				Roll = 0f
 			}
 		).Wrapped;
