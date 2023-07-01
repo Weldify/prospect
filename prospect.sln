@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prospect.Engine", "Engine\P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prospect.Runtime", "Runtime\Prospect.Runtime.csproj", "{7596852E-FE0A-4B13-8923-56D839B72BA9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Prospect.TestBed", "TestBed\Prospect.TestBed.csproj", "{AAC6AA16-9DC8-4CE8-9B46-FFC90F7F649E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{7596852E-FE0A-4B13-8923-56D839B72BA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7596852E-FE0A-4B13-8923-56D839B72BA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7596852E-FE0A-4B13-8923-56D839B72BA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAC6AA16-9DC8-4CE8-9B46-FFC90F7F649E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAC6AA16-9DC8-4CE8-9B46-FFC90F7F649E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAC6AA16-9DC8-4CE8-9B46-FFC90F7F649E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAC6AA16-9DC8-4CE8-9B46-FFC90F7F649E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

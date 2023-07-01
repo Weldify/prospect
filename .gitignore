@@ -6,5 +6,6 @@
 Engine/obj
 Runtime/obj
 Editor/obj
+TestBed/obj
 
 **/imgui.ini
