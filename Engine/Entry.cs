@@ -21,6 +21,7 @@ public static partial class Entry {
 
 	// Input
 	internal static Angles LookDelta { get; private set; } = Angles.Zero;
+	internal static float ScrollDelta { get; private set; } = 0f;
 	internal static HashSet<Key> HeldKeys { get; private set; } = new();
 	internal static HashSet<Key> PreviousHeldKeys { get; private set; } = new();
 	internal static HashSet<MouseButton> HeldButtons { get; private set; } = new();
@@ -40,7 +41,8 @@ public static partial class Entry {
 			KeyUp = onKeyUp,
 			MouseMoved = onMouseMoved,
 			MouseDown = onMouseDown,
-			MouseUp = onMouseUp
+			MouseUp = onMouseUp,
+			Scroll = onScroll
 		};
 	}
 
@@ -111,6 +113,7 @@ public static partial class Entry {
 		PreviousHeldKeys = new( HeldKeys );
 		PreviousHeldButtons = new( HeldButtons );
 		LookDelta = Angles.Zero;
+		ScrollDelta = 0f;
 	}
 
 	static void onKeyDown( Key key ) => HeldKeys.Add( key );
@@ -132,4 +135,5 @@ public static partial class Entry {
 
 	static void onMouseDown( MouseButton button ) => HeldButtons.Add( button );
 	static void onMouseUp( MouseButton button ) => HeldButtons.Remove( button );
+	static void onScroll( float side ) => ScrollDelta = side;
 }

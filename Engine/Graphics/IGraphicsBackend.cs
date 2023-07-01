@@ -16,6 +16,7 @@ interface IGraphicsBackend {
 	Action<Vector2> MouseMoved { get; set; }
 	Action<MouseButton> MouseDown { get; set; }
 	Action<MouseButton> MouseUp { get; set; }
+	Action<float> Scroll { get; set; }
 
 	// Loop
 	Action OnLoad { set; }

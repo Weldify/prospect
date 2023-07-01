@@ -10,6 +10,7 @@ public static class Input {
 	}
 
 	public static Angles LookDelta => Entry.LookDelta;
+	public static float ScrollDelta => Entry.ScrollDelta;
 
 	public static bool Pressed( Key key ) => Entry.HeldKeys.Contains( key ) && !Entry.PreviousHeldKeys.Contains( key );
 	public static bool Down( Key key ) => Entry.HeldKeys.Contains( key );

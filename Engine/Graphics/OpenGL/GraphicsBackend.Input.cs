@@ -16,6 +16,7 @@ partial class GraphicsBackend {
 	public Action<Vector2> MouseMoved { get; set; } = ( v ) => { };
 	public Action<MouseButton> MouseDown { get; set; } = ( b ) => { };
 	public Action<MouseButton> MouseUp { get; set; } = ( b ) => { };
+	public Action<float> Scroll { get; set; } = ( f ) => { };
 
 	MouseMode _mouseMode;
 
@@ -32,6 +33,7 @@ partial class GraphicsBackend {
 			mouse.MouseMove += onMouseMove;
 			mouse.MouseDown += onMouseDown;
 			mouse.MouseUp += onMouseUp;
+			mouse.Scroll += onScroll;
 		}
 	}
 
@@ -53,6 +55,10 @@ partial class GraphicsBackend {
 
 	void onMouseUp( IMouse mouse, Silk.NET.Input.MouseButton button ) {
 		MouseUp.Invoke( (MouseButton)button );
+	}
+
+	void onScroll( IMouse mouse, ScrollWheel wheel ) {
+		Scroll.Invoke( wheel.Y );
 	}
 
 	void updateCursorMode() {
