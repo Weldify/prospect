@@ -14,6 +14,8 @@ partial class GraphicsBackend {
 	public Action<Key> KeyDown { get; set; } = ( k ) => { };
 	public Action<Key> KeyUp { get; set; } = ( k ) => { };
 	public Action<Vector2> MouseMoved { get; set; } = ( v ) => { };
+	public Action<MouseButton> MouseDown { get; set; } = ( b ) => { };
+	public Action<MouseButton> MouseUp { get; set; } = ( b ) => { };
 
 	MouseMode _mouseMode;
 
@@ -26,7 +28,10 @@ partial class GraphicsBackend {
 		}
 
 		for ( int i = 0; i < _inputContext.Mice.Count; i++ ) {
-			_inputContext.Mice[i].MouseMove += onMouseMove;
+			var mouse = _inputContext.Mice[i];
+			mouse.MouseMove += onMouseMove;
+			mouse.MouseDown += onMouseDown;
+			mouse.MouseUp += onMouseUp;
 		}
 	}
 
@@ -40,6 +45,14 @@ partial class GraphicsBackend {
 
 	void onMouseMove( IMouse mouse, System.Numerics.Vector2 pos ) {
 		MouseMoved.Invoke( new Vector2( pos.X, pos.Y ) );
+	}
+
+	void onMouseDown( IMouse mouse, Silk.NET.Input.MouseButton button ) {
+		MouseDown.Invoke( (MouseButton)button );
+	}
+
+	void onMouseUp( IMouse mouse, Silk.NET.Input.MouseButton button ) {
+		MouseUp.Invoke( (MouseButton)button );
 	}
 
 	void updateCursorMode() {

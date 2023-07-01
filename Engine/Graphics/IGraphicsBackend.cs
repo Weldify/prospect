@@ -14,6 +14,8 @@ interface IGraphicsBackend {
 	Action<Key> KeyDown { get; set; }
 	Action<Key> KeyUp { get; set; }
 	Action<Vector2> MouseMoved { get; set; }
+	Action<MouseButton> MouseDown { get; set; }
+	Action<MouseButton> MouseUp { get; set; }
 
 	// Loop
 	Action OnLoad { set; }

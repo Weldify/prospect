@@ -23,6 +23,8 @@ public static partial class Entry {
 	internal static Angles LookDelta { get; private set; } = Angles.Zero;
 	internal static HashSet<Key> HeldKeys { get; private set; } = new();
 	internal static HashSet<Key> PreviousHeldKeys { get; private set; } = new();
+	internal static HashSet<MouseButton> HeldButtons { get; private set; } = new();
+	internal static HashSet<MouseButton> PreviousHeldButtons { get; private set; } = new();
 
 	internal static IGraphicsBackend Graphics { get; private set; }
 
@@ -36,7 +38,9 @@ public static partial class Entry {
 			OnRender = onRender,
 			KeyDown = onKeyDown,
 			KeyUp = onKeyUp,
-			MouseMoved = onMouseMoved
+			MouseMoved = onMouseMoved,
+			MouseDown = onMouseDown,
+			MouseUp = onMouseUp
 		};
 	}
 
@@ -105,6 +109,7 @@ public static partial class Entry {
 		_game?.Frame();
 
 		PreviousHeldKeys = new( HeldKeys );
+		PreviousHeldButtons = new( HeldButtons );
 		LookDelta = Angles.Zero;
 	}
 
@@ -124,4 +129,7 @@ public static partial class Entry {
 		var lookDelta = new Angles( delta.X, delta.Y, 0f );
 		LookDelta = lookDelta.Wrapped;
 	}
+
+	static void onMouseDown( MouseButton button ) => HeldButtons.Add( button );
+	static void onMouseUp( MouseButton button ) => HeldButtons.Remove( button );
 }

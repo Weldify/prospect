@@ -36,6 +36,8 @@ public class TestBed : IGame {
 			+ Camera.Transform.Rotation.Forward * forward * Time.FrameDelta
 			+ Camera.Transform.Rotation.Right * right * Time.FrameDelta;
 
+		if ( Input.Down( MouseButton.Left ) ) return;
+
 		var transform = new Transform( Vector3.Zero, Rotation.From( new( Time.Now * 10f, 0f, 0f ) ) );
 		Graphics.DrawModel( _sword, transform );
 	}
