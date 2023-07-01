@@ -116,6 +116,7 @@ class GraphicsBackend : IGraphicsBackend {
 		_gl.BlendFunc( BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha );
 
 		_gl.Enable( EnableCap.DepthTest );
+		_gl.Enable( EnableCap.CullFace );
 
 		IsReady = true;
 
