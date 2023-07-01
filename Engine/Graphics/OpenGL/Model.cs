@@ -64,8 +64,8 @@ class Model : IModel, IDisposable {
 			{
 				// A vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
 				// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-				Vector3f texcoord3 = mesh->MTextureCoords[0][i];
-				vertex.TexCoords = new Vector2f( texcoord3.X, texcoord3.Y );
+				Vector3 texcoord3 = mesh->MTextureCoords[0][i];
+				vertex.TexCoords = new Vector2( texcoord3.X, texcoord3.Y );
 			}
 
 			vertices.Add( vertex );

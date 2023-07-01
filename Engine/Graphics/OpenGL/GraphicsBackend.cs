@@ -1,9 +1,11 @@
-﻿using Silk.NET.OpenGL;
+﻿using Silk.NET.Input;
+using Silk.NET.OpenGL;
 using StbImageSharp;
 using System;
 using System.Drawing;
 using System.IO;
-using System.Numerics;
+
+using Matrix4x4 = System.Numerics.Matrix4x4;
 
 namespace Prospect.Engine.OpenGL;
 
@@ -26,19 +28,35 @@ class GraphicsBackend : IGraphicsBackend {
 		}
 	}
 
+	public MouseMode MouseMode {
+		get => _mouseMode;
+		set {
+			if ( value == _mouseMode ) return;
+			_mouseMode = value;
+
+			for ( int i = 0; i < _input.Mice.Count; i++ ) {
+				_input.Mice[i].Cursor.CursorMode = (CursorMode)_mouseMode;
+			}
+		}
+	}
+
 	public Action OnRender { private get; set; } = () => { };
 	public Action OnLoad { private get; set; } = () => { };
+	public Action<Key> KeyDown { get; set; } = ( k ) => { };
+	public Action<Key> KeyUp { get; set; } = ( k ) => { };
+	public Action<Vector2> MouseMoved { get; set; } = ( v ) => { };
 
 	public bool IsReady { get; private set; } = false;
 
 	PolygonMode _polygonMode;
-	readonly Window _window;
+	MouseMode _mouseMode;
+	readonly Window _window = new();
+	IInputContext _input = null!;
 
 	GL _gl = null!;
 	Shader _shader = null!;
 
 	public GraphicsBackend() {
-		_window = new();
 		_window.Load += onLoad;
 		_window.DoRender += doRender;
 	}
@@ -59,8 +77,8 @@ class GraphicsBackend : IGraphicsBackend {
 	public void DrawModel( Engine.Model model, Transform transform ) {
 		_shader.Use();
 		_shader.SetUniform( "uTexture", 0 );
-		_shader.SetUniform( "uTransform", transform.ViewMatrix );
-		_shader.SetUniform( "uView", _currentView );
+		_shader.SetUniform( "uTransform", transform.Matrix );
+		_shader.SetUniform( "uView", Camera.ViewMatrix );
 		_shader.SetUniform( "uProjection", _currentProjection );
 
 		var backendModel = model.BackendModel as Model ?? throw new Exception( "Bad" );
@@ -79,7 +97,18 @@ class GraphicsBackend : IGraphicsBackend {
 	}
 
 	void onLoad() {
-		_gl = _window.Gl;
+		_gl = _window.GL;
+		_input = _window.CreateInput();
+
+		if ( _input.Keyboards.FirstOrDefault() is IKeyboard kb ) {
+			kb.KeyDown += onKeyDown;
+			kb.KeyUp += onKeyUp;
+		}
+
+		for ( int i = 0; i < _input.Mice.Count; i++ ) {
+			_input.Mice[i].MouseMove += onMouseMove;
+		}
+
 		_shader = new Shader( _gl, Shaders.VERTEX_SOURCE, Shaders.FRAGMENT_SOURCE );
 
 		// Better blending of texture edges or some shit
@@ -93,12 +122,22 @@ class GraphicsBackend : IGraphicsBackend {
 		OnLoad.Invoke();
 	}
 
+	void onKeyDown( IKeyboard kb, Silk.NET.Input.Key key, int i ) {
+		KeyDown.Invoke( (Key)key );
+	}
+
+	void onKeyUp( IKeyboard kb, Silk.NET.Input.Key key, int i ) {
+		KeyUp.Invoke( (Key)key );
+	}
+
+	void onMouseMove( IMouse mouse, System.Numerics.Vector2 pos ) {
+		MouseMoved.Invoke( new Vector2( pos.X, pos.Y ) );
+	}
+
 	Matrix4x4 _currentProjection;
-	Matrix4x4 _currentView;
 
 	void doRender() {
 		_currentProjection = Matrix4x4.CreatePerspectiveFieldOfView( Camera.FieldOfView.ToRadians(), _window.Size.Aspect, 0.1f, 100f );
-		_currentView = Camera.Transform.ViewMatrix;
 
 		_gl.ClearColor( Color.FromArgb( 255, 0, 0, 0 ) );
 		_gl.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit );
