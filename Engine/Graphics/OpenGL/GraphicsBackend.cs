@@ -4,7 +4,8 @@ using StbImageSharp;
 using System;
 using System.Drawing;
 using System.IO;
-using System.Numerics;
+
+using Matrix4x4 = System.Numerics.Matrix4x4;
 
 namespace Prospect.Engine.OpenGL;
 
@@ -33,7 +34,6 @@ class GraphicsBackend : IGraphicsBackend {
 			if ( value == _mouseMode ) return;
 			_mouseMode = value;
 
-			Console.WriteLine( "cock" );
 			for ( int i = 0; i < _input.Mice.Count; i++ ) {
 				_input.Mice[i].Cursor.CursorMode = (CursorMode)_mouseMode;
 			}
@@ -44,7 +44,7 @@ class GraphicsBackend : IGraphicsBackend {
 	public Action OnLoad { private get; set; } = () => { };
 	public Action<Key> KeyDown { get; set; } = ( k ) => { };
 	public Action<Key> KeyUp { get; set; } = ( k ) => { };
-	public Action<Vector2f> MouseMoved { get; set; } = ( v ) => { };
+	public Action<Vector2> MouseMoved { get; set; } = ( v ) => { };
 
 	public bool IsReady { get; private set; } = false;
 
@@ -77,7 +77,7 @@ class GraphicsBackend : IGraphicsBackend {
 	public void DrawModel( Engine.Model model, Transform transform ) {
 		_shader.Use();
 		_shader.SetUniform( "uTexture", 0 );
-		_shader.SetUniform( "uTransform", transform.ViewMatrix );
+		_shader.SetUniform( "uTransform", transform.Matrix );
 		_shader.SetUniform( "uView", Camera.ViewMatrix );
 		_shader.SetUniform( "uProjection", _currentProjection );
 
@@ -130,8 +130,8 @@ class GraphicsBackend : IGraphicsBackend {
 		KeyUp.Invoke( (Key)key );
 	}
 
-	void onMouseMove( IMouse mouse, Vector2 pos ) {
-		MouseMoved.Invoke( new Vector2f( pos.X, pos.Y ) );
+	void onMouseMove( IMouse mouse, System.Numerics.Vector2 pos ) {
+		MouseMoved.Invoke( new Vector2( pos.X, pos.Y ) );
 	}
 
 	Matrix4x4 _currentProjection;

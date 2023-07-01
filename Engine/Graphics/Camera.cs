@@ -25,7 +25,7 @@ public static class Camera {
 	static Transform _transform;
 
 	static Camera() {
-		var startPosition = -Vector3f.Forward * 5f;
+		var startPosition = -Vector3.Forward * 5f;
 		Transform = new Transform( startPosition, Rotation.Identity );
 	}
 }

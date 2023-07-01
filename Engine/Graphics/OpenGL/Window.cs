@@ -12,9 +12,9 @@ class Window : IWindow, IDisposable {
 		set => _nativeWindow.Title = value;
 	}
 
-	public Vector2i Size {
+	public Point2 Size {
 		get => new( _nativeWindow.Size.X, _nativeWindow.Size.Y );
-		set => _nativeWindow.Size = value;
+		set => _nativeWindow.Size = new( value.X, value.Y );
 	}
 
 	public Action<float>? DoUpdate { get; set; }

@@ -2,7 +2,6 @@
 global using System.Linq;
 global using System.Collections.Generic;
 using System.Diagnostics;
-using System.Numerics;
 using System.Text;
 
 using ImGuiNET;
@@ -93,8 +92,8 @@ public static partial class Entry {
 	static void onKeyDown( Key key ) => HeldKeys.Add( key );
 	static void onKeyUp( Key key ) => HeldKeys.Remove( key );
 
-	static Vector2f _lastMousePosition = default;
-	static void onMouseMoved( Vector2f pos ) {
+	static Vector2 _lastMousePosition = default;
+	static void onMouseMoved( Vector2 pos ) {
 		if ( _lastMousePosition == default )
 			_lastMousePosition = pos;
 
@@ -103,7 +102,7 @@ public static partial class Entry {
 
 		if ( Graphics.MouseMode == MouseMode.Normal ) return;
 
-		var lookDelta = new Angles( delta.X, -delta.Y, 0f );
+		var lookDelta = new Angles( delta.X, delta.Y, 0f );
 		LookDelta = lookDelta.Wrapped;
 	}
 

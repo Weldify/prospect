@@ -1,8 +1,9 @@
 ﻿namespace Prospect.Engine;
 
 public static class MathX {
-	const float _PI_DEG = MathF.PI / 180f;
+	public const float DEG_TO_RAD = MathF.PI / 180f;
+	public const float RAD_TO_DEG = 180f / MathF.PI;
 
-	public static float ToRadians( this float f ) => f * _PI_DEG;
-	public static float ToDegrees( this float f ) => f / _PI_DEG;
+	public static float ToRadians( this float f ) => f * DEG_TO_RAD;
+	public static float ToDegrees( this float f ) => f * RAD_TO_DEG;
 }

@@ -3,14 +3,12 @@ global using System.Linq;
 global using System.Collections.Generic;
 
 using Microsoft.CodeAnalysis.CSharp;
-using System.Numerics;
 using System.IO;
 
 using ImGuiNET;
 
 using Prospect.Engine;
 using Microsoft.CodeAnalysis;
-using Silk.NET.Maths;
 
 namespace Prospect.Editor;
 
@@ -35,15 +33,7 @@ partial class Editor : IGame {
 		_projectManager.TryRestoreProject( _settings.LastProjectPath );
 	}
 
-	public void Tick() {
-		if ( Input.Pressed( Key.Space ) ) {
-			Console.WriteLine( $"wepres {Time.Tick}" );
-		}
-
-		if ( Input.Down( Key.Space ) ) {
-			Console.WriteLine( $"wehold {Time.Tick}" );
-		}
-	}
+	public void Tick() {}
 
 	readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
 	Angles _lookAngles = Angles.Zero;
@@ -52,11 +42,10 @@ partial class Editor : IGame {
 	public void Frame() {
 		_projectManager.Draw();
 
-		_lookAngles = (_lookAngles + Input.LookDelta * 0.01f).Wrapped;
+		_lookAngles = (_lookAngles + Input.LookDelta).Wrapped;
 		_rightOffset += 0.001f;
 
-		Console.WriteLine( Camera.Transform.Rotation.Forward );
-		Camera.Transform = Camera.Transform with { Rotation = (Rotation)_lookAngles };
+		Camera.Transform = Camera.Transform with { Rotation = Rotation.From( _lookAngles ) };
 
 		if ( Input.Down( Key.W ) )
 			Camera.Transform += Camera.Transform.Rotation.Forward * 0.01f;
@@ -64,7 +53,13 @@ partial class Editor : IGame {
 		if ( Input.Down( Key.S ) )
 			Camera.Transform -= Camera.Transform.Rotation.Forward * 0.01f;
 
-		var transform = new Transform( Vector3f.Zero, (Rotation)new Angles( Time.Now, 90f, 0f ) );
+		if ( Input.Down( Key.D ) )
+			Camera.Transform += Camera.Transform.Rotation.Right * 0.01f;
+
+		if ( Input.Down( Key.A ) )
+			Camera.Transform -= Camera.Transform.Rotation.Right * 0.01f;
+
+		var transform = new Transform( Vector3.Zero, Rotation.From( new( Time.Now * 10f, 0f, 0f ) ) );
 
 		Graphics.DrawModel( _prospectIcon, transform );
 	}

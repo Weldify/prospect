@@ -7,7 +7,7 @@ interface IGraphicsBackend : IDisposable {
 
 	Action<Key> KeyDown { get; set; }
 	Action<Key> KeyUp { get; set; }
-	Action<Vector2f> MouseMoved { get; set; }
+	Action<Vector2> MouseMoved { get; set; }
 
 	/// <summary>
 	/// Is this backend ready to draw things, load models, etc
