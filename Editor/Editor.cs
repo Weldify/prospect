@@ -46,13 +46,17 @@ partial class Editor : IGame {
 	}
 
 	readonly Model _prospectIcon = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
-	Angles _lookAngles = (Angles)Rotation.LookAt( -Vector3f.Forward, Vector3.Zero );
+	Angles _lookAngles = (Angles)Rotation.LookAt( Vector3f.Forward, Vector3.Zero );
+	float _rightOffset = 0f;
 
 	public void Frame() {
 		_projectManager.Draw();
 
 		_lookAngles = (_lookAngles + Input.LookDelta * 0.01f).Wrapped;
-		Camera.Transform = new Transform( -Vector3f.Forward, (Rotation)_lookAngles );
+		_rightOffset += 0.001f;
+
+		//Camera.Transform = new Transform( -Vector3f.Forward + Vector3f.Right * _rightOffset, (Rotation)_lookAngles );
+		Camera.Transform = Camera.Transform + Camera.Transform.Rotation.Left * 0.01f;
 
 		var transform = new Transform( Vector3f.Zero, (Rotation)new Angles( Time.Now, 90f, 0f ) );
 

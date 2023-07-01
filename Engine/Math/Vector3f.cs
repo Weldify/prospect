@@ -7,7 +7,7 @@ namespace Prospect.Engine;
 public struct Vector3f : IEquatable<Vector3f> {
 	public static readonly Vector3f Zero = new( 0f, 0f, 0f );
 	public static readonly Vector3f One = new( 1f, 1f, 1f );
-	public static readonly Vector3f Forward = new( 0f, 0f, 1f );
+	public static readonly Vector3f Forward = new( 0f, 0f, -1f );
 	public static readonly Vector3f Right = new( 1f, 0f, 0f );
 	public static readonly Vector3f Up = new( 0f, 1f, 0f );
 

@@ -1,16 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Runtime.Intrinsics;
 using Prospect.Engine;
-using YamlDotNet.Core.Tokens;
 
 public struct Rotation : IEquatable<Rotation> {
-	const float _SLERP_EPSILON = 1e-6f;
-
 	public static readonly Rotation Identity = new( 0f, 0f, 0f, 1f );
-	public static readonly Rotation Zero = new( 0f, 0f, 0f, 0f );
 
 	public static Rotation LookAt( Vector3f sourcePoint, Vector3f destPoint ) {
 		Vector3f forwardVector = (destPoint - sourcePoint).Normal;

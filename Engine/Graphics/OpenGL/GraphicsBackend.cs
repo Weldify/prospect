@@ -75,16 +75,10 @@ class GraphicsBackend : IGraphicsBackend {
 	}
 
 	public void DrawModel( Engine.Model model, Transform transform ) {
-		var cameraView = Matrix4x4.CreateLookAt(
-			Camera.Transform.Position,
-			Camera.Transform.Position + Camera.Transform.Rotation.Forward,
-			Camera.Transform.Rotation.Up
-		);
-
 		_shader.Use();
 		_shader.SetUniform( "uTexture", 0 );
 		_shader.SetUniform( "uTransform", transform.ViewMatrix );
-		_shader.SetUniform( "uView", cameraView );
+		_shader.SetUniform( "uView", Camera.ViewMatrix );
 		_shader.SetUniform( "uProjection", _currentProjection );
 
 		var backendModel = model.BackendModel as Model ?? throw new Exception( "Bad" );
