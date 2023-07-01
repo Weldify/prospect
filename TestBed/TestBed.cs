@@ -33,8 +33,8 @@ public class TestBed : IGame {
 		Camera.Transform = Camera.Transform with { Rotation = Rotation.From( _lookAngles ) };
 
 		Camera.Transform = Camera.Transform
-			+ Camera.Transform.Rotation.Forward * forward
-			+ Camera.Transform.Rotation.Right * right;
+			+ Camera.Transform.Rotation.Forward * forward * Time.FrameDelta
+			+ Camera.Transform.Rotation.Right * right * Time.FrameDelta;
 
 		var transform = new Transform( Vector3.Zero, Rotation.From( new( Time.Now * 10f, 0f, 0f ) ) );
 		Graphics.DrawModel( _sword, transform );

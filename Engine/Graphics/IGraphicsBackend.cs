@@ -1,26 +1,31 @@
 ﻿namespace Prospect.Engine;
 
-interface IGraphicsBackend : IDisposable {
-	IWindow Window { get; }
-	PolygonMode PolygonMode { get; set; }
-	MouseMode MouseMode { get; set; }
+interface IGraphicsBackend {
+	// State
+	/// <summary> Is the backend ready to be used?</summary>
+	bool HasLoaded { get; }
 
+	// Windowing
+	/// <summary> If the backend has a window, use this as the title </summary>
+	string WindowTitle { get; set; }
+
+	// Input
+	MouseMode MouseMode { get; set; }
 	Action<Key> KeyDown { get; set; }
 	Action<Key> KeyUp { get; set; }
 	Action<Vector2> MouseMoved { get; set; }
 
-	/// <summary>
-	/// Is this backend ready to draw things, load models, etc
-	/// </summary>
-	bool IsReady { get; }
-
+	// Loop
 	Action OnLoad { set; }
-	Action OnRender { set; }
+	Action OnUpdate { set; }
+	Action<float> OnRender { set; }
+	void RunLoop();
 
+	// Rendering
 	IModel LoadModel( string path, ITexture texture );
 	ITexture LoadTexture( string path );
 
-	void RunLoop();
+	PolygonMode PolygonMode { get; set; }
 
 	void DrawModel( Model model, Transform transform );
 }

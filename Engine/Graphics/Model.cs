@@ -8,9 +8,10 @@ public sealed class Model : IPreloadable {
 	internal IModel BackendModel { get; private set; } = null!;
 	internal ITexture BackendTexture { get; private set; } = null!;
 
-	// When we replace unready models, we use this
+	bool IPreloadable.IsLoaded => _isLoaded;
+
 	ModelResource _preset = null!;
-	bool _isReady = false;
+	bool _isLoaded = false;
 
 	// Mark the constructor as private, prevent instantiation!
 	Model() { }
@@ -24,12 +25,9 @@ public sealed class Model : IPreloadable {
 
 		Model model = new() {
 			_preset = res,
-			_isReady = true,
 		};
 
-		if ( !Entry.Graphics.IsReady )
-			model._isReady = false;
-		else
+		if ( Entry.Graphics.HasLoaded )
 			model.UpdateFromResource( res );
 
 		Cache[path] = model;
@@ -44,9 +42,11 @@ public sealed class Model : IPreloadable {
 		BackendTexture = texture;
 	}
 
-	void IPreloadable.Ready() {
-		if ( _isReady ) return;
-		_isReady = true;
+	void IPreloadable.Load() {
+		if ( _isLoaded ) return;
+		_isLoaded = true;
+
+		Console.WriteLine( "amaload" );
 
 		UpdateFromResource( _preset );
 	}

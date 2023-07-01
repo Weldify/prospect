@@ -1,7 +1,8 @@
 ﻿namespace Prospect.Engine;
 
-/// <summary> This asset can be preloaded by the user, but won't actually be ready until some point in time </summary>
+/// <summary> This asset relies on the graphics backend and might not be fully loaded right away </summary>
 interface IPreloadable {
-	/// <summary> Runs when this should be loaded </summary>
-	internal void Ready();
+	bool IsLoaded { get; }
+	/// <summary> Runs when the graphics backend has loaded </summary>
+	void Load();
 }

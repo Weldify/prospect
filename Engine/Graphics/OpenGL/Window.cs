@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Prospect.Engine.OpenGL;
 
-class Window : IWindow, IDisposable {
+class Window : IDisposable {
 	public string Title {
 		get => _nativeWindow.Title;
 		set => _nativeWindow.Title = value;
@@ -17,15 +17,13 @@ class Window : IWindow, IDisposable {
 		set => _nativeWindow.Size = new( value.X, value.Y );
 	}
 
-	public Action<float>? DoUpdate { get; set; }
-	public Action? DoRender { get; set; }
+	public Action OnLoad { get; set; } = () => { };
+	public Action OnUpdate { get; set; } = () => { };
+	public Action<float> OnRender { get; set; } = ( f ) => { };
 
-	public event Action Load = () => { };
 	public GL GL => _gl ?? throw new Exception( "Window hasn't loaded yet" );
 
-	readonly Silk.NET.Windowing.IWindow _nativeWindow;
-
-	// These will never be null in _nativeWindow events
+	readonly IWindow _nativeWindow;
 	ImGuiController _imGuiController = null!;
 	IInputContext _inputContext = null!;
 	GL _gl = null!;
@@ -47,7 +45,17 @@ class Window : IWindow, IDisposable {
 				_inputContext = _nativeWindow.CreateInput()
 			);
 
-			Load.Invoke();
+			OnLoad.Invoke();
+		};
+
+		_nativeWindow.Update += delta => {
+			OnUpdate.Invoke();
+		};
+
+		_nativeWindow.Render += delta => {
+			_imGuiController.Update( (float)delta );
+			OnRender.Invoke( (float)delta );
+			_imGuiController.Render();
 		};
 
 		_nativeWindow.Closing += () => {
@@ -56,21 +64,11 @@ class Window : IWindow, IDisposable {
 			_gl?.Dispose();
 		};
 
-		_nativeWindow.Update += delta => {
-			DoUpdate?.Invoke( (float)delta );
-		};
-
-		_nativeWindow.Render += delta => {
-			_imGuiController.Update( (float)delta );
-			DoRender?.Invoke();
-			_imGuiController.Render();
-		};
-
 		_nativeWindow.FramebufferResize += size => _gl.Viewport( size );
 	}
 
 	public IInputContext CreateInput() => _nativeWindow.CreateInput();
-	public void Run() => _nativeWindow.Run();
+	public void RunLoop() => _nativeWindow.Run();
 
 	public void Dispose() {
 		_nativeWindow.Dispose();
