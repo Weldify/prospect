@@ -5,22 +5,13 @@ using Prospect.Engine;
 public struct Rotation : IEquatable<Rotation> {
 	public static readonly Rotation Identity = new( 0f, 0f, 0f, 1f );
 
-	public static Rotation LookAt( Vector3f sourcePoint, Vector3f destPoint ) {
-		Vector3f forwardVector = (destPoint - sourcePoint).Normal;
+	public static Rotation LookAt( Vector3f source, Vector3f destination ) {
+		var direction = (destination - source).Normal;
+		var rotationAxis = Vector3f.Forward.Cross( direction );
+		var dot = Vector3f.Forward.Dot( direction );
 
-		float dot = Vector3.Dot( Vector3f.Forward, forwardVector );
-
-		if ( Math.Abs( dot - (-1.0f) ) < 0.000001f ) {
-			return new Rotation( Vector3f.Up.X, Vector3f.Up.Y, Vector3f.Up.Z, 3.1415926535897932f );
-		}
-		if ( Math.Abs( dot - (1.0f) ) < 0.000001f ) {
-			return Identity;
-		}
-
-		float rotAngle = (float)Math.Acos( dot );
-		Vector3f rotAxis = Vector3f.Forward.Cross( forwardVector );
-
-		return FromAxisAngle( rotAxis.Normal, rotAngle );
+		Rotation rotation = new( rotationAxis, dot + 1 );
+		return rotation.Normal;
 	}
 
 	internal static Rotation FromYawPitchRoll( float yaw, float pitch, float roll ) {
@@ -49,16 +40,10 @@ public struct Rotation : IEquatable<Rotation> {
 	}
 
 	public static Rotation FromAxisAngle( Vector3f axis, float angle ) {
-		float halfAngle = angle * 0.5f;
-		float s = MathF.Sin( halfAngle );
-		float c = MathF.Cos( halfAngle );
+		float s = MathF.Sin( angle / 2f );
+		axis = axis.Normal;
 
-		return new(
-			axis.X * s,
-			axis.Y * s,
-			axis.Z * s,
-			c
-		);
+		return new( axis.X * s, axis.Y * s, axis.Z * s, MathF.Cos( angle / 2f ) );
 	}
 
 	public float X;
@@ -84,7 +69,8 @@ public struct Rotation : IEquatable<Rotation> {
 		}
 	}
 
-	public Vector3f Forward => new(
+	// OpenGL Forward is -Z
+	public Vector3f Forward => -new Vector3f(
 		2f * (X * Z + W * Y),
 		2f * (Y * Z - W * X),
 		1f - 2f * (X * X + Y * Y)
@@ -96,8 +82,8 @@ public struct Rotation : IEquatable<Rotation> {
 		2f * (Y * Z + W * X)
 	);
 
-	public Vector3f Left => new(
-		1f - 2f * (Y * Y + Z * Z), // I think this computes the left
+	public Vector3f Right => new(
+		1f - 2f * (Y * Y + Z * Z),
 		2f * (X * Y + W * Z),
 		2f * (X * Z - W * Y)
 	);
@@ -112,7 +98,8 @@ public struct Rotation : IEquatable<Rotation> {
 		Z = z;
 		W = w;
 	}
-	public Rotation( Vector3 vectorPart, float scalarPart ) {
+
+	public Rotation( Vector3f vectorPart, float scalarPart ) {
 		X = vectorPart.X;
 		Y = vectorPart.Y;
 		Z = vectorPart.Z;

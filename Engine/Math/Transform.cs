@@ -40,10 +40,8 @@ public struct Transform : IEquatable<Transform> {
 	public static bool operator ==( Transform t1, Transform t2 ) => t1.Position == t2.Position;
 	public static bool operator !=( Transform t1, Transform t2 ) => !(t1 == t2);
 
-	public static Transform operator +( Transform t, Vector3f v ) {
-		t.Position += v;
-		return t;
-	}
+	public static Transform operator +( Transform t, Vector3f v ) => t with { Position = t.Position + v };
+	public static Transform operator -( Transform t, Vector3f v ) => t with { Position = t.Position - v };
 
 	public bool Equals( Transform other ) => this == other;
 	public override bool Equals( [NotNullWhen( true )] object? obj ) => obj is Transform other && this == other;

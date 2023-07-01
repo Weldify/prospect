@@ -11,7 +11,7 @@ public static class Camera {
 			// Recompute ViewMatrix when changing transform so the graphics backend doesn't have to do that
 			ViewMatrix = Matrix4x4.CreateLookAt(
 				_transform.Position,
-				_transform.Position - _transform.Rotation.Forward,
+				_transform.Position + _transform.Rotation.Forward,
 				_transform.Rotation.Up
 			);
 		}

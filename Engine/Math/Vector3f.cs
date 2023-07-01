@@ -35,6 +35,8 @@ public struct Vector3f : IEquatable<Vector3f> {
 		(X * v.Y) - (Y * v.X)
 	);
 
+	public float Dot( Vector3 v ) => (X * v.X) + (Y * v.Y) + (Z * v.Z);
+
 	public static bool operator ==( Vector3f v1, Vector3f v2 ) => v1.X == v2.X && v1.Y == v2.Y && v1.Z == v2.Z;
 	public static bool operator !=( Vector3f v1, Vector3f v2 ) => !(v1 == v2);
 
@@ -50,4 +52,8 @@ public struct Vector3f : IEquatable<Vector3f> {
 
 	public static implicit operator Vector3( Vector3f v ) => new( v.X, v.Y, v.Z );
 	public static implicit operator Vector3f( Vector3 v ) => new( v.X, v.Y, v.Z );
+
+	public override string ToString() {
+		return $"{X}, {Y}, {Z}";
+	}
 }
