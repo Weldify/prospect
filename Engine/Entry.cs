@@ -37,6 +37,7 @@ public static partial class Entry {
 			OnLoad = onGraphicsLoaded,
 			OnUpdate = onUpdate,
 			OnRender = onRender,
+			OnFileDrop = onFileDrop,
 			KeyDown = onKeyDown,
 			KeyUp = onKeyUp,
 			MouseMoved = onMouseMoved,
@@ -114,6 +115,10 @@ public static partial class Entry {
 		PreviousHeldButtons = new( HeldButtons );
 		LookDelta = Angles.Zero;
 		ScrollDelta = 0f;
+	}
+
+	static void onFileDrop( string[] paths ) {
+		Window.OnFileDrop.Invoke( paths );
 	}
 
 	static void onKeyDown( Key key ) => HeldKeys.Add( key );

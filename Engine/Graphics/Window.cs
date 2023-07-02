@@ -5,4 +5,6 @@ public static class Window {
 		get => Entry.Graphics.WindowTitle;
 		set => Entry.Graphics.WindowTitle = value;
 	}
+
+	public static Action<string[]> OnFileDrop { internal get; set; } = ( p ) => { };
 }

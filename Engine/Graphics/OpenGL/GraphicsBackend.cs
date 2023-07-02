@@ -14,6 +14,8 @@ partial class GraphicsBackend : IGraphicsBackend {
 		set => _window.Title = value;
 	}
 
+	public Action<string[]> OnFileDrop { private get; set; } = ( p ) => { };
+
 	readonly IWindow _window;
 	ImGuiController? _imGuiController;
 
@@ -35,6 +37,7 @@ partial class GraphicsBackend : IGraphicsBackend {
 		_window.Update += onUpdate;
 		_window.Render += onRender;
 		_window.FramebufferResize += onResize;
+		_window.FileDrop += onFileDrop;
 		_window.Closing += onClose;
 	}
 
@@ -68,6 +71,10 @@ partial class GraphicsBackend : IGraphicsBackend {
 
 	void onResize( Vector2D<int> size ) {
 		_gl.Viewport( size );
+	}
+
+	void onFileDrop( string[] paths ) {
+		OnFileDrop.Invoke( paths );
 	}
 
 	void onClose() {

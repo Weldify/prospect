@@ -22,6 +22,7 @@ interface IGraphicsBackend {
 	Action OnLoad { set; }
 	Action OnUpdate { set; }
 	Action<float> OnRender { set; }
+	Action<string[]> OnFileDrop { set; }
 	void RunLoop();
 
 	// Rendering
