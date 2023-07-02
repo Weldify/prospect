@@ -73,8 +73,6 @@ partial class ProjectManager {
 		ImGui.TextColored( new Vector4( 1f, 1f, 0f, 1f ), proj.Title );
 		ImGui.Button( "Options" );
 		ImGui.SameLine( 0f, 4f );
-		ImGui.Button( "Run" );
-		ImGui.SameLine( 0f, 4f );
 
 		drawExport();
 
