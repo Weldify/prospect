@@ -45,26 +45,29 @@ partial class ProjectManager {
 		ImGui.Separator();
 	}
 
+	string[] _exportOptimizationLevels = new[] { "Debug", "Release" };
+	string _chosenExportOptimizationLevel = "Debug";
+
 	void drawExport() {
 		// Open export popup when we click export
 		if ( ImGui.Button( "Export" ) )
 			ImGui.OpenPopup( "ExportPopup" );
 
 		if ( ImGui.BeginPopup( "ExportPopup" ) ) {
-			//// Draw platform selection
-			//if ( ImGui.BeginCombo( "Platform", _comboCurrentPlatform ) ) {
-			//	foreach ( var platform in _comboPlatforms ) {
-			//		var isSelected = platform == _comboCurrentPlatform;
+			// Draw optimization level selection
+			if ( ImGui.BeginCombo( "Optimization level", _chosenExportOptimizationLevel ) ) {
+				foreach ( var level in _exportOptimizationLevels ) {
+					var isSelected = level == _chosenExportOptimizationLevel;
 
-			//		if ( ImGui.Selectable( platform, isSelected ) )
-			//			_comboCurrentPlatform = platform;
+					if ( ImGui.Selectable( level, isSelected ) )
+						_chosenExportOptimizationLevel = level;
 
-			//		if ( isSelected )
-			//			ImGui.SetItemDefaultFocus();
-			//	}
+					if ( isSelected )
+						ImGui.SetItemDefaultFocus();
+				}
 
-			//	ImGui.EndCombo();
-			//}
+				ImGui.EndCombo();
+			}
 
 			if ( ImGui.Button( "Export" ) ) {
 				ImGui.CloseCurrentPopup();
@@ -160,6 +163,10 @@ partial class ProjectManager {
 	}
 
 	bool tryCompileProject() {
+		OptimizationLevel optimizationLevel;
+		if ( !Enum.TryParse( _chosenExportOptimizationLevel, out optimizationLevel ) )
+			throw new Exception( "Failed to parse optimization level" );
+
 		string[] sourceFiles = getProjectCsFilePaths();
 
 		List<SyntaxTree> syntaxTrees = new();
@@ -185,11 +192,14 @@ partial class ProjectManager {
 			references.Add( MetadataReference.CreateFromFile( Path.Combine( netCoreDir, file ) ) );
 		}
 
+		var options = new CSharpCompilationOptions( OutputKind.DynamicallyLinkedLibrary )
+			.WithOptimizationLevel( optimizationLevel );
+
 		var compilation = CSharpCompilation.Create(
 			"game.dll",
 			syntaxTrees,
 			references,
-			new( OutputKind.DynamicallyLinkedLibrary )
+			options
 		);
 
 		var exportDir = Path.Combine( ProjectPath, "export" );
