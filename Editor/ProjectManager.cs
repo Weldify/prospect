@@ -10,18 +10,11 @@ namespace Prospect.Editor;
 
 partial class ProjectManager {
 	public string ProjectPath { get; private set; } = "";
-
+	public bool HasProject { get; private set; } = false;
 	Project? _project;
 
-	string _projectOpenPath = "";
-	string _projectCreateDir = "";
-	string _projectCreateName = "";
-
-	public void TryRestoreProject( string path ) {
-		if ( !Directory.Exists( path ) ) return;
-
-		openProject( path );
-	}
+	bool isValidProjectFile( string file ) => File.Exists( file ) && Path.GetExtension( file ) == ".proj";
+	bool canHouseNewProject( string path ) => Directory.Exists( path ) && Directory.GetFiles( path ).Length == 0;
 
 	public void Draw() {
 		ImGui.Begin( "Project manager" );
@@ -29,44 +22,12 @@ partial class ProjectManager {
 		if ( _project is Project proj )
 			drawProjectInfo( proj );
 		else {
-			drawOpenProject();
-			ImGui.Separator();
-			drawCreateProject();
+			ImGui.Text( "Drag and drop a .proj file to open an existing project" );
+			ImGui.TextColored( new Vector4( 1, 1, 0, 1 ), "Or" );
+			ImGui.Text( "Drag and drop an empty folder to create a new project" );
 		}
 
 		ImGui.End();
-	}
-
-	void drawOpenProject() {
-		ImGui.InputText( ".proj file", ref _projectOpenPath, 64 );
-
-		var opening = ImGui.Button( "Open" );
-		if ( !opening ) return;
-		if ( !Directory.Exists( _projectOpenPath ) ) return;
-
-		openProject( _projectOpenPath );
-	}
-
-	void drawCreateProject() {
-		ImGui.InputText( "parent dir", ref _projectCreateDir, 64 );
-		ImGui.InputText( "name", ref _projectCreateName, 64 );
-
-		var creating = ImGui.Button( "Create" );
-		if ( !creating ) return;
-
-		// Is this root path valid
-		if (
-			!Path.Exists( _projectCreateDir )
-			|| !File.GetAttributes( _projectCreateDir ).HasFlag( FileAttributes.Directory )
-		) return;
-
-		// Is the name free
-		if (
-			_projectCreateName == ""
-			|| Path.Exists( Path.Combine( _projectCreateDir, _projectCreateName ) )
-		) return;
-
-		createProject( _projectCreateDir, _projectCreateName );
 	}
 
 	void drawProjectInfo( Project proj ) {
@@ -114,9 +75,10 @@ partial class ProjectManager {
 		}
 	}
 
-	void createProject( string parentPath, string title ) {
-		var projectPath = Path.Combine( parentPath, title );
-		Directory.CreateDirectory( projectPath );
+	public void TryCreateProject( string projectPath ) {
+		if ( !canHouseNewProject( projectPath ) ) return;
+
+		var title = Path.GetFileName( projectPath ) ?? throw new Exception( "Aurgghh" );
 
 		var codePath = Path.Combine( projectPath, "code" );
 		Directory.CreateDirectory( codePath );
@@ -130,17 +92,21 @@ partial class ProjectManager {
 		var projectFilePath = Path.Combine( projectPath, "project.proj" );
 		project.Write( projectFilePath );
 
-		openProject( projectPath );
+		TryOpenProject( projectFilePath );
 	}
 
-	void openProject( string path ) {
-		var projectFilePath = Path.Combine( path, "project.proj" );
+	public void TryOpenProject( string filePath ) {
+		if ( !isValidProjectFile( filePath ) ) return;
 
-		_project = Resources.GetOrCreate<Project>( projectFilePath );
-		ProjectPath = path;
+		closeProject();
+
+		_project = Resources.GetOrCreate<Project>( filePath );
+		ProjectPath = Directory.GetParent( filePath )?.FullName ?? throw new Exception( "HOw" );
 
 		regenerateCsproj( _project );
 		regenerateEditorConfig();
+
+		HasProject = true;
 	}
 
 	void closeProject() {
@@ -149,17 +115,17 @@ partial class ProjectManager {
 		var projectFilePath = Path.Combine( ProjectPath, "project.proj" );
 		_project.Write( projectFilePath );
 
-		_projectOpenPath = ProjectPath;
-
 		_project = null;
 		ProjectPath = "";
+
+		HasProject = false;
 	}
 
 	void exportProject() {
 		// Copy runtime to build folder
 		copyDirectory( "../../../runtime/Release/net7.0", Path.Combine( ProjectPath, "export" ) );
 
-		if ( compileProject() ) {
+		if ( tryCompileProject() ) {
 			Console.WriteLine( "Compiled successfully!" );
 		} else {
 			Console.WriteLine( "Compilation failed" );
@@ -193,7 +159,7 @@ partial class ProjectManager {
 		}
 	}
 
-	bool compileProject() {
+	bool tryCompileProject() {
 		string[] sourceFiles = getProjectCsFilePaths();
 
 		List<SyntaxTree> syntaxTrees = new();

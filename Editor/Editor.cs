@@ -4,6 +4,7 @@ global using System.Collections.Generic;
 
 using Prospect.Engine;
 using Microsoft.CodeAnalysis;
+using System.IO;
 
 namespace Prospect.Editor;
 
@@ -20,9 +21,10 @@ partial class Editor : IGame {
 
 	public void Start() {
 		Window.Title = "Prospect Editor";
+		Window.OnFileDrop = onFileDrop;
 
 		_settings = Resources.GetOrCreate<EditorSettings>( "settings.eds" );
-		_projectManager.TryRestoreProject( _settings.LastProjectPath );
+		_projectManager.TryOpenProject( Path.Combine( _settings.LastProjectPath, "project.proj" ) );
 	}
 
 	public void Tick() { }
@@ -34,5 +36,15 @@ partial class Editor : IGame {
 	public void Shutdown() {
 		_settings.LastProjectPath = _projectManager.ProjectPath;
 		_settings.Write( "settings.eds" );
+	}
+
+	void onFileDrop( string[] paths ) {
+		if ( _projectManager.HasProject ) return;
+		Console.WriteLine( "noitdon" );
+
+		foreach ( var path in paths ) {
+			_projectManager.TryOpenProject( path );
+			_projectManager.TryCreateProject( path );
+		}
 	}
 }
