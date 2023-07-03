@@ -110,6 +110,7 @@ public static partial class Entry {
 		FrameDelta = delta;
 
 		_game?.Frame();
+		Consoole.Frame();
 
 		PreviousHeldKeys = new( HeldKeys );
 		PreviousHeldButtons = new( HeldButtons );

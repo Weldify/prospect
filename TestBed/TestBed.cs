@@ -13,7 +13,7 @@ public class TestBed : IGame {
 	public void Start() {
 		Window.Title = "Prospect testbed";
 
-		Input.MouseMode = MouseMode.Lock;
+		Input.MouseMode = MouseMode.Normal;
 		Camera.FieldOfView = 70f;
 	}
 
@@ -21,25 +21,9 @@ public class TestBed : IGame {
 
 	}
 
-	readonly Model _sword = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
-	Angles _lookAngles = Angles.Zero;
-
 	public void Frame() {
-		_lookAngles = (_lookAngles + Input.LookDelta).Wrapped;
-
-		var forward = Convert.ToSingle( Input.Down( Key.W ) ) - Convert.ToSingle( Input.Down( Key.S ) );
-		var right = Convert.ToSingle( Input.Down( Key.D ) ) - Convert.ToSingle( Input.Down( Key.A ) );
-
-		Camera.Transform = Camera.Transform with { Rotation = Rotation.From( _lookAngles ) };
-
-		Camera.Transform = Camera.Transform
-			+ Camera.Transform.Rotation.Forward * forward * Time.FrameDelta
-			+ Camera.Transform.Rotation.Right * right * Time.FrameDelta;
-
-		if ( Input.ScrollDelta != 0f ) return;
-
-		var transform = new Transform( Vector3.Zero, Rotation.From( new( Time.Now * 10f, 0f, 0f ) ) );
-		Graphics.DrawModel( _sword, transform );
+		if ( Input.Pressed( Key.GraveAccent ) )
+			Consoole.IsOpen = !Consoole.IsOpen;
 	}
 
 	public void Shutdown() {
