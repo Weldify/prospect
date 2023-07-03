@@ -230,8 +230,19 @@ partial class ProjectManager {
 	}
 
 	void regenerateEditorConfig() {
+		var endFilePath = Path.Combine( ProjectPath, ".editorconfig" );
+
 		// Currently I just yoink this from the engine, probably not a good idea
-		File.Copy( "../../../../.editorconfig", Path.Combine( ProjectPath, ".editorconfig" ), true );
+		var currentDir = Directory.GetCurrentDirectory();
+		var editorConfigFile = Path.Combine( currentDir, "../../../../.editorconfig" );
+
+		if ( !File.Exists( editorConfigFile ) ) {
+			Console.WriteLine( "Didnt copy existing .editorconfig into project because we couldnt find it" );
+			File.WriteAllText( "", endFilePath );
+			return;
+		}
+
+		File.Copy( editorConfigFile, endFilePath, true );
 	}
 
 	string generateCsprojContents() {
