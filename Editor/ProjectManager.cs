@@ -163,8 +163,7 @@ partial class ProjectManager {
 	}
 
 	bool tryCompileProject() {
-		OptimizationLevel optimizationLevel;
-		if ( !Enum.TryParse( _chosenExportOptimizationLevel, out optimizationLevel ) )
+		if ( !Enum.TryParse( _chosenExportOptimizationLevel, out OptimizationLevel optimizationLevel ) )
 			throw new Exception( "Failed to parse optimization level" );
 
 		string[] sourceFiles = getProjectCsFilePaths();
