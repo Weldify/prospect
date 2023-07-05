@@ -12,12 +12,16 @@ public static class Consoole {
 		set => _isOpen = value;
 	}
 
-	static readonly List<OutputEntry> _entries = new( new OutputEntry[_MAX_OUTPUT_SIZE] ) {
-		new() { Message="Bigballs" }
-	};
+	static readonly List<OutputEntry> _entries = new( new OutputEntry[_MAX_OUTPUT_SIZE] ) { };
 
 	static bool _isOpen = false;
 	static string _commandInput = "";
+
+	static Consoole() {
+		for ( var i = 1; i < _MAX_OUTPUT_SIZE; i++ ) {
+			_entries[i] = new();
+		}
+	}
 
 	internal static void Frame() {
 		if ( !_isOpen ) return;
@@ -35,14 +39,18 @@ public static class Consoole {
 	}
 
 	static void drawOutput() {
-		for ( int i = 0; i < _entries.Count; i++ ) {
-			var entry = _entries[i];
-			var message = entry.Message ?? "";
+		if ( !ImGui.BeginTable( "__consoleOutput", 1 ) ) return;
 
-            ImGui.PushID(i);
-			ImGui.InputText( "", ref message, byte.MaxValue, ImGuiInputTextFlags.ReadOnly );
-            ImGui.PopID();
+		ImGui.TableSetupColumn( "Text", ImGuiTableColumnFlags.WidthStretch, 1f );
+
+		foreach ( var entry in _entries ) {
+			ImGui.TableNextRow();
+			ImGui.TableNextColumn();
+
+			ImGui.Text( entry.Message ?? "" );
 		}
+
+		ImGui.EndTable();
 	}
 
 	static void drawCommandInput() {
