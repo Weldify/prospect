@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis;
 using Prospect.Engine;
 using System.IO;
 using System.Numerics;
-using Microsoft.CodeAnalysis.Emit;
 
 namespace Prospect.Editor;
 
@@ -78,8 +77,8 @@ partial class ProjectManager {
 		}
 	}
 
-	public void TryCreateProject( string projectPath ) {
-		if ( !canHouseNewProject( projectPath ) ) return;
+	public Result CreateProject( string projectPath ) {
+		if ( !canHouseNewProject( projectPath ) ) return Result.Fail();
 
 		var title = Path.GetFileName( projectPath ) ?? throw new Exception( "Aurgghh" );
 
@@ -95,11 +94,13 @@ partial class ProjectManager {
 		var projectFilePath = Path.Combine( projectPath, "project.proj" );
 		project.Write( projectFilePath );
 
-		TryOpenProject( projectFilePath );
+		OpenProject( projectFilePath );
+
+		return Result.Ok();
 	}
 
-	public void TryOpenProject( string filePath ) {
-		if ( !isValidProjectFile( filePath ) ) return;
+	public Result OpenProject( string filePath ) {
+		if ( !isValidProjectFile( filePath ) ) return Result.Fail();
 
 		closeProject();
 
@@ -110,6 +111,8 @@ partial class ProjectManager {
 		regenerateEditorConfig();
 
 		HasProject = true;
+
+		return Result.Ok();
 	}
 
 	void closeProject() {
@@ -128,7 +131,7 @@ partial class ProjectManager {
 		// Copy runtime to build folder
 		copyDirectory( "../../../runtime/Release/net7.0", Path.Combine( ProjectPath, "export" ) );
 
-		if ( tryCompileProject() ) {
+		if ( compileProject().IsOk ) {
 			Console.WriteLine( "Compiled successfully!" );
 		} else {
 			Console.WriteLine( "Compilation failed" );
@@ -162,7 +165,7 @@ partial class ProjectManager {
 		}
 	}
 
-	bool tryCompileProject() {
+	Result compileProject() {
 		if ( !Enum.TryParse( _chosenExportOptimizationLevel, out OptimizationLevel optimizationLevel ) )
 			throw new Exception( "Failed to parse optimization level" );
 
@@ -177,7 +180,7 @@ partial class ProjectManager {
 
 		if ( Directory.GetParent( typeof( object ).Assembly.Location )?.FullName is not string netCoreDir ) {
 			Console.WriteLine( "Couldn't find NET core dir" );
-			return false;
+			return Result.Fail();
 		}
 
 		List<MetadataReference> references = new() {
@@ -211,12 +214,12 @@ partial class ProjectManager {
 
 		// Success = good!
 		if ( result.Success )
-			return true;
+			return Result.Ok();
 
 		// Clean up after fail
 		File.Delete( gameDllPath );
 
-		return false;
+		return Result.Fail();
 	}
 
 	string[] getProjectCsFilePaths() {

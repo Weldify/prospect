@@ -3,7 +3,6 @@ global using System.Linq;
 global using System.Collections.Generic;
 
 using Prospect.Engine;
-using Microsoft.CodeAnalysis;
 using System.IO;
 
 namespace Prospect.Editor;
@@ -24,7 +23,7 @@ partial class Editor : IGame {
 		Window.OnFileDrop = onFileDrop;
 
 		_settings = Resources.GetOrCreate<EditorSettings>( "settings.eds" );
-		_projectManager.TryOpenProject( Path.Combine( _settings.LastProjectPath, "project.proj" ) );
+		_projectManager.OpenProject( Path.Combine( _settings.LastProjectPath, "project.proj" ) );
 	}
 
 	public void Tick() { }
@@ -43,8 +42,8 @@ partial class Editor : IGame {
 		Console.WriteLine( "noitdon" );
 
 		foreach ( var path in paths ) {
-			_projectManager.TryOpenProject( path );
-			_projectManager.TryCreateProject( path );
+			_projectManager.OpenProject( path );
+			_projectManager.CreateProject( path );
 		}
 	}
 }
