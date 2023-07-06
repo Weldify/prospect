@@ -10,22 +10,23 @@ public sealed class Model : IPreloadable {
 
 	bool IPreloadable.IsLoaded => _isLoaded;
 
-	ModelResource _preset = null!;
+	ModelResource _preset;
 	bool _isLoaded = false;
 
 	// Mark the constructor as private, prevent instantiation!
-	Model() { }
+	Model( ModelResource preset ) {
+		_preset = preset;
+	}
 
 	public static Model Load( string path ) {
 		if ( Cache.TryGetValue( path, out var mdl ) )
 			return mdl;
 
 		if ( Resources.Get<ModelResource>( path ) is not ModelResource res )
+			// TODO: Make an in-engine error model and return that instead of throwing
 			throw new Exception( "Model ain't there pal" );
 
-		Model model = new() {
-			_preset = res,
-		};
+		Model model = new( res );
 
 		if ( Entry.Graphics.HasLoaded )
 			model.UpdateFromResource( res );
