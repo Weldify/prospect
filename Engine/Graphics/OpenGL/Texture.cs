@@ -5,24 +5,28 @@ using System.IO;
 namespace Prospect.Engine.OpenGL;
 
 public sealed class Texture : ITexture, IDisposable {
-	readonly uint _handle;
-	readonly GL _gl;
-
-	public unsafe Texture( GL gl, string path ) {
-		//Saving the gl instance.
-		_gl = gl;
-
-		//Generating the opengl handle;
-		_handle = _gl.GenTexture();
-		Bind();
+	public static Result<Texture> Load( GL gl, string path ) {
+		if ( !File.Exists( path ) )
+			return Result.Fail();
 
 		// Load the image from memory.
 		ImageResult result = ImageResult.FromMemory( File.ReadAllBytes( path ), ColorComponents.RedGreenBlueAlpha );
+		
+		return new Texture( gl, result );
+	}
 
-		fixed ( byte* ptr = result.Data ) {
+	readonly uint _handle;
+	readonly GL _gl;
+
+	unsafe Texture( GL gl, ImageResult imageResult ) {
+		_gl = gl;
+		_handle = _gl.GenTexture();
+		Bind();
+
+		fixed ( byte* ptr = imageResult.Data ) {
 			// Create our texture and upload the image data.
-			_gl.TexImage2D( TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)result.Width,
-				(uint)result.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, ptr );
+			_gl.TexImage2D( TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)imageResult.Width,
+				(uint)imageResult.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, ptr );
 		}
 
 		setParameters();

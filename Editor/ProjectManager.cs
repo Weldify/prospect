@@ -77,8 +77,8 @@ partial class ProjectManager {
 		}
 	}
 
-	public Result CreateProject( string projectPath ) {
-		if ( !canHouseNewProject( projectPath ) ) return Result.Fail();
+	public Status CreateProject( string projectPath ) {
+		if ( !canHouseNewProject( projectPath ) ) return Status.Fail();
 
 		var title = Path.GetFileName( projectPath ) ?? throw new Exception( "Aurgghh" );
 
@@ -96,11 +96,11 @@ partial class ProjectManager {
 
 		OpenProject( projectFilePath );
 
-		return Result.Ok();
+		return Status.Ok();
 	}
 
-	public Result OpenProject( string filePath ) {
-		if ( !isValidProjectFile( filePath ) ) return Result.Fail();
+	public Status OpenProject( string filePath ) {
+		if ( !isValidProjectFile( filePath ) ) return Status.Fail();
 
 		closeProject();
 
@@ -112,7 +112,7 @@ partial class ProjectManager {
 
 		HasProject = true;
 
-		return Result.Ok();
+		return Status.Ok();
 	}
 
 	void closeProject() {
@@ -165,7 +165,7 @@ partial class ProjectManager {
 		}
 	}
 
-	Result compileProject() {
+	Status compileProject() {
 		if ( !Enum.TryParse( _chosenExportOptimizationLevel, out OptimizationLevel optimizationLevel ) )
 			throw new Exception( "Failed to parse optimization level" );
 
@@ -180,7 +180,7 @@ partial class ProjectManager {
 
 		if ( Directory.GetParent( typeof( object ).Assembly.Location )?.FullName is not string netCoreDir ) {
 			Console.WriteLine( "Couldn't find NET core dir" );
-			return Result.Fail();
+			return Status.Fail();
 		}
 
 		List<MetadataReference> references = new() {
@@ -214,12 +214,12 @@ partial class ProjectManager {
 
 		// Success = good!
 		if ( result.Success )
-			return Result.Ok();
+			return Status.Ok();
 
 		// Clean up after fail
 		File.Delete( gameDllPath );
 
-		return Result.Fail();
+		return Status.Fail();
 	}
 
 	string[] getProjectCsFilePaths() {

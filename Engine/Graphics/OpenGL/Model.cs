@@ -6,6 +6,16 @@ using AssMesh = Silk.NET.Assimp.Mesh;
 namespace Prospect.Engine.OpenGL;
 
 class Model : IModel, IDisposable {
+	public unsafe static Result<Model, string> Load( GL gl, string path, Texture texture ) {
+		var assimp = Assimp.GetApi();
+
+		var scene = assimp.ImportFile( path, (uint)PostProcessSteps.Triangulate );
+		if ( scene == null || scene->MFlags == Assimp.SceneFlagsIncomplete || scene->MRootNode == null )
+			return assimp.GetErrorStringS();
+
+		return new Model( gl, scene, texture );
+	}
+
 	public IReadOnlyList<Mesh> Meshes => _meshes;
 
 	readonly GL _gl;
@@ -14,14 +24,10 @@ class Model : IModel, IDisposable {
 	readonly List<Mesh> _meshes = new();
 	readonly Texture _texture;
 
-	public unsafe Model( GL gl, string path, Texture texture ) {
+	public unsafe Model( GL gl, Scene* scene, Texture texture ) {
 		_gl = gl;
 		_assimp = Assimp.GetApi();
 		_texture = texture;
-
-		var scene = _assimp.ImportFile( path, (uint)PostProcessSteps.Triangulate );
-		if ( scene == null || scene->MFlags == Assimp.SceneFlagsIncomplete || scene->MRootNode == null )
-			throw new Exception( _assimp.GetErrorStringS() );
 
 		processNode( scene->MRootNode, scene );
 	}

@@ -55,14 +55,19 @@ partial class GraphicsBackend {
 	}
 
 	public Result<IModel> LoadModel( string path, ITexture texture ) {
-		if ( texture is not Texture tex )
-			return Result.Fail<IModel>();
+		if ( texture is not Texture tex ) return Result.Fail();
 
-		return Result.Ok( new Model( _gl, path, tex ) as IModel );
+		var model = Model.Load( _gl, path, tex );
+		if ( model.IsError ) return Result.Fail();
+
+		return model.Value;
 	}
 
 	public Result<ITexture> LoadTexture( string path ) {
-		return Result.Ok( new Texture( _gl, path ) as ITexture );
+		var texture = Texture.Load( _gl, path );
+		if ( texture.IsError ) return Result.Fail();
+
+		return texture.Value;
 	}
 
 	public void DrawModel( Engine.Model model, Transform transform ) {
