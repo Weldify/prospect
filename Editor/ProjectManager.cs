@@ -80,7 +80,8 @@ partial class ProjectManager {
 	public Status CreateProject( string projectPath ) {
 		if ( !canHouseNewProject( projectPath ) ) return Status.Fail();
 
-		var title = Path.GetFileName( projectPath ) ?? throw new Exception( "Aurgghh" );
+		if ( Path.GetFileName( projectPath ) is not string title )
+			return Status.Fail();
 
 		var codePath = Path.Combine( projectPath, "code" );
 		Directory.CreateDirectory( codePath );
@@ -102,10 +103,13 @@ partial class ProjectManager {
 	public Status OpenProject( string filePath ) {
 		if ( !isValidProjectFile( filePath ) ) return Status.Fail();
 
+		if ( Directory.GetParent( filePath )?.FullName is not string projectPath )
+			return Status.Fail();
+
 		closeProject();
 
 		_project = Resources.GetOrCreate<Project>( filePath );
-		ProjectPath = Directory.GetParent( filePath )?.FullName ?? throw new Exception( "HOw" );
+		ProjectPath = projectPath;
 
 		regenerateCsproj( _project );
 		regenerateEditorConfig();
@@ -131,20 +135,20 @@ partial class ProjectManager {
 		// Copy runtime to build folder
 		copyDirectory( "../../../runtime/Release/net7.0", Path.Combine( ProjectPath, "export" ) );
 
-		if ( compileProject().IsOk ) {
+		var compilationStatus = compileProject();
+		if ( compilationStatus.IsOk ) {
 			Console.WriteLine( "Compiled successfully!" );
 		} else {
-			Console.WriteLine( "Compilation failed" );
+			Console.WriteLine( compilationStatus.Error );
 		}
 	}
 
-	void copyDirectory( string source, string destination ) {
+	Status copyDirectory( string source, string destination ) {
 		// Get information about the source directory
 		var dir = new DirectoryInfo( source );
 
 		// Check if the source directory exists
-		if ( !dir.Exists )
-			throw new DirectoryNotFoundException( $"Source directory not found: {dir.FullName}" );
+		if ( !dir.Exists ) return Status.Fail();
 
 		// Cache directories before we start copying
 		DirectoryInfo[] dirs = dir.GetDirectories();
@@ -161,13 +165,17 @@ partial class ProjectManager {
 		// If recursive and copying subdirectories, recursively call this method
 		foreach ( DirectoryInfo subDir in dirs ) {
 			string newDestinationDir = Path.Combine( destination, subDir.Name );
-			copyDirectory( subDir.FullName, newDestinationDir );
+
+			if ( copyDirectory( subDir.FullName, newDestinationDir ).IsError )
+				return Status.Fail();
 		}
+
+		return Status.Ok();
 	}
 
-	Status compileProject() {
+	Status<string> compileProject() {
 		if ( !Enum.TryParse( _chosenExportOptimizationLevel, out OptimizationLevel optimizationLevel ) )
-			throw new Exception( "Failed to parse optimization level" );
+			return "Failed to parse optimization level";
 
 		string[] sourceFiles = getProjectCsFilePaths();
 
@@ -178,10 +186,8 @@ partial class ProjectManager {
 			syntaxTrees.Add( tree );
 		}
 
-		if ( Directory.GetParent( typeof( object ).Assembly.Location )?.FullName is not string netCoreDir ) {
-			Console.WriteLine( "Couldn't find NET core dir" );
-			return Status.Fail();
-		}
+		if ( Directory.GetParent( typeof( object ).Assembly.Location )?.FullName is not string netCoreDir )
+			return Status.Fail( "Couldn't find NET core dir" );
 
 		List<MetadataReference> references = new() {
 			MetadataReference.CreateFromFile( "Prospect.Engine.dll" ),
@@ -219,7 +225,7 @@ partial class ProjectManager {
 		// Clean up after fail
 		File.Delete( gameDllPath );
 
-		return Status.Fail();
+		return "Compilation emit failed";
 	}
 
 	string[] getProjectCsFilePaths() {
