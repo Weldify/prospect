@@ -1,9 +1,21 @@
 namespace Prospect.Engine;
 
-public readonly struct Result<TValue> {
-	public static Result<TValue> Ok( TValue value ) => new( true, value );
-	public static Result<TValue> Fail() => new( false );
+public readonly struct Result {
+    // All the constructors are here to make the API nice
+	public static Result Ok() => new( true);
+	public static Result Fail() => new( false );
+    public static Result<TV> Ok<TV>( TV value ) => new( true, value );
+	public static Result<TV> Fail<TV>() => new( false );
+    public static Result<TV, TE> Ok<TV, TE>( TV value ) => new( true, value );
+	public static Result<TV, TE> Fail<TV, TE>( TE error ) => new( false, error: error );
 
+	public readonly bool IsOk;
+	public bool Failed => !IsOk;
+
+	Result( bool isOk ) => IsOk = isOk;
+}
+
+public readonly struct Result<TValue> {
 	public readonly bool IsOk;
 	public bool Failed => !IsOk;
 
@@ -12,7 +24,7 @@ public readonly struct Result<TValue> {
 	readonly TValue _value;
 
 #nullable disable
-	Result( bool isOk, TValue value = default ) {
+	internal Result( bool isOk, TValue value = default ) {
 #nullable enable
 		IsOk = isOk;
 		_value = value;
@@ -20,9 +32,6 @@ public readonly struct Result<TValue> {
 }
 
 public readonly struct Result<TValue, TError> {
-	public static Result<TValue, TError> Ok( TValue value ) => new( true, value );
-	public static Result<TValue, TError> Fail( TError error ) => new( false, error: error );
-
 	public readonly bool IsOk;
 	public bool Failed => !IsOk;
 
@@ -33,7 +42,7 @@ public readonly struct Result<TValue, TError> {
 	readonly TError _error;
 
 #nullable disable
-	Result( bool isOk, TValue value = default, TError error = default ) {
+	internal Result( bool isOk, TValue value = default, TError error = default ) {
 #nullable enable
 		IsOk = isOk;
 		_value = value;
