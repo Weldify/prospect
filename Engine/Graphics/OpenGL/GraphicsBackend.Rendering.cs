@@ -54,23 +54,26 @@ partial class GraphicsBackend {
 		_imGuiController?.Render();
 	}
 
-	public IModel LoadModel( string path, ITexture texture ) {
-		var tex = texture as Texture ?? throw new Exception( "Booboo exception" );
-		return new Model( _gl, path, tex );
+	public Result<IModel> LoadModel( string path, ITexture texture ) {
+		if ( texture is not Texture tex )
+			return Result.Fail<IModel>();
+
+		return Result.Ok( new Model( _gl, path, tex ) as IModel );
 	}
 
-	public ITexture LoadTexture( string path ) {
-		return new Texture( _gl, path );
+	public Result<ITexture> LoadTexture( string path ) {
+		return Result.Ok( new Texture( _gl, path ) as ITexture );
 	}
 
 	public void DrawModel( Engine.Model model, Transform transform ) {
+		// BackendModel is never null, and its always from our backend
+		var backendModel = (model.BackendModel as Model)!;
+
 		_mainModelShader.Use();
 		_mainModelShader.SetUniform( "uTexture", 0 );
 		_mainModelShader.SetUniform( "uTransform", transform.Matrix );
 		_mainModelShader.SetUniform( "uView", Camera.ViewMatrix );
 		_mainModelShader.SetUniform( "uProjection", _currentProjection );
-
-		var backendModel = model.BackendModel as Model ?? throw new Exception( "Bad" );
 
 		foreach ( var mesh in backendModel.Meshes ) {
 			mesh.Bind();

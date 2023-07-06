@@ -1,12 +1,12 @@
 namespace Prospect.Engine;
 
 public readonly struct Result {
-    // All the constructors are here to make the API nice
-	public static Result Ok() => new( true);
+	// All the constructors are here to make the API nice
+	public static Result Ok() => new( true );
 	public static Result Fail() => new( false );
-    public static Result<TV> Ok<TV>( TV value ) => new( true, value );
+	public static Result<TV> Ok<TV>( TV value ) => new( true, value );
 	public static Result<TV> Fail<TV>() => new( false );
-    public static Result<TV, TE> Ok<TV, TE>( TV value ) => new( true, value );
+	public static Result<TV, TE> Ok<TV, TE>( TV value ) => new( true, value );
 	public static Result<TV, TE> Fail<TV, TE>( TE error ) => new( false, error: error );
 
 	public readonly bool IsOk;

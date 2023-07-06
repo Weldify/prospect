@@ -36,11 +36,12 @@ public sealed class Model : IPreloadable {
 	}
 
 	internal void UpdateFromResource( ModelResource res ) {
+		// TODO: Use placeholder error resources if these fail
 		var texture = Entry.Graphics.LoadTexture( res.TexturePath );
-		var backendMesh = Entry.Graphics.LoadModel( res.MeshPath, texture );
+		var backendMesh = Entry.Graphics.LoadModel( res.MeshPath, texture.Value );
 
-		BackendModel = backendMesh;
-		BackendTexture = texture;
+		BackendModel = backendMesh.Value;
+		BackendTexture = texture.Value;
 	}
 
 	void IPreloadable.Load() {
