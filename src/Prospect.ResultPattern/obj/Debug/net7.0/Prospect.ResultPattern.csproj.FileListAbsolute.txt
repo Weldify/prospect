@@ -1,0 +1,12 @@
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\bin\Debug\net7.0\Prospect.ResultPattern.deps.json
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\bin\Debug\net7.0\Prospect.ResultPattern.dll
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\bin\Debug\net7.0\Prospect.ResultPattern.pdb
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\obj\Debug\net7.0\Prospect.ResultPattern.csproj.AssemblyReference.cache
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\obj\Debug\net7.0\Prospect.ResultPattern.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\obj\Debug\net7.0\Prospect.ResultPattern.AssemblyInfoInputs.cache
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\obj\Debug\net7.0\Prospect.ResultPattern.AssemblyInfo.cs
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\obj\Debug\net7.0\Prospect.ResultPattern.csproj.CoreCompileInputs.cache
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\obj\Debug\net7.0\Prospect.ResultPattern.dll
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\obj\Debug\net7.0\refint\Prospect.ResultPattern.dll
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\obj\Debug\net7.0\Prospect.ResultPattern.pdb
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.ResultPattern\obj\Debug\net7.0\ref\Prospect.ResultPattern.dll

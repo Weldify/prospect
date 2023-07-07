@@ -1,0 +1,17 @@
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\obj\Debug\net7.0\Prospect.Engine.csproj.AssemblyReference.cache
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\obj\Debug\net7.0\Prospect.Engine.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\obj\Debug\net7.0\Prospect.Engine.AssemblyInfoInputs.cache
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\obj\Debug\net7.0\Prospect.Engine.AssemblyInfo.cs
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\obj\Debug\net7.0\Prospect.Engine.csproj.CoreCompileInputs.cache
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\bin\Debug\net7.0\Prospect.Engine.deps.json
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\bin\Debug\net7.0\Prospect.Engine.dll
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\bin\Debug\net7.0\Prospect.Engine.pdb
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\bin\Debug\net7.0\Prospect.Math.dll
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\bin\Debug\net7.0\Prospect.ResultPattern.dll
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\bin\Debug\net7.0\Prospect.Math.pdb
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\bin\Debug\net7.0\Prospect.ResultPattern.pdb
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\obj\Debug\net7.0\Prospect.Engine.csproj.CopyComplete
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\obj\Debug\net7.0\Prospect.Engine.dll
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\obj\Debug\net7.0\refint\Prospect.Engine.dll
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\obj\Debug\net7.0\Prospect.Engine.pdb
+C:\Users\ian\Documents\Projects\prospect\src\Prospect.Engine\obj\Debug\net7.0\ref\Prospect.Engine.dll
