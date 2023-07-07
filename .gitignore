@@ -1,11 +1,3 @@
-.vscode
-.vs
-
-/build
-
-Engine/obj
-Runtime/obj
-Editor/obj
-TestBed/obj
-
-**/imgui.ini
+src/*/obj
+src/*/bin
+src/.vs
