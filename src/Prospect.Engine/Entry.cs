@@ -55,20 +55,20 @@ public static partial class Entry {
 		_game.Start();
 	}
 
-	public static void Run<T>() where T : IGame, new() => runGame( new T() );
+    public static void Run<T>() where T : IGame, new()
+    {
+        var game = new T();
+        applyOptions( game );
 
-	static void runGame( IGame game ) {
-		applyOptions( game );
+        RawGameTime.Start();
 
-		RawGameTime.Start();
+        _game = game;
+        tryStartGame();
 
-		_game = game;
-		tryStartGame();
+        Graphics.RunLoop();
 
-		Graphics.RunLoop();
-
-		shutdown();
-	}
+        shutdown();
+    }
 
 	static void shutdown() => _game?.Shutdown();
 
