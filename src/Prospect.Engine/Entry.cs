@@ -25,6 +25,7 @@ public static partial class Entry {
 	internal static HashSet<MouseButton> PreviousHeldButtons { get; private set; } = new();
 
 	internal static IGraphicsBackend Graphics { get; private set; }
+    internal static IAudioBackend Audio { get; private set; }
 
 	static IGame? _game;
 	static bool _hasGameStarted = false;

@@ -27,6 +27,9 @@ public class TestBed : IGame {
 	public void Frame() {
 		_lookAngles = (_lookAngles + Input.LookDelta).Wrapped;
 
+        if ( Input.Pressed( MouseButton.Left ) )
+            Audio.PlayFardd();
+
 		var forward = Convert.ToSingle( Input.Down( Key.W ) ) - Convert.ToSingle( Input.Down( Key.S ) );
 		var right = Convert.ToSingle( Input.Down( Key.D ) ) - Convert.ToSingle( Input.Down( Key.A ) );
 
