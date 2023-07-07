@@ -1,11 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<OutputType>Library</OutputType>
-
 		<TargetFramework>net7.0</TargetFramework>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>Prospect Engine</Title>
+		<Version>0.0.1</Version>
+		<Description>Game engine</Description>
+		<Copyright>MIT License</Copyright>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Authors>Weldify</Authors>
 	</PropertyGroup>
 
 	<ItemGroup>
