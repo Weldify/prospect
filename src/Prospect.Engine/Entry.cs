@@ -31,7 +31,7 @@ public static partial class Entry {
 	static bool _hasGameStarted = false;
 
 	static Entry() {
-		Graphics = new OpenGL.GraphicsBackend {
+		Graphics = new OpenGL.GraphicsBackend() {
 			OnLoad = onGraphicsLoaded,
 			OnUpdate = onUpdate,
 			OnRender = onRender,
@@ -43,6 +43,8 @@ public static partial class Entry {
 			MouseUp = onMouseUp,
 			Scroll = onScroll
 		};
+
+        Audio = new OpenAL.AudioBackend();
 	}
 
 	static void applyOptions( IGame game ) {
