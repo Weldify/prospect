@@ -1,6 +1,7 @@
 ﻿using Prospect.Engine.OpenGL;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Prospect.Engine;
 
@@ -36,9 +37,13 @@ public sealed class Model : IPreloadable {
 	}
 
 	internal void UpdateFromResource( ModelResource res ) {
-		// TODO: Use placeholder error resources if these fail
-		var texture = Entry.Graphics.LoadTexture( res.TexturePath );
-		var backendMesh = Entry.Graphics.LoadModel( res.MeshPath, texture.Value );
+        // These are relative
+        var texturePath = Path.Combine( res.Directory, res.TexturePath );
+        var meshPath = Path.Combine( res.Directory, res.MeshPath );
+
+        // TODO: Use placeholder error resources if these fail
+        var texture = Entry.Graphics.LoadTexture( texturePath );
+		var backendMesh = Entry.Graphics.LoadModel( meshPath, texture.Value );
 
 		BackendModel = backendMesh.Value;
 		BackendTexture = texture.Value;

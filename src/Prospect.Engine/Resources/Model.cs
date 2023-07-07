@@ -2,7 +2,7 @@
 
 namespace Prospect.Engine;
 
-sealed class ModelResource : IResource {
+sealed class ModelResource : Resource {
 	public string MeshPath = "";
 	public string TexturePath = "";
 }

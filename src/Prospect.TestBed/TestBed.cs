@@ -21,7 +21,7 @@ public class TestBed : IGame {
 
 	}
 
-	readonly Model _sword = Model.Load( "C:/Users/ian/Documents/Models/sword/longsword.mdl" );
+	readonly Model _sword = Model.Load( "../../../../assets/fish.mdl" );
 	Angles _lookAngles = Angles.Zero;
 
 	public void Frame() {
