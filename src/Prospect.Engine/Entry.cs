@@ -73,12 +73,9 @@ public static partial class Entry {
 	static void shutdown() => _game?.Shutdown();
 
 	static void onGraphicsLoaded() {
-		// Load preloadable models
-		Model._cache.Values
-			.Cast<IPreloadable>()
-			.Where( m => !m.IsLoaded )
-			.ToList()
-			.ForEach( m => m.Load() );
+        // Load preloadable models
+        foreach ( var model in Model._cache.Values.Where( m => !m._hasLoaded ) )
+            model.postBackendLoad();
 
 		tryStartGame();
 	}

@@ -4,10 +4,6 @@ root = true
 # C# files
 [*.cs]
 
-[*.cs]
-# https://github.com/dotnet/roslyn/issues/67949
-dotnet_diagnostic.IDE0251.severity = none
-
 #### Core EditorConfig Options ####
 
 # Indentation and spacing
@@ -28,7 +24,7 @@ file_header_template = unset
 
 # this. and Me. preferences
 dotnet_style_qualification_for_event = false:warning
-dotnet_style_qualification_for_field = false:warning
+dotnet_style_qualification_for_field = false
 dotnet_style_qualification_for_method = false:warning
 dotnet_style_qualification_for_property = false:warning
 
@@ -241,7 +237,7 @@ dotnet_naming_symbols.method.applicable_accessibilities = public
 dotnet_naming_symbols.method.required_modifiers = 
 
 dotnet_naming_symbols.private_method.applicable_kinds = method
-dotnet_naming_symbols.private_method.applicable_accessibilities = private
+dotnet_naming_symbols.private_method.applicable_accessibilities = internal, private
 dotnet_naming_symbols.private_method.required_modifiers = 
 
 dotnet_naming_symbols.public_or_protected_field.applicable_kinds = field

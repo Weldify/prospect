@@ -5,16 +5,14 @@ using System.IO;
 
 namespace Prospect.Engine;
 
-public sealed class Model : IPreloadable {
+public sealed class Model {
 	internal readonly static Dictionary<string, Model> _cache = new();
 
 	internal IModel BackendModel { get; private set; } = null!;
 	internal ITexture BackendTexture { get; private set; } = null!;
 
-	bool IPreloadable.IsLoaded => _isLoaded;
-
+    internal bool _hasLoaded = false;
 	readonly ModelResource _preset;
-	bool _isLoaded = false;
 
 	// Mark the constructor as private, prevent instantiation!
 	Model( ModelResource preset ) => _preset = preset;
@@ -30,13 +28,13 @@ public sealed class Model : IPreloadable {
 		Model model = new( res );
 
 		if ( Entry.Graphics.HasLoaded )
-			model.UpdateFromResource( res );
+			model.updateFromResource( res );
 
 		_cache[path] = model;
 		return model;
 	}
 
-	internal void UpdateFromResource( ModelResource res ) {
+	void updateFromResource( ModelResource res ) {
         // These are relative
         var texturePath = Path.Combine( res.Directory, res.TexturePath );
         var meshPath = Path.Combine( res.Directory, res.MeshPath );
@@ -49,12 +47,12 @@ public sealed class Model : IPreloadable {
 		BackendTexture = texture.Value;
 	}
 
-	void IPreloadable.Load() {
-		if ( _isLoaded ) return;
-		_isLoaded = true;
+	internal void postBackendLoad() {
+		if ( _hasLoaded ) return;
+		_hasLoaded = true;
 
 		Console.WriteLine( "amaload" );
 
-		UpdateFromResource( _preset );
+        updateFromResource( _preset );
 	}
 }
