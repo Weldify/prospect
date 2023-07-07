@@ -50,26 +50,30 @@ public static partial class Entry {
 		TickDelta = 1f / (float)TickRate;
 	}
 
-	static void tryStartGame() {
-		if ( _game is null || !Graphics.HasLoaded || _hasGameStarted ) return;
+	static Status startGame() {
+		if ( _game is null || !Graphics.HasLoaded || _hasGameStarted ) 
+            return Status.Fail();
+
 		_hasGameStarted = true;
 		_game.Start();
+
+        return Status.Ok();
 	}
 
-	public static void Run<T>() where T : IGame, new() => runGame( new T() );
+    public static void Run<T>() where T : IGame, new()
+    {
+        var game = new T();
+        applyOptions( game );
 
-	static void runGame( IGame game ) {
-		applyOptions( game );
+        RawGameTime.Start();
 
-		RawGameTime.Start();
+        _game = game;
+        _ = startGame();
 
-		_game = game;
-		tryStartGame();
+        Graphics.RunLoop();
 
-		Graphics.RunLoop();
-
-		shutdown();
-	}
+        shutdown();
+    }
 
 	static void shutdown() => _game?.Shutdown();
 
@@ -78,7 +82,7 @@ public static partial class Entry {
         foreach ( var model in Model._cache.Values.Where( m => !m._hasLoaded ) )
             model.postBackendLoad();
 
-		tryStartGame();
+		_ = startGame();
 	}
 
 	static void onUpdate() {
