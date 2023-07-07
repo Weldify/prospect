@@ -43,7 +43,7 @@ partial class GraphicsBackend {
 	void beginRender( float delta ) {
 		// Calculate camera projection that will be used for this frame
 		Point2 windowSize = new( _window.Size.X, _window.Size.Y );
-		_currentProjection = Matrix4x4.CreatePerspectiveFieldOfView( Camera.FieldOfView.ToRadians(), windowSize.Aspect, 0.1f, 100f );
+		_currentProjection = Matrix4x4.CreatePerspectiveFieldOfView( Camera.FieldOfView.ToRadians(), windowSize.Aspect, Camera.Near, Camera.Far );
 
 		_gl.ClearColor( Color.FromArgb( 255, 0, 0, 0 ) );
 		_gl.Clear( ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit );

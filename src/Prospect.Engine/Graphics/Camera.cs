@@ -19,6 +19,8 @@ public static class Camera {
 
 	/// <summary> Camera's field of view in degrees </summary>
 	public static float FieldOfView { get; set; } = 70f;
+    public static float Near { get; set; } = 0.01f;
+    public static float Far { get; set; } = 100f;
 
 	internal static Matrix4x4 ViewMatrix { get; private set; }
 
