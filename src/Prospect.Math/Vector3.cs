@@ -57,4 +57,6 @@ public struct Vector3 : IEquatable<Vector3> {
 
 	public static implicit operator System.Numerics.Vector3( Vector3 v ) => new( v._vec.X, v._vec.Y, v._vec.Z );
 	public static implicit operator Vector3( System.Numerics.Vector3 v ) => new( v.X, v.Y, v.Z );
+
+    public override string ToString() => $"{X}, {Y}, {Z}";
 }
