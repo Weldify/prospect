@@ -9,16 +9,8 @@ public static class Time
     public static uint TickRate => Entry.TickRate;
     public static float TickDelta => Entry.TickDelta;
 
-    // Frames
-    public static float FrameDelta => Entry.FrameDelta;
-
-    /// <summary> Time since the game's startup </summary>
-    public static float Now => Entry.LoopState switch
-    {
-        GameLoopState.Ticking => calculateTimeFromTick( Tick ),
-        GameLoopState.Framing or _ => (float)Entry.RawGameTime.Elapsed.TotalSeconds,
-    };
-
+    /// <summary> Time since startup, aligned to the current tick </summary>
+    public static float Now => calculateTimeFromTick( Tick );
 
     internal static uint calculateCurrentTick() => (uint)MathF.Ceiling( (float)Entry.RawGameTime.Elapsed.TotalSeconds * (float)TickRate );
     internal static float calculateTimeFromTick( uint tick ) => (float)tick / (float)TickRate;

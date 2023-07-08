@@ -27,8 +27,6 @@ public static partial class Entry {
 	internal static IGraphicsBackend Graphics { get; private set; }
     internal static IAudioBackend Audio { get; private set; }
 
-    internal static GameLoopState LoopState { get; private set; } = GameLoopState.None;
-
 	static IGame? _game;
 	static bool _hasGameStarted = false;
 
@@ -90,8 +88,6 @@ public static partial class Entry {
 	}
 
 	static void onUpdate() {
-        LoopState = GameLoopState.Ticking;
-
 		var expectedCurrentTick = Time.calculateCurrentTick();
 
 		while ( CurrentTick < expectedCurrentTick ) {
@@ -101,7 +97,6 @@ public static partial class Entry {
 	}
 
 	static void onRender( float delta ) {
-        LoopState = GameLoopState.Framing;
         FrameDelta = delta;
 
 		_game?.Frame();

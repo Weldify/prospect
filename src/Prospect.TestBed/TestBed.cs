@@ -27,7 +27,7 @@ public class TestBed : IGame
     }
 
     readonly Model _sword = Model.Load( "../../../../assets/fish.mdl" );
-    readonly Audio _audio = Audio.Load( "../../../../assets/test.ogg" );
+    readonly Audio _fishAudio = Audio.Load( "../../../../assets/test.ogg" );
     Sound? _sound;
     Angles _lookAngles = Angles.Zero;
 
@@ -38,17 +38,14 @@ public class TestBed : IGame
         if ( _sound is null )
         {
             _sound = new();
-            _sound.Audio = _audio;
+            _sound.Audio = _fishAudio;
             _sound.Position = Vector3.Zero;
             _sound.Volume = 1f;
-            _sound.Reach = 5f;
-            _sound.Pitch = 0.5f;
+            _sound.Reach = 300f;
             _sound.DropStart = 0.9f;
             _sound.Looped = true;
             _sound.Play();
         }
-
-        //_sound.Pitch = MathF.Abs(MathF.Sin(Time.Now)).Remap(0f, 1f, 0.5f, 2f);
 
         var forward = Convert.ToSingle( Input.Down( Key.W ) ) - Convert.ToSingle( Input.Down( Key.S ) );
         var right = Convert.ToSingle( Input.Down( Key.D ) ) - Convert.ToSingle( Input.Down( Key.A ) );
@@ -56,12 +53,25 @@ public class TestBed : IGame
         Camera.Transform = Camera.Transform with { Rotation = Rotation.From( _lookAngles ) };
 
         Camera.Transform = Camera.Transform
-            + Camera.Transform.Rotation.Forward * forward * Time.FrameDelta
-            + Camera.Transform.Rotation.Right * right * Time.FrameDelta;
+            + Camera.Transform.Rotation.Forward * forward * RealTime.Delta
+            + Camera.Transform.Rotation.Right * right * RealTime.Delta;
 
         if ( Input.ScrollDelta != 0f ) return;
 
-        var transform = new Transform( Vector3.Zero, Rotation.From( new( Time.Now * 200f, 0f, 0f ) ) );
+        for (var x = -10; x < 10; x++ )
+        {
+            for (var y = -10; y < 10; y++ )
+            {
+                drawFish( new( x, y ) );
+            }
+        }
+    }
+
+    void drawFish(Vector2 gridPos)
+    {
+        var pos = new Vector3( gridPos.X, gridPos.Y, 0f );
+        var almostRandom = gridPos.X + gridPos.Y;
+        var transform = new Transform( pos, Rotation.From( new( ( RealTime.Now + almostRandom) * 200f, 0f, 0f ) ) );
         Graphics.DrawModel( _sword, transform );
     }
 

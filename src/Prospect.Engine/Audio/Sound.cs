@@ -24,13 +24,18 @@ public sealed class Sound
 
             // If value isn't null, swap out the audio but keep playing
             var wasPlaying = IsPlaying;
+            var oldPlaybackPosition = PlaybackPosition;
 
             Stop();
 
             _audio = value;
             _source.Buffer = _audio.BackendBuffer;
 
-            if ( wasPlaying ) Play();
+            if ( wasPlaying )
+            {
+                PlaybackPosition = oldPlaybackPosition;
+                Play();
+            }
         }
     }
 
