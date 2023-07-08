@@ -22,7 +22,7 @@ public sealed class Sound
                 return;
             }
 
-            // If value isn't null, replace the current sound with it
+            // If value isn't null, swap out the audio but keep playing
             var wasPlaying = IsPlaying;
 
             Stop();
