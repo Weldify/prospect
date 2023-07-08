@@ -34,14 +34,8 @@ class AudioBackend : IAudioBackend
     void updateListener()
     {
         var cameraPosition = Camera.Transform.Position;
-        cameraPosition.Z = -cameraPosition.Z; // OpenAL is right handed, we are left handed
-
         var cameraForward = Camera.Transform.Rotation.Forward;
         var cameraUp = Camera.Transform.Rotation.Up;
-
-        // Convert to OpenAL coordinate system
-        cameraForward.Z = -cameraForward.Z;
-        cameraUp.Z = -cameraUp.Z;
 
         var directions = new float[]
         {

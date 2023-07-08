@@ -35,6 +35,8 @@ public class TestBed : IGame {
             var sound = new Sound();
             sound.Audio = _audio;
             sound.Position = Vector3.Zero;
+            sound.Reach = 5f;
+            sound.DropStart = 0.9f;
             sound.Play();
         }
 

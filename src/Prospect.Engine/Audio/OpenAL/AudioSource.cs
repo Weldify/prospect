@@ -37,11 +37,7 @@ class AudioSource : IAudioSource, IDisposable
         set
         {
             _position = value;
-
-            var alPos = _position;
-            alPos.Z = -alPos.Z; // OpenAL is right handed, we are left handed
-
-            _al.SetSourceProperty( _handle, SourceVector3.Position, alPos );
+            _al.SetSourceProperty( _handle, SourceVector3.Position, _position );
         }
     }
 
@@ -53,10 +49,17 @@ class AudioSource : IAudioSource, IDisposable
             _reach = Math.Max( 0f, value );
 
             _al.SetSourceProperty( _handle, SourceFloat.MaxDistance, _reach );
+            updateReferenceDistance();
+        }
+    }
 
-            // Anything up to reference distance will be heard at full volume
-            // So 0f means the sound will start rolling off right away
-            _al.SetSourceProperty( _handle, SourceFloat.ReferenceDistance, 0f );
+    public float DropStart
+    {
+        get => _dropStart;
+        set
+        {
+            _dropStart = Math.Clamp(value, 0f, 1f);
+            updateReferenceDistance();
         }
     }
 
@@ -66,6 +69,7 @@ class AudioSource : IAudioSource, IDisposable
     AudioBuffer? _buffer;
     Vector3 _position;
     float _reach;
+    float _dropStart;
 
     public AudioSource( AL al )
     {
@@ -78,10 +82,14 @@ class AudioSource : IAudioSource, IDisposable
 
         Position = Vector3.Zero;
         Reach = 1f;
+        DropStart = 0f;
     }
 
     public void Play() => _al.SourcePlay( _handle );
     public void Stop() => _al.SourceStop( _handle );
 
     public void Dispose() => _al.DeleteSource( _handle );
+
+    void updateReferenceDistance()
+        => _al.SetSourceProperty( _handle, SourceFloat.ReferenceDistance, _reach * _dropStart );
 }
