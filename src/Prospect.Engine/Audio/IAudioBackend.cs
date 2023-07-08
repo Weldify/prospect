@@ -1,6 +1,9 @@
-﻿namespace Prospect.Engine;
+﻿using System;
+
+namespace Prospect.Engine;
 
 interface IAudioBackend
 {
-    void PlayFardd();
+    IAudioSource CreateSource();
+    IAudioBuffer LoadBuffer( string path );
 }

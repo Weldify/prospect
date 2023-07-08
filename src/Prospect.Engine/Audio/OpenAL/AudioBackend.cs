@@ -25,6 +25,9 @@ class AudioBackend : IAudioBackend
         _source.Buffer = testBuffer;
     }
 
+    public IAudioSource CreateSource() => new AudioSource( _al );
+    public IAudioBuffer LoadBuffer( string path ) => new AudioBuffer( _al, path );
+
     AL initAL()
     {
         var alc = ALContext.GetApi();
@@ -42,6 +45,4 @@ class AudioBackend : IAudioBackend
 
         return al;
     }
-
-    public void PlayFardd() => _source.Play();
 }

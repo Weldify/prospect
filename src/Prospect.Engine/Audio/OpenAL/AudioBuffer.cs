@@ -5,8 +5,10 @@ using System.Collections.Generic;
 
 namespace Prospect.Engine.OpenAL;
 
-class AudioBuffer : IDisposable
+class AudioBuffer : IAudioBuffer, IDisposable
 {
+    public float Length { get; private set; }
+
     readonly AL _al;
     internal readonly uint _handle;
 
@@ -54,6 +56,8 @@ class AudioBuffer : IDisposable
                 _al.BufferData( _handle, BufferFormat.Stereo16, data, buffer.Length, reader.SampleRate );
             }
         }
+
+        Length = (float)reader.TotalTime.TotalSeconds;
     }
 
     public void Dispose() => _al.DeleteBuffer( _handle );
