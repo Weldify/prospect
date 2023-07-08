@@ -35,6 +35,11 @@ public sealed class Sound
     }
 
     public bool IsPlaying => _isPlaying && _sinceStartedPlaying < _audio!.Length;
+    public Vector3 Position
+    {
+        get => _source.Position;
+        set => _source.Position = value;
+    }
 
     readonly IAudioSource _source;
     Audio? _audio;

@@ -90,8 +90,6 @@ public static partial class Entry {
 	static void onUpdate() {
 		var expectedCurrentTick = Time.CalculateCurrentTick();
 
-        Audio.Update();
-
 		while ( CurrentTick < expectedCurrentTick ) {
 			CurrentTick++;
 			_game?.Tick();
@@ -102,8 +100,9 @@ public static partial class Entry {
 		FrameDelta = delta;
 
 		_game?.Frame();
+        Audio.Frame();
 
-		PreviousHeldKeys = new( HeldKeys );
+        PreviousHeldKeys = new( HeldKeys );
 		PreviousHeldButtons = new( HeldButtons );
 		LookDelta = Angles.Zero;
 		ScrollDelta = 0f;

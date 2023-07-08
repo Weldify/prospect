@@ -29,7 +29,41 @@ class AudioBackend : IAudioBackend
     public IAudioSource CreateSource() => new AudioSource( _al );
     public IAudioBuffer LoadBuffer( string path ) => new AudioBuffer( _al, path );
 
-    public void Update()
+    public void Frame()
+    {
+        updateListener();
+        stopFinishedSounds();
+    }
+
+    void updateListener()
+    {
+        var cameraPosition = Camera.Transform.Position;
+        cameraPosition.Z = -cameraPosition.Z; // OpenAL is right handed, we are left handed
+
+        var cameraForward = Camera.Transform.Rotation.Forward;
+        var cameraUp = Camera.Transform.Rotation.Up;
+
+        // Convert to OpenAL coordinate system
+        cameraForward.Z = -cameraForward.Z;
+        cameraUp.Z = -cameraUp.Z;
+
+        var directions = new float[]
+        {
+            cameraForward.X, cameraForward.Y, cameraForward.Z,
+            cameraUp.X, cameraUp.Y, cameraUp.Z
+        };
+
+        _al.SetListenerProperty( ListenerVector3.Position, cameraPosition );
+        unsafe
+        {
+            fixed (float* dirs = directions)
+            {
+                _al.SetListenerProperty( ListenerFloatArray.Orientation, dirs );
+            }
+        }
+    }
+
+    void stopFinishedSounds()
     {
         // Stop sounds that finished playing.
         // Allows them to be freed by GC
