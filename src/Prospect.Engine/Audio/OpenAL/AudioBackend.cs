@@ -19,7 +19,7 @@ class AudioBackend : IAudioBackend
             throw new Exception( $"OpenAL initialization failed: {err}" );
         }
 
-        _al.DistanceModel( DistanceModel.InverseDistanceClamped );
+        _al.DistanceModel( DistanceModel.LinearDistanceClamped );
     }
 
     public IAudioSource CreateSource() => new AudioSource( _al );
@@ -57,6 +57,8 @@ class AudioBackend : IAudioBackend
                 _al.SetListenerProperty( ListenerFloatArray.Orientation, dirs );
             }
         }
+
+        Console.WriteLine( cameraPosition );
     }
 
     void stopFinishedSounds()

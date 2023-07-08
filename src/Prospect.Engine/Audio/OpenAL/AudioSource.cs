@@ -53,7 +53,10 @@ class AudioSource : IAudioSource, IDisposable
             _reach = Math.Max( 0f, value );
 
             _al.SetSourceProperty( _handle, SourceFloat.MaxDistance, _reach );
-            _al.SetSourceProperty( _handle, SourceFloat.ReferenceDistance, _reach / 2f );
+
+            // Anything up to reference distance will be heard at full volume
+            // So 0f means the sound will start rolling off right away
+            _al.SetSourceProperty( _handle, SourceFloat.ReferenceDistance, 0f );
         }
     }
 
@@ -68,6 +71,10 @@ class AudioSource : IAudioSource, IDisposable
     {
         _al = al;
         _handle = _al.GenSource();
+
+        _al.SetSourceProperty( _handle, SourceFloat.Gain, 1f );
+        _al.SetSourceProperty( _handle, SourceFloat.Pitch, 1f );
+        _al.SetSourceProperty( _handle, SourceFloat.RolloffFactor, 1f );
 
         Position = Vector3.Zero;
         Reach = 1f;
