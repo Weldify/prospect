@@ -12,16 +12,25 @@ public sealed class Sound
         get => _audio;
         set
         {
+            // If value is null, stop playing the audio.
             if ( value is null )
             {
                 Stop();
                 _audio = null;
+                _source.Buffer = null;
 
                 return;
             }
 
+            // If value isn't null, replace the current sound with it
+            var wasPlaying = IsPlaying;
+
+            Stop();
+
             _audio = value;
             _source.Buffer = _audio.BackendBuffer;
+
+            if ( wasPlaying ) Play();
         }
     }
 
@@ -33,11 +42,7 @@ public sealed class Sound
     TimeSince _sinceStartedPlaying;
     bool _isPlaying;
 
-    public Sound( Audio audio )
-    {
-        _source = Entry.Audio.CreateSource();
-        Audio = audio;
-    }
+    public Sound() => _source = Entry.Audio.CreateSource();
 
     ~Sound()
     {

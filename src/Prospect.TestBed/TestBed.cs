@@ -30,7 +30,8 @@ public class TestBed : IGame {
 
         if ( Input.Pressed( MouseButton.Left ) )
         {
-            var sound = new Sound( _audio );
+            var sound = new Sound();
+            sound.Audio = _audio;
             sound.Play();
         }
 
