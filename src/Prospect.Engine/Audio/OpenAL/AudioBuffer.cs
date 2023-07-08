@@ -22,12 +22,9 @@ class AudioBuffer : IAudioBuffer, IDisposable
         var floatBuffer = new float[ 1024 ];
         var result = new List<byte>();
 
-        var totalSamples = 0;
         int count;
         while ( ( count = reader.ReadSamples( floatBuffer, 0, floatBuffer.Length ) ) > 0 )
         {
-            totalSamples += count;
-
             // The following code was ripped out from a 500 year old resource i think
             // The commented out stuff makes it Mono16, by default its Stereo16
             for ( var i = 0; i < count; i++ )
