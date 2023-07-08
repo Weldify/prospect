@@ -9,7 +9,6 @@ namespace Prospect.Engine.OpenAL;
 class AudioBackend : IAudioBackend
 {
     AL _al;
-    AudioSource _source;
 
     public AudioBackend()
     {
@@ -20,10 +19,7 @@ class AudioBackend : IAudioBackend
             throw new Exception( $"OpenAL initialization failed: {err}" );
         }
 
-        var testBuffer = new AudioBuffer( _al, "../../../../assets/test.ogg" );
-
-        _source = new AudioSource( _al );
-        _source.Buffer = testBuffer;
+        
     }
 
     public IAudioSource CreateSource() => new AudioSource( _al );

@@ -52,7 +52,7 @@ class AudioSource : IAudioSource, IDisposable
     {
         _al = al;
         _handle = _al.GenSource();
-
+        
         Position = Vector3.Zero;
         Reach = 1f;
     }
