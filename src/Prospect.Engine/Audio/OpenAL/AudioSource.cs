@@ -16,6 +16,21 @@ class AudioSource : IAudioSource, IDisposable
         }
     }
 
+    public AudioSourceState State
+    {
+        get
+        {
+            _al.GetSourceProperty( _handle, GetSourceInteger.SourceState, out var state );
+
+            return (SourceState)state switch
+            {
+                SourceState.Playing => AudioSourceState.Playing,
+                SourceState.Paused => AudioSourceState.Paused,
+                _ => AudioSourceState.Stopped,
+            };
+        }
+    }
+
     public Vector3 Position
     {
         get => _position;
@@ -38,6 +53,7 @@ class AudioSource : IAudioSource, IDisposable
             _reach = Math.Max( 0f, value );
 
             _al.SetSourceProperty( _handle, SourceFloat.MaxDistance, _reach );
+            _al.SetSourceProperty( _handle, SourceFloat.ReferenceDistance, _reach / 2f );
         }
     }
 
@@ -52,7 +68,7 @@ class AudioSource : IAudioSource, IDisposable
     {
         _al = al;
         _handle = _al.GenSource();
-        
+
         Position = Vector3.Zero;
         Reach = 1f;
     }

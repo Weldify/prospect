@@ -19,7 +19,7 @@ class AudioBackend : IAudioBackend
             throw new Exception( $"OpenAL initialization failed: {err}" );
         }
 
-        _al.DistanceModel( DistanceModel.LinearDistanceClamped );
+        _al.DistanceModel( DistanceModel.InverseDistanceClamped );
     }
 
     public IAudioSource CreateSource() => new AudioSource( _al );

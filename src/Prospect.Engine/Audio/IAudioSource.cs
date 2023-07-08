@@ -8,6 +8,8 @@ interface IAudioSource : IDisposable
     public Vector3 Position { get; set; }
     public float Reach { get; set; }
 
+    public AudioSourceState State { get; }
+
     void Play();
     void Stop();
 }

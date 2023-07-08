@@ -34,7 +34,7 @@ public sealed class Sound
         }
     }
 
-    public bool IsPlaying => _isPlaying && _sinceStartedPlaying < _audio!.Length;
+    public bool IsPlaying => _source.State == AudioSourceState.Playing;
     public Vector3 Position
     {
         get => _source.Position;
@@ -43,9 +43,6 @@ public sealed class Sound
 
     readonly IAudioSource _source;
     Audio? _audio;
-
-    TimeSince _sinceStartedPlaying;
-    bool _isPlaying;
 
     public Sound() => _source = Entry.Audio.CreateSource();
 
@@ -60,9 +57,6 @@ public sealed class Sound
         // We dont have audio set. It's appropriate to do nothing here
         if ( _audio is null ) return;
 
-        _isPlaying = true;
-        _sinceStartedPlaying = 0f;
-
         // Prevent this sound from being GCed while playing
         // The backend handles removing sounds that stopped playing
         _ = _playingSounds.Add( this );
@@ -71,7 +65,6 @@ public sealed class Sound
     }
     public void Stop()
     {
-        _isPlaying = false;
         _source.Stop();
 
         _ = _playingSounds.Remove( this );
