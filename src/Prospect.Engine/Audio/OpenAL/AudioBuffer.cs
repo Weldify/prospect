@@ -28,21 +28,22 @@ class AudioBuffer : IAudioBuffer, IDisposable
         {
             totalSamples += count;
 
-            // Black magic
+            // The following code was ripped out from a 500 year old resource i think
+            // The commented out stuff makes it Mono16, by default its Stereo16
             for ( var i = 0; i < count; i++ )
             {
                 var temp = (short)( 32767f * floatBuffer[ i ] );
                 if ( temp > 32767 )
                 {
-                    result.Add( 0xFF );
+                    //result.Add( 0xFF );
                     result.Add( 0x7F );
                 }
                 else if ( temp < -32768 )
                 {
-                    result.Add( 0x80 );
+                    //result.Add( 0x80 );
                     result.Add( 0x00 );
                 }
-                result.Add( (byte)temp );
+                //result.Add( (byte)temp );
                 result.Add( (byte)( temp >> 8 ) );
             }
         }
@@ -53,7 +54,7 @@ class AudioBuffer : IAudioBuffer, IDisposable
         {
             fixed ( byte* data = buffer )
             {
-                _al.BufferData( _handle, BufferFormat.Stereo16, data, buffer.Length, reader.SampleRate );
+                _al.BufferData( _handle, BufferFormat.Mono16, data, buffer.Length, reader.SampleRate );
             }
         }
 

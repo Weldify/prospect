@@ -57,8 +57,6 @@ class AudioBackend : IAudioBackend
                 _al.SetListenerProperty( ListenerFloatArray.Orientation, dirs );
             }
         }
-
-        Console.WriteLine( cameraPosition );
     }
 
     void stopFinishedSounds()

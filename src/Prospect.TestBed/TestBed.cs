@@ -15,6 +15,7 @@ public class TestBed : IGame {
 
 		Input.MouseMode = MouseMode.Lock;
 		Camera.FieldOfView = 70f;
+        Camera.Transform = Transform.Zero;
 	}
 
 	public void Tick() {
@@ -33,6 +34,7 @@ public class TestBed : IGame {
         {
             var sound = new Sound();
             sound.Audio = _audio;
+            sound.Position = Vector3.Zero;
             sound.Play();
         }
 
