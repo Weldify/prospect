@@ -12,6 +12,8 @@ interface IAudioSource : IDisposable
     public float DropStart { get; set; }
     public bool Looped { get; set; }
 
+    public float PlaybackPosition { get; set; }
+
     public AudioSourceState State { get; }
 
     void Play();

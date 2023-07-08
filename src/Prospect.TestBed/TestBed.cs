@@ -37,13 +37,14 @@ public class TestBed : IGame {
             _sound.Position = Vector3.Zero;
             _sound.Volume = 1f;
             _sound.Reach = 5f;
-            _sound.Pitch = 2f;
+            _sound.Pitch = 0.5f;
             _sound.DropStart = 0.9f;
             _sound.Looped = true;
             _sound.Play();
         }
 
-        _sound.Pitch = MathF.Abs(MathF.Sin(Time.Now)).Remap(0f, 1f, 0.5f, 2f);
+        _sound.PlaybackPosition = 0.5f;
+        //_sound.Pitch = MathF.Abs(MathF.Sin(Time.Now)).Remap(0f, 1f, 0.5f, 2f);
 
 		var forward = Convert.ToSingle( Input.Down( Key.W ) ) - Convert.ToSingle( Input.Down( Key.S ) );
 		var right = Convert.ToSingle( Input.Down( Key.D ) ) - Convert.ToSingle( Input.Down( Key.A ) );

@@ -93,6 +93,25 @@ class AudioSource : IAudioSource, IDisposable
         }
     }
 
+    public float PlaybackPosition
+    {
+        get
+        {
+            if ( _buffer is null ) return 0f;
+
+            _al.GetSourceProperty( _handle, SourceFloat.SecOffset, out var timePosition );
+            return timePosition / _buffer.Length;
+        }
+
+        set
+        {
+            value = Math.Clamp( value, 0f, 1f );
+            var offset = _buffer is null ? 0f : value * _buffer.Length;
+
+            _al.SetSourceProperty( _handle, SourceFloat.SecOffset, offset );
+        }
+    }
+
     readonly AL _al;
     readonly uint _handle;
 

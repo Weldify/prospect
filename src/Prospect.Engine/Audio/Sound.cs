@@ -85,6 +85,16 @@ public sealed class Sound
         set => _source.Looped = value;
     }
 
+    /// <summary>
+    /// <c>[0f;1f]</c> 
+    /// Current playback position of the sound
+    /// </summary>
+    public float PlaybackPosition
+    {
+        get => _source.PlaybackPosition;
+        set => _source.PlaybackPosition = value;
+    }
+
     readonly IAudioSource _source;
     Audio? _audio;
 
