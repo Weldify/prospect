@@ -35,6 +35,8 @@ public sealed class Sound
     }
 
     public bool IsPlaying => _source.State == AudioSourceState.Playing;
+    public bool IsPaused => _source.State == AudioSourceState.Paused;
+
     public Vector3 Position
     {
         get => _source.Position;
@@ -117,10 +119,16 @@ public sealed class Sound
 
         _source.Play();
     }
+
+    public void Pause()
+    {
+        _source.Pause();
+        _ = _playingSounds.Remove( this );
+    }
+
     public void Stop()
     {
         _source.Stop();
-
         _ = _playingSounds.Remove( this );
     }
 }

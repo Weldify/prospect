@@ -139,6 +139,7 @@ class AudioSource : IAudioSource, IDisposable
     }
 
     public void Play() => _al.SourcePlay( _handle );
+    public void Pause() => _al.SourcePause( _handle );
     public void Stop() => _al.SourceStop( _handle );
 
     public void Dispose() => _al.DeleteSource( _handle );

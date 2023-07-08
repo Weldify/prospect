@@ -17,5 +17,6 @@ interface IAudioSource : IDisposable
     public AudioSourceState State { get; }
 
     void Play();
+    void Pause();
     void Stop();
 }
