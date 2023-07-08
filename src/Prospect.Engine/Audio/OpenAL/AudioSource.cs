@@ -41,6 +41,16 @@ class AudioSource : IAudioSource, IDisposable
         }
     }
 
+    public float Volume
+    {
+        get => _volume;
+        set
+        {
+            _volume = MathF.Max( 0f, value );
+            _al.SetSourceProperty( _handle, SourceFloat.Gain, _volume );
+        }
+    }
+
     public float Reach
     {
         get => _reach;
@@ -58,7 +68,7 @@ class AudioSource : IAudioSource, IDisposable
         get => _dropStart;
         set
         {
-            _dropStart = Math.Clamp(value, 0f, 1f);
+            _dropStart = Math.Clamp( value, 0f, 1f );
             updateReferenceDistance();
         }
     }
@@ -78,6 +88,7 @@ class AudioSource : IAudioSource, IDisposable
 
     AudioBuffer? _buffer;
     Vector3 _position;
+    float _volume;
     float _reach;
     float _dropStart;
     bool _looped;
@@ -87,11 +98,11 @@ class AudioSource : IAudioSource, IDisposable
         _al = al;
         _handle = _al.GenSource();
 
-        _al.SetSourceProperty( _handle, SourceFloat.Gain, 1f );
         _al.SetSourceProperty( _handle, SourceFloat.Pitch, 1f );
         _al.SetSourceProperty( _handle, SourceFloat.RolloffFactor, 1f );
 
         Position = Vector3.Zero;
+        Volume = 1f;
         Reach = 1f;
         DropStart = 0f;
         Looped = false;

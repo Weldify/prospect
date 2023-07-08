@@ -24,22 +24,26 @@ public class TestBed : IGame {
 
 	readonly Model _sword = Model.Load( "../../../../assets/fish.mdl" );
     readonly Audio _audio = Audio.Load( "../../../../assets/test.ogg" );
+    Sound? _sound;
 	Angles _lookAngles = Angles.Zero;
     TimeUntil _timeUntilGC;
 
 	public void Frame() {
 		_lookAngles = (_lookAngles + Input.LookDelta).Wrapped;
 
-        if ( Input.Pressed( MouseButton.Left ) )
+        if (_sound is null)
         {
-            var sound = new Sound();
-            sound.Audio = _audio;
-            sound.Position = Vector3.Zero;
-            sound.Reach = 5f;
-            sound.DropStart = 0.9f;
-            sound.Looped = true;
-            sound.Play();
+            _sound = new();
+            _sound.Audio = _audio;
+            _sound.Position = Vector3.Zero;
+            _sound.Volume = 1f;
+            _sound.Reach = 5f;
+            _sound.DropStart = 0.9f;
+            _sound.Looped = true;
+            _sound.Play();
         }
+
+        _sound.Volume = MathF.Abs(MathF.Sin(Time.Now));
 
         if ( _timeUntilGC < 0f)
         {
