@@ -25,12 +25,13 @@ public static partial class Entry {
 	internal static HashSet<MouseButton> PreviousHeldButtons { get; private set; } = new();
 
 	internal static IGraphicsBackend Graphics { get; private set; }
+    internal static IAudioBackend Audio { get; private set; }
 
 	static IGame? _game;
 	static bool _hasGameStarted = false;
 
 	static Entry() {
-		Graphics = new OpenGL.GraphicsBackend {
+		Graphics = new OpenGL.GraphicsBackend() {
 			OnLoad = onGraphicsLoaded,
 			OnUpdate = onUpdate,
 			OnRender = onRender,
@@ -42,6 +43,8 @@ public static partial class Entry {
 			MouseUp = onMouseUp,
 			Scroll = onScroll
 		};
+
+        Audio = new OpenAL.AudioBackend();
 	}
 
 	static void applyOptions( IGame game ) {
@@ -85,7 +88,7 @@ public static partial class Entry {
 	}
 
 	static void onUpdate() {
-		var expectedCurrentTick = Time.CalculateCurrentTick();
+		var expectedCurrentTick = Time.calculateCurrentTick();
 
 		while ( CurrentTick < expectedCurrentTick ) {
 			CurrentTick++;
@@ -94,11 +97,12 @@ public static partial class Entry {
 	}
 
 	static void onRender( float delta ) {
-		FrameDelta = delta;
+        FrameDelta = delta;
 
 		_game?.Frame();
+        Audio.Frame();
 
-		PreviousHeldKeys = new( HeldKeys );
+        PreviousHeldKeys = new( HeldKeys );
 		PreviousHeldButtons = new( HeldButtons );
 		LookDelta = Angles.Zero;
 		ScrollDelta = 0f;
