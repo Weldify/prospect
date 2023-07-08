@@ -23,7 +23,6 @@ public class TestBed : IGame {
 
 	readonly Model _sword = Model.Load( "../../../../assets/fish.mdl" );
     readonly Audio _audio = Audio.Load( "../../../../assets/test.ogg" );
-    TimeUntil _untilGarbageCollect;
 	Angles _lookAngles = Angles.Zero;
 
 	public void Frame() {
@@ -32,14 +31,7 @@ public class TestBed : IGame {
         if ( Input.Pressed( MouseButton.Left ) )
         {
             var sound = new Sound( _audio );
-            Console.WriteLine( _audio.Length );
             sound.Play();
-        }
-
-        if (_untilGarbageCollect < 0f)
-        {
-            _untilGarbageCollect = 1f;
-            GC.Collect();
         }
 
 		var forward = Convert.ToSingle( Input.Down( Key.W ) ) - Convert.ToSingle( Input.Down( Key.S ) );
