@@ -41,11 +41,24 @@ public sealed class Sound
         set => _source.Position = value;
     }
 
-    /// <summary> Volume of the sound - multiplier </summary>
+    /// <summary> 
+    /// <c>[0f;1f]</c> 
+    /// Volume of the sound - multiplier 
+    /// </summary>
     public float Volume
     {
         get => _source.Volume;
         set => _source.Volume = value;
+    }
+
+    /// <summary>
+    /// <c>[0.5f;2.0f]</c> 
+    /// Pitch of the sound 
+    /// </summary>
+    public float Pitch
+    {
+        get => _source.Pitch;
+        set => _source.Pitch = value;
     }
 
     /// <summary> Past this distance, the sound will be inaudible </summary>
@@ -55,7 +68,10 @@ public sealed class Sound
         set => _source.Reach = value;
     }
 
-    /// <summary> Dont start dropping volume until we pass this fraction. Based on reach </summary>
+    /// <summary> 
+    /// <c>[0f;1f]</c> 
+    /// Dont start dropping volume until we pass this 
+    /// </summary>
     public float DropStart
     {
         get => _source.DropStart;

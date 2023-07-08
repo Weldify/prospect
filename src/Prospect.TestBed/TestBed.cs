@@ -26,7 +26,6 @@ public class TestBed : IGame {
     readonly Audio _audio = Audio.Load( "../../../../assets/test.ogg" );
     Sound? _sound;
 	Angles _lookAngles = Angles.Zero;
-    TimeUntil _timeUntilGC;
 
 	public void Frame() {
 		_lookAngles = (_lookAngles + Input.LookDelta).Wrapped;
@@ -38,18 +37,13 @@ public class TestBed : IGame {
             _sound.Position = Vector3.Zero;
             _sound.Volume = 1f;
             _sound.Reach = 5f;
+            _sound.Pitch = 2f;
             _sound.DropStart = 0.9f;
             _sound.Looped = true;
             _sound.Play();
         }
 
-        _sound.Volume = MathF.Abs(MathF.Sin(Time.Now));
-
-        if ( _timeUntilGC < 0f)
-        {
-            _timeUntilGC = 1f;
-            GC.Collect();
-        }
+        _sound.Pitch = MathF.Abs(MathF.Sin(Time.Now)).Remap(0f, 1f, 0.5f, 2f);
 
 		var forward = Convert.ToSingle( Input.Down( Key.W ) ) - Convert.ToSingle( Input.Down( Key.S ) );
 		var right = Convert.ToSingle( Input.Down( Key.D ) ) - Convert.ToSingle( Input.Down( Key.A ) );
@@ -62,7 +56,7 @@ public class TestBed : IGame {
 
 		if ( Input.ScrollDelta != 0f ) return;
 
-		var transform = new Transform( Vector3.Zero, Rotation.From( new( Time.Now * 10f, 0f, 0f ) ) );
+		var transform = new Transform( Vector3.Zero, Rotation.From( new( Time.Now * 200f, 0f, 0f ) ) );
 		Graphics.DrawModel( _sword, transform );
 	}
 
