@@ -25,8 +25,13 @@ class AudioBuffer : IAudioBuffer, IDisposable
         int count;
         while ( ( count = reader.ReadSamples( floatBuffer, 0, floatBuffer.Length ) ) > 0 )
         {
-            // The following code was ripped out from a 500 year old resource i think
-            // The commented out stuff makes it Mono16, by default its Stereo16
+            // TODO: BAD BAD BAD BAD BAD 
+            // The following code was ripped out from a 500 year old resource 
+            // This decodes the samples into a byte[]
+            // Normally its fine, but it decodes it in Stereo16
+            // OpenAL attenuation doesnt work with Stereo16, so I had to convert it to Mono16
+            // But I have no CLUE IN THE SLIGHTEST what I am doing
+            // This code probably discards one of the channels. Fucking sucks.
             for ( var i = 0; i < count; i++ )
             {
                 var temp = (short)( 32767f * floatBuffer[ i ] );
