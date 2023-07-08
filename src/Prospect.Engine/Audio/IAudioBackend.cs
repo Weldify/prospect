@@ -6,4 +6,6 @@ interface IAudioBackend
 {
     IAudioSource CreateSource();
     IAudioBuffer LoadBuffer( string path );
+
+    void Update();
 }

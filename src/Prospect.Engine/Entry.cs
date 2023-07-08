@@ -90,6 +90,8 @@ public static partial class Entry {
 	static void onUpdate() {
 		var expectedCurrentTick = Time.CalculateCurrentTick();
 
+        Audio.Update();
+
 		while ( CurrentTick < expectedCurrentTick ) {
 			CurrentTick++;
 			_game?.Tick();

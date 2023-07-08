@@ -2,6 +2,7 @@
 using Silk.NET.OpenAL;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Prospect.Engine.OpenAL;
 
@@ -14,7 +15,7 @@ class AudioBackend : IAudioBackend
     {
         _al = initAL();
 
-        if (_al.GetError() is var err && err != AudioError.NoError)
+        if ( _al.GetError() is var err && err != AudioError.NoError )
         {
             throw new Exception( $"OpenAL initialization failed: {err}" );
         }
@@ -27,6 +28,14 @@ class AudioBackend : IAudioBackend
 
     public IAudioSource CreateSource() => new AudioSource( _al );
     public IAudioBuffer LoadBuffer( string path ) => new AudioBuffer( _al, path );
+
+    public void Update()
+    {
+        // Stop sounds that finished playing.
+        // Allows them to be freed by GC
+        foreach ( var sound in Sound._playingSounds.Where( s => !s.IsPlaying ) )
+            sound.Stop();
+    }
 
     AL initAL()
     {
