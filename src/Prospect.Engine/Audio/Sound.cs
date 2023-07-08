@@ -55,6 +55,13 @@ public sealed class Sound
         set => _source.DropStart = value;
     }
 
+    /// <summary> Will the sound repeat after ending </summary>
+    public bool Looped
+    {
+        get => _source.Looped;
+        set => _source.Looped = value;
+    }
+
     readonly IAudioSource _source;
     Audio? _audio;
 

@@ -63,6 +63,16 @@ class AudioSource : IAudioSource, IDisposable
         }
     }
 
+    public bool Looped
+    {
+        get => _looped;
+        set
+        {
+            _looped = value;
+            _al.SetSourceProperty( _handle, SourceBoolean.Looping, _looped );
+        }
+    }
+
     readonly AL _al;
     readonly uint _handle;
 
@@ -70,6 +80,7 @@ class AudioSource : IAudioSource, IDisposable
     Vector3 _position;
     float _reach;
     float _dropStart;
+    bool _looped;
 
     public AudioSource( AL al )
     {
@@ -83,6 +94,7 @@ class AudioSource : IAudioSource, IDisposable
         Position = Vector3.Zero;
         Reach = 1f;
         DropStart = 0f;
+        Looped = false;
     }
 
     public void Play() => _al.SourcePlay( _handle );

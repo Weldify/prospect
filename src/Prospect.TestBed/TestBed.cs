@@ -37,6 +37,7 @@ public class TestBed : IGame {
             sound.Position = Vector3.Zero;
             sound.Reach = 5f;
             sound.DropStart = 0.9f;
+            sound.Looped = true;
             sound.Play();
         }
 
