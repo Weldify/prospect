@@ -7,14 +7,14 @@ using AssMesh = Silk.NET.Assimp.Mesh;
 namespace Prospect.Engine.OpenGL;
 
 class Model : IModel, IDisposable {
-	public unsafe static Result<Model, string> Load( GL gl, string path, Texture texture ) {
+	public unsafe static Result<Model, string> Load( GL gl, string path ) {
 		var assimp = Assimp.GetApi();
 
 		var scene = assimp.ImportFile( path, (uint)PostProcessSteps.Triangulate );
 		if ( scene == null || scene->MFlags == Assimp.SceneFlagsIncomplete || scene->MRootNode == null )
 			return assimp.GetErrorStringS();
 
-		return new Model( gl, scene, texture );
+		return new Model( gl, scene );
 	}
 
 	public IReadOnlyList<Mesh> Meshes => _meshes;
@@ -23,12 +23,10 @@ class Model : IModel, IDisposable {
 	readonly Assimp _assimp;
 
 	readonly List<Mesh> _meshes = new();
-	readonly Texture _texture;
 
-	public unsafe Model( GL gl, Scene* scene, Texture texture ) {
+	public unsafe Model( GL gl, Scene* scene ) {
 		_gl = gl;
 		_assimp = Assimp.GetApi();
-		_texture = texture;
 
 		processNode( scene->MRootNode, scene );
 	}
@@ -85,7 +83,7 @@ class Model : IModel, IDisposable {
 				indices.Add( face.MIndices[j] );
 		}
 
-		return new( _gl, buildVertices( vertices ), indices.ToArray(), _texture );
+		return new( _gl, buildVertices( vertices ), indices.ToArray() );
 	}
 
 	float[] buildVertices( List<Vertex> vertexList ) {

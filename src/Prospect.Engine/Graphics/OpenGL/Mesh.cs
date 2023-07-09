@@ -10,13 +10,10 @@ class Mesh : IDisposable {
 	readonly BufferObject<float> _vbo;
 	readonly BufferObject<uint> _ebo;
 	readonly VertexArrayObject<float, uint> _vao;
-	readonly Texture _texture;
 
-	public Mesh( GL gl, float[] vertices, uint[] indices, Texture texture ) {
+	public Mesh( GL gl, float[] vertices, uint[] indices ) {
 		VertexCount = (uint)vertices.Length;
 		IndiceCount = (uint)indices.Length;
-
-		_texture = texture;
 
 		_vbo = new( gl, BufferTargetARB.ArrayBuffer, vertices );
 		_ebo = new( gl, BufferTargetARB.ElementArrayBuffer, indices );
@@ -28,7 +25,6 @@ class Mesh : IDisposable {
 
 	public void Bind() {
 		_vao.Bind();
-		_texture.Bind( TextureUnit.Texture0 );
 	}
 
 	public void Dispose() {

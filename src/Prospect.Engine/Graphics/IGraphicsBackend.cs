@@ -28,8 +28,8 @@ interface IGraphicsBackend {
 	void RunLoop();
 
 	// Rendering
-	Result<IModel> LoadModel( string path, ITexture texture );
-	Result<ITexture> LoadTexture( string path );
+	Result<IModel> LoadModel( string path );
+	Result<ITexture> LoadTexture( string path, TextureFilter filter );
 
 	PolygonMode PolygonMode { get; set; }
 
