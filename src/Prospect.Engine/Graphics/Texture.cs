@@ -20,13 +20,17 @@ public sealed class Texture
         var texture = new Texture(res);
 
         if ( Entry.Graphics.HasLoaded )
+        {
             texture.updateFromResource( res );
+            texture._hasLoaded = true;
+        }
 
         _cache[ path ] = texture;
         return texture;
     }
 
     internal ITexture BackendTexture { get; private set; } = null!;
+    internal bool _hasLoaded = false;
     readonly TextureResource _preset;
 
     Texture( TextureResource preset ) => _preset = preset;
@@ -38,5 +42,13 @@ public sealed class Texture
         var texture = Entry.Graphics.LoadTexture( imagePath, res.Filter );
 
         BackendTexture = texture.Value;
+    }
+
+    internal void postBackendLoad()
+    {
+        if ( _hasLoaded ) return;
+        _hasLoaded = true;
+
+        updateFromResource( _preset );
     }
 }

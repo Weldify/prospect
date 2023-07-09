@@ -70,9 +70,9 @@ partial class GraphicsBackend
         return model.Value;
     }
 
-    public Result<ITexture> LoadTexture( string path )
+    public Result<ITexture> LoadTexture( string path, TextureFilter filter )
     {
-        var texture = Texture.Load( _gl, path );
+        var texture = Texture.Load( _gl, path, filter );
         if ( texture.IsError ) return Result.Fail();
 
         return texture.Value;

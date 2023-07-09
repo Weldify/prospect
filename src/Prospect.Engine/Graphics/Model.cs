@@ -28,7 +28,10 @@ public sealed class Model {
 		Model model = new( res );
 
 		if ( Entry.Graphics.HasLoaded )
+        {
 			model.updateFromResource( res );
+            model._hasLoaded = true;
+        }
 
 		_cache[path] = model;
 		return model;
@@ -50,8 +53,6 @@ public sealed class Model {
 	internal void postBackendLoad() {
 		if ( _hasLoaded ) return;
 		_hasLoaded = true;
-
-		Console.WriteLine( "amaload" );
 
         updateFromResource( _preset );
 	}
