@@ -41,7 +41,7 @@ public sealed class Texture : ITexture, IDisposable {
 		_gl.TexParameter( TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)GLEnum.Linear );
 		_gl.TexParameter( TextureTarget.Texture2D, TextureParameterName.TextureBaseLevel, 0 );
 		_gl.TexParameter( TextureTarget.Texture2D, TextureParameterName.TextureMaxLevel, 8 );
-
+        
 		//Generating mipmaps.
 		_gl.GenerateMipmap( TextureTarget.Texture2D );
 	}

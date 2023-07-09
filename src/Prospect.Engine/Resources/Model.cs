@@ -1,6 +1,4 @@
-﻿using YamlDotNet.Serialization;
-
-namespace Prospect.Engine;
+﻿namespace Prospect.Engine;
 
 sealed class ModelResource : Resource {
 	public string MeshPath = "";
