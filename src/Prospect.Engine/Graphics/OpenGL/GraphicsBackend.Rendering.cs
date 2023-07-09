@@ -82,6 +82,9 @@ partial class GraphicsBackend
     {
         // BackendModel is never null, and its always from our backend
         var backendModel = ( model.BackendModel as Model )!;
+        var backendTexture = ( model.Texture.BackendTexture as Texture )!;
+
+        backendTexture.Bind();
 
         _mainModelShader.Use();
         _mainModelShader.SetUniform( "uTexture", 0 );

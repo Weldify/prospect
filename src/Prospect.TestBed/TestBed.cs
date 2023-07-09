@@ -71,7 +71,7 @@ public class TestBed : IGame
     {
         var pos = new Vector3( gridPos.X, gridPos.Y, 0f );
         var almostRandom = gridPos.X + gridPos.Y;
-        var transform = new Transform( pos, Rotation.From( new( ( RealTime.Now + almostRandom) * 200f, 0f, 0f ) ) );
+        var transform = new Transform( pos, Rotation.From( new( ( RealTime.Now + almostRandom) * 10f, 0f, 0f ) ) );
         Graphics.DrawModel( _sword, transform );
     }
 
