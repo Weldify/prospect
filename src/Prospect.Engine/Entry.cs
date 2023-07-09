@@ -84,7 +84,11 @@ public static partial class Entry {
         foreach ( var model in Model._cache.Values.Where( m => !m._hasLoaded ) )
             model.postBackendLoad();
 
-		_ = startGame();
+        // And textures
+        foreach ( var texture in Texture._cache.Values.Where( m => !m._hasLoaded ) )
+            texture.postBackendLoad();
+
+        _ = startGame();
 	}
 
 	static void onUpdate() {
