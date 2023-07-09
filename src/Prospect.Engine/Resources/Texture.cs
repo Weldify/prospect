@@ -1,11 +1,5 @@
 ﻿namespace Prospect.Engine;
 
-enum TextureFilter
-{
-    Linear,
-    Nearest
-}
-
 sealed class TextureResource : Resource
 {
     public string ImagePath = "";
